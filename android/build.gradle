@@ -1,0 +1,51 @@
+// Define flutter extension class first
+class FlutterExtension {
+    int compileSdkVersion = 34
+    int targetSdkVersion = 34
+    int minSdkVersion = 21
+    String ndkVersion = "25.1.8937393"
+    int versionCode = 1
+    String versionName = "1.0.0"
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+
+    // Add flutter extension before evaluation for plugins that need it
+    // Skip the :app project which will get flutter extension from Flutter gradle plugin
+    if (project.name != 'app') {
+        project.extensions.create('flutter', FlutterExtension)
+    }
+
+    // Fix namespace issues for plugins that don't define one
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            def android = project.android
+            if (android.namespace == null) {
+                // Set namespace based on project name
+                if (project.name == 'flutter_libserialport') {
+                    android.namespace = 'dev.nickvital.flutter_libserialport'
+                } else if (project.name == 'flutter_bluetooth_serial') {
+                    android.namespace = 'io.github.nicholaslee119.flutter_bluetooth_serial'
+                }
+            }
+        }
+    }
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
