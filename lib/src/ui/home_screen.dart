@@ -9,6 +9,8 @@ import 'vehicle_info_screen.dart';
 import 'freeze_frame_screen.dart';
 import 'settings_screen.dart';
 import 'module_list_screen.dart';
+import 'dashboard_screen.dart';
+import 'history_screen.dart';
 import 'theme.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -94,46 +96,60 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildFeatureGrid(BuildContext context, bool isConnected) {
     final features = [
       _FeatureItem(
+        icon: Icons.dashboard,
+        title: 'Dashboard',
+        subtitle: 'Live gauges & recording',
+        color: Colors.teal,
+        onTap: isConnected ? () => _navigateToDashboard(context) : null,
+      ),
+      _FeatureItem(
         icon: AppIcons.dtc,
         title: 'Read DTCs',
-        subtitle: 'View diagnostic trouble codes',
+        subtitle: 'View diagnostic codes',
         color: AppTheme.errorColor,
         onTap: isConnected ? () => _navigateToDTC(context) : null,
       ),
       _FeatureItem(
         icon: AppIcons.liveData,
         title: 'Live Data',
-        subtitle: 'Real-time sensor data',
+        subtitle: 'Real-time sensors',
         color: AppTheme.primaryColor,
         onTap: isConnected ? () => _navigateToLiveData(context) : null,
       ),
       _FeatureItem(
         icon: AppIcons.readiness,
         title: 'Readiness',
-        subtitle: 'Emission monitor status',
+        subtitle: 'Monitor status',
         color: AppTheme.successColor,
         onTap: isConnected ? () => _navigateToReadiness(context) : null,
       ),
       _FeatureItem(
         icon: AppIcons.vehicle,
         title: 'Vehicle Info',
-        subtitle: 'VIN and vehicle details',
+        subtitle: 'VIN & details',
         color: AppTheme.secondaryColor,
         onTap: isConnected ? () => _navigateToVehicleInfo(context) : null,
       ),
       _FeatureItem(
         icon: AppIcons.freezeFrame,
         title: 'Freeze Frame',
-        subtitle: 'Snapshot at DTC time',
+        subtitle: 'DTC snapshot',
         color: Colors.cyan,
         onTap: isConnected ? () => _navigateToFreezeFrame(context) : null,
       ),
       _FeatureItem(
         icon: AppIcons.modules,
         title: 'Modules',
-        subtitle: 'ECU bi-directional control',
+        subtitle: 'ECU control',
         color: Colors.deepPurple,
         onTap: isConnected ? () => _navigateToModules(context) : null,
+      ),
+      _FeatureItem(
+        icon: Icons.history,
+        title: 'History',
+        subtitle: 'Sessions & reports',
+        color: Colors.indigo,
+        onTap: () => _navigateToHistory(context),
       ),
       _FeatureItem(
         icon: AppIcons.settings,
@@ -145,9 +161,10 @@ class HomeScreen extends ConsumerWidget {
     ];
 
     return GridView.count(
-      crossAxisCount: 2,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
+      crossAxisCount: 3,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      childAspectRatio: 0.9,
       children: features.map((f) => _buildFeatureCard(context, f, isConnected)).toList(),
     );
   }
@@ -162,26 +179,30 @@ class HomeScreen extends ConsumerWidget {
         child: Opacity(
           opacity: isEnabled ? 1.0 : 0.5,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   feature.icon,
-                  size: 48,
+                  size: 36,
                   color: feature.color,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 Text(
                   feature.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   feature.subtitle,
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 10,
+                  ),
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -195,6 +216,13 @@ class HomeScreen extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ConnectionScreen()),
+    );
+  }
+
+  void _navigateToDashboard(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const DashboardScreen()),
     );
   }
 
@@ -237,6 +265,13 @@ class HomeScreen extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ModuleListScreen()),
+    );
+  }
+
+  void _navigateToHistory(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HistoryScreen()),
     );
   }
 

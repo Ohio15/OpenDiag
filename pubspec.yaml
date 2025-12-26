@@ -31,10 +31,17 @@ dependencies:
   equatable: ^2.0.5
   intl: ^0.18.1
   collection: ^1.18.0
+  uuid: ^4.2.1
 
   # UI components
   cupertino_icons: ^1.0.6
   fl_chart: ^0.65.0
+  syncfusion_flutter_gauges: ^24.1.41
+
+  # PDF generation
+  pdf: ^3.10.4
+  printing: ^5.11.0
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:

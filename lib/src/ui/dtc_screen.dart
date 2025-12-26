@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/diagnostic_providers.dart';
 import '../obd/obd_protocol.dart';
+import '../data/dtc_database.dart';
 import 'theme.dart';
 
 class DTCScreen extends ConsumerStatefulWidget {
@@ -15,6 +16,7 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
   late TabController _tabController;
   bool _isClearing = false;
   bool _isRefreshing = false;
+  final _dtcDatabase = DTCDatabase();
 
   @override
   void initState() {
@@ -34,6 +36,11 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
       appBar: AppBar(
         title: const Text('Diagnostic Trouble Codes'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _showSearchSheet,
+            tooltip: 'Search DTC Database',
+          ),
           IconButton(
             icon: _isRefreshing
                 ? const SizedBox(
@@ -73,6 +80,23 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
     );
   }
 
+  void _showSearchSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => _DTCSearchSheet(
+          scrollController: scrollController,
+          database: _dtcDatabase,
+        ),
+      ),
+    );
+  }
+
   Widget _buildDTCList(AsyncValue<List<DTC>> dtcsAsync) {
     return dtcsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -82,7 +106,7 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
           children: [
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Error: $error'),
+            Text('Error: \$error'),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _refresh,
@@ -131,6 +155,8 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
 
   Widget _buildDTCCard(DTC dtc) {
     final categoryColor = _getCategoryColor(dtc.category);
+    final definition = _dtcDatabase.lookup(dtc.code);
+    final severityColor = _getSeverityColor(definition?.severity);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -163,18 +189,40 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      dtc.code,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          dtc.code,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (definition != null) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: severityColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              definition.severity.label,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: severityColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      dtc.category.description,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: categoryColor,
-                      ),
+                      definition?.description ?? dtc.category.description,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -200,48 +248,180 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
     }
   }
 
+  Color _getSeverityColor(DTCSeverity? severity) {
+    switch (severity) {
+      case DTCSeverity.critical:
+        return Colors.red;
+      case DTCSeverity.warning:
+        return Colors.orange;
+      case DTCSeverity.info:
+        return Colors.blue;
+      case DTCSeverity.unknown:
+      case null:
+        return Colors.grey;
+    }
+  }
+
   void _showDTCDetails(DTC dtc) {
+    final definition = _dtcDatabase.lookup(dtc.code);
+
     showModalBottomSheet(
       context: context,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  dtc.code,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.4,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => SingleChildScrollView(
+          controller: scrollController,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
+              ),
+              // Header
+              Row(
+                children: [
+                  Text(
+                    dtc.code,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (definition != null) ...[
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getSeverityColor(definition.severity).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        definition.severity.label,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: _getSeverityColor(definition.severity),
+                        ),
+                      ),
+                    ),
+                  ],
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Description
+              if (definition != null) ...[
+                Text(
+                  definition.description,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Basic info
+              _buildDetailRow('Category', dtc.category.description),
+              _buildDetailRow('Type', _getDTCType(dtc.code)),
+              _buildDetailRow('Raw Value', '0x\${dtc.rawValue.toRadixString(16).toUpperCase()}'),
+
+              if (definition != null) ...[
+                // Cause
+                if (definition.cause != null) ...[
+                  const SizedBox(height: 20),
+                  _buildSectionHeader('Possible Cause'),
+                  const SizedBox(height: 8),
+                  Text(definition.cause!),
+                ],
+
+                // Symptoms
+                if (definition.symptoms != null) ...[
+                  const SizedBox(height: 20),
+                  _buildSectionHeader('Symptoms'),
+                  const SizedBox(height: 8),
+                  Text(definition.symptoms!),
+                ],
+
+                // Fixes
+                if (definition.possibleFixes.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  _buildSectionHeader('Suggested Repairs'),
+                  const SizedBox(height: 8),
+                  ...definition.possibleFixes.map((fix) => _buildBulletPoint(fix)),
+                ],
+              ] else ...[
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.grey[600]),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'No detailed information available for this code in the database.',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-            _buildDetailRow('Category', dtc.category.description),
-            _buildDetailRow('Type', _getDTCType(dtc.code)),
-            _buildDetailRow('Raw Value', '0x${dtc.rawValue.toRadixString(16).toUpperCase()}'),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  // TODO: Implement DTC lookup
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.search),
-                label: const Text('Look Up Code'),
-              ),
-            ),
-          ],
+
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: AppTheme.primaryColor,
+      ),
+    );
+  }
+
+  Widget _buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 6, right: 8),
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[600],
+            ),
+          ),
+          Expanded(child: Text(text)),
+        ],
       ),
     );
   }
@@ -351,7 +531,7 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text('Error: \$e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -359,5 +539,250 @@ class _DTCScreenState extends ConsumerState<DTCScreen> with SingleTickerProvider
     } finally {
       setState(() => _isClearing = false);
     }
+  }
+}
+
+/// Search sheet for browsing DTC database
+class _DTCSearchSheet extends StatefulWidget {
+  final ScrollController scrollController;
+  final DTCDatabase database;
+
+  const _DTCSearchSheet({
+    required this.scrollController,
+    required this.database,
+  });
+
+  @override
+  State<_DTCSearchSheet> createState() => _DTCSearchSheetState();
+}
+
+class _DTCSearchSheetState extends State<_DTCSearchSheet> {
+  final _searchController = TextEditingController();
+  List<DTCDefinition> _results = [];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _search(String query) {
+    if (query.isEmpty) {
+      setState(() => _results = []);
+      return;
+    }
+    setState(() {
+      _results = widget.database.search(query);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Handle bar
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 12),
+          width: 40,
+          height: 4,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        // Title
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Text(
+                'DTC Database Search',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        ),
+        // Search bar
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _searchController,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Search by code or description...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        _search('');
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onChanged: _search,
+          ),
+        ),
+        // Results
+        Expanded(
+          child: _results.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.search, size: 64, color: Colors.grey[300]),
+                      const SizedBox(height: 16),
+                      Text(
+                        _searchController.text.isEmpty
+                            ? 'Enter a code or keyword to search'
+                            : 'No results found',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  controller: widget.scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _results.length,
+                  itemBuilder: (context, index) {
+                    final def = _results[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ListTile(
+                        title: Row(
+                          children: [
+                            Text(
+                              def.code,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: _getSeverityColor(def.severity).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                def.severity.label,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: _getSeverityColor(def.severity),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        subtitle: Text(
+                          def.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Text(
+                          def.category,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        onTap: () => _showDefinitionDetails(def),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  Color _getSeverityColor(DTCSeverity severity) {
+    switch (severity) {
+      case DTCSeverity.critical:
+        return Colors.red;
+      case DTCSeverity.warning:
+        return Colors.orange;
+      case DTCSeverity.info:
+        return Colors.blue;
+      case DTCSeverity.unknown:
+        return Colors.grey;
+    }
+  }
+
+  void _showDefinitionDetails(DTCDefinition def) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Text(def.code),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: _getSeverityColor(def.severity).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                def.severity.label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: _getSeverityColor(def.severity),
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                def.description,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              if (def.cause != null) ...[
+                Text('Cause:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                Text(def.cause!),
+                const SizedBox(height: 12),
+              ],
+              if (def.symptoms != null) ...[
+                Text('Symptoms:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                Text(def.symptoms!),
+                const SizedBox(height: 12),
+              ],
+              if (def.possibleFixes.isNotEmpty) ...[
+                Text('Possible Fixes:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                ...def.possibleFixes.map((fix) => Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('• '),
+                      Expanded(child: Text(fix)),
+                    ],
+                  ),
+                )),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 }
