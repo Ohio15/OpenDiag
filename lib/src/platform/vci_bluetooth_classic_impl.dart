@@ -11,19 +11,44 @@ class VciBluetoothClassicImpl implements VciInterface {
   final BluetoothClassic _bluetooth = BluetoothClassic();
   Device? _connectedDevice;
 
-  final StreamController<List<int>> _responseController = StreamController<List<int>>.broadcast();
-  final StreamController<VciConnectionState> _stateController = StreamController<VciConnectionState>.broadcast();
+  StreamController<List<int>>? _responseController;
+  StreamController<VciConnectionState>? _stateController;
 
   VciConnectionState _state = VciConnectionState.disconnected;
   StreamSubscription<Uint8List>? _inputSubscription;
+  StreamSubscription<int>? _statusSubscription;
   final StringBuffer _responseBuffer = StringBuffer();
   Completer<String>? _responseCompleter;
 
-  @override
-  Stream<List<int>> get responseStream => _responseController.stream;
+  VciBluetoothClassicImpl() {
+    _initControllers();
+  }
+
+  void _initControllers() {
+    _responseController = StreamController<List<int>>.broadcast();
+    _stateController = StreamController<VciConnectionState>.broadcast();
+  }
+
+  void _ensureControllersOpen() {
+    if (_responseController == null || _responseController!.isClosed) {
+      _responseController = StreamController<List<int>>.broadcast();
+    }
+    if (_stateController == null || _stateController!.isClosed) {
+      _stateController = StreamController<VciConnectionState>.broadcast();
+    }
+  }
 
   @override
-  Stream<VciConnectionState> get connectionStateStream => _stateController.stream;
+  Stream<List<int>> get responseStream {
+    _ensureControllersOpen();
+    return _responseController!.stream;
+  }
+
+  @override
+  Stream<VciConnectionState> get connectionStateStream {
+    _ensureControllersOpen();
+    return _stateController!.stream;
+  }
 
   @override
   VciConnectionState get state => _state;
@@ -33,7 +58,10 @@ class VciBluetoothClassicImpl implements VciInterface {
 
   void _updateState(VciConnectionState newState) {
     _state = newState;
-    _stateController.add(newState);
+    _ensureControllersOpen();
+    if (!_stateController!.isClosed) {
+      _stateController!.add(newState);
+    }
   }
 
   @override
@@ -102,10 +130,15 @@ class VciBluetoothClassicImpl implements VciInterface {
       _connectedDevice = device.platformDevice as Device?;
       _connectedDevice ??= Device(name: device.name, address: address);
 
+      // Ensure controllers are open
+      _ensureControllersOpen();
+
       // Listen for incoming data
       _inputSubscription = _bluetooth.onDeviceDataReceived().listen(
         (data) {
-          _responseController.add(data.toList());
+          if (!_responseController!.isClosed) {
+            _responseController!.add(data.toList());
+          }
 
           // Process for command responses
           final chars = String.fromCharCodes(data);
@@ -123,8 +156,11 @@ class VciBluetoothClassicImpl implements VciInterface {
         },
       );
 
+      // Cancel previous status subscription if any
+      await _statusSubscription?.cancel();
+
       // Listen for connection status changes
-      _bluetooth.onDeviceStatusChanged().listen((status) {
+      _statusSubscription = _bluetooth.onDeviceStatusChanged().listen((status) {
         if (status == Device.disconnected) {
           _handleDisconnection();
         }
@@ -179,6 +215,8 @@ class VciBluetoothClassicImpl implements VciInterface {
   void _handleDisconnection() {
     _inputSubscription?.cancel();
     _inputSubscription = null;
+    _statusSubscription?.cancel();
+    _statusSubscription = null;
     _connectedDevice = null;
     _responseCompleter?.completeError(VciException('Connection lost'));
     _responseCompleter = null;
@@ -190,6 +228,8 @@ class VciBluetoothClassicImpl implements VciInterface {
     try {
       _inputSubscription?.cancel();
       _inputSubscription = null;
+      _statusSubscription?.cancel();
+      _statusSubscription = null;
 
       await _bluetooth.disconnect();
 
@@ -299,7 +339,9 @@ class VciBluetoothClassicImpl implements VciInterface {
   @override
   void dispose() {
     disconnect();
-    _responseController.close();
-    _stateController.close();
+    _responseController?.close();
+    _stateController?.close();
+    _responseController = null;
+    _stateController = null;
   }
 }
