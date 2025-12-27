@@ -5,6 +5,7 @@ import 'vci_serial_impl.dart';
 import 'vci_bluetooth_classic_impl.dart';
 import 'vci_network_impl.dart';
 import 'vci_autel_impl.dart';
+import 'vci_simulator.dart';
 
 /// Factory for creating platform-appropriate VCI implementations
 class VciFactory {
@@ -56,9 +57,24 @@ class VciFactory {
     return NetworkVciImpl();
   }
 
+
+  /// Create a Simulator VCI implementation
+  /// For testing without a real OBD-II adapter
+  static VciSimulator createSimulator() {
+    return VciSimulator();
+  }
+
   /// Get all available VCI implementations for the current platform
   static List<VciImplementationInfo> getAvailableImplementations() {
     final implementations = <VciImplementationInfo>[];
+
+    // Simulator is always available for testing
+    implementations.add(VciImplementationInfo(
+      name: 'Simulator',
+      description: 'Virtual OBD-II adapter for testing without hardware',
+      type: VciDeviceType.elm327,
+      create: createSimulator,
+    ));
 
     // Network VCI is available on all platforms
     implementations.add(VciImplementationInfo(

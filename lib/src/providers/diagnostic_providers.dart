@@ -12,6 +12,41 @@ enum ConnectionStatus {
   error,
 }
 
+
+/// Manager for VCI connections that allows runtime switching
+class VciManager {
+  VciInterface? _currentVci;
+  DiagnosticService? _diagnosticService;
+
+  VciInterface? get currentVci => _currentVci;
+  DiagnosticService? get diagnosticService => _diagnosticService;
+  bool get isConnected => _currentVci?.isConnected ?? false;
+
+  /// Set a new VCI implementation (e.g., switch to simulator)
+  Future<void> setVci(VciInterface vci) async {
+    // Disconnect existing
+    if (_currentVci != null && _currentVci!.isConnected) {
+      await _currentVci!.disconnect();
+    }
+
+    _currentVci = vci;
+    _diagnosticService = DiagnosticService(vci);
+  }
+
+  /// Dispose all resources
+  void dispose() {
+    _currentVci?.dispose();
+    _diagnosticService?.dispose();
+  }
+}
+
+/// Global VCI Manager provider
+final vciManagerProvider = Provider<VciManager>((ref) {
+  final manager = VciManager();
+  ref.onDispose(() => manager.dispose());
+  return manager;
+});
+
 // Selected VCI implementation type provider (for Android with multiple options)
 final selectedVciTypeProvider = StateProvider<VciDeviceType?>((ref) => null);
 

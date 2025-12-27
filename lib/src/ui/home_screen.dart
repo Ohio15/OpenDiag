@@ -11,6 +11,7 @@ import 'settings_screen.dart';
 import 'module_list_screen.dart';
 import 'dashboard_screen.dart';
 import 'history_screen.dart';
+import 'simulator_screen.dart';
 import 'theme.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -152,6 +153,13 @@ class HomeScreen extends ConsumerWidget {
         onTap: () => _navigateToHistory(context),
       ),
       _FeatureItem(
+        icon: Icons.developer_mode,
+        title: 'Simulator',
+        subtitle: 'Test without OBD',
+        color: Colors.purple,
+        onTap: () => _navigateToSimulator(context),
+      ),
+      _FeatureItem(
         icon: AppIcons.settings,
         title: 'Settings',
         subtitle: 'App preferences',
@@ -272,6 +280,14 @@ class HomeScreen extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const HistoryScreen()),
+    );
+  }
+
+
+  void _navigateToSimulator(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SimulatorScreen()),
     );
   }
 
