@@ -34,8 +34,9 @@ class DiagnosticService {
       throw DiagnosticException('Not connected to VCI');
     }
 
-    // Initialize ELM327 compatible adapter
+    // Initialize ELM327 compatible adapter (BLE, Bluetooth Classic, and Serial)
     if (_connectedDevice?.type == VciDeviceType.elm327 ||
+        _connectedDevice?.type == VciDeviceType.elm327Bluetooth ||
         _connectedDevice?.type == VciDeviceType.serialPort) {
       await _initializeELM327();
     }

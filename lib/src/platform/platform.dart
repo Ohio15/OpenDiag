@@ -16,4 +16,3 @@ export 'vci_interface.dart';
 export 'vci_factory.dart';
 // Platform-specific implementations are not exported directly
 // Use VciFactory.create() to get the appropriate implementation
-export 'vci_simulator.dart';

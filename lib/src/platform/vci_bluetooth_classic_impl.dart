@@ -11,8 +11,10 @@ class VciBluetoothClassicImpl implements VciInterface {
   final BluetoothClassic _bluetooth = BluetoothClassic();
   Device? _connectedDevice;
 
-  StreamController<List<int>>? _responseController;
-  StreamController<VciConnectionState>? _stateController;
+  // Non-nullable final controllers - same pattern as BLE implementation
+  // These are created once and never recreated, so subscriptions stay valid
+  final _responseController = StreamController<List<int>>.broadcast();
+  final _stateController = StreamController<VciConnectionState>.broadcast();
 
   VciConnectionState _state = VciConnectionState.disconnected;
   StreamSubscription<Uint8List>? _inputSubscription;
@@ -20,35 +22,11 @@ class VciBluetoothClassicImpl implements VciInterface {
   final StringBuffer _responseBuffer = StringBuffer();
   Completer<String>? _responseCompleter;
 
-  VciBluetoothClassicImpl() {
-    _initControllers();
-  }
-
-  void _initControllers() {
-    _responseController = StreamController<List<int>>.broadcast();
-    _stateController = StreamController<VciConnectionState>.broadcast();
-  }
-
-  void _ensureControllersOpen() {
-    if (_responseController == null || _responseController!.isClosed) {
-      _responseController = StreamController<List<int>>.broadcast();
-    }
-    if (_stateController == null || _stateController!.isClosed) {
-      _stateController = StreamController<VciConnectionState>.broadcast();
-    }
-  }
+  @override
+  Stream<List<int>> get responseStream => _responseController.stream;
 
   @override
-  Stream<List<int>> get responseStream {
-    _ensureControllersOpen();
-    return _responseController!.stream;
-  }
-
-  @override
-  Stream<VciConnectionState> get connectionStateStream {
-    _ensureControllersOpen();
-    return _stateController!.stream;
-  }
+  Stream<VciConnectionState> get connectionStateStream => _stateController.stream;
 
   @override
   VciConnectionState get state => _state;
@@ -58,9 +36,8 @@ class VciBluetoothClassicImpl implements VciInterface {
 
   void _updateState(VciConnectionState newState) {
     _state = newState;
-    _ensureControllersOpen();
-    if (!_stateController!.isClosed) {
-      _stateController!.add(newState);
+    if (!_stateController.isClosed) {
+      _stateController.add(newState);
     }
   }
 
@@ -130,14 +107,11 @@ class VciBluetoothClassicImpl implements VciInterface {
       _connectedDevice = device.platformDevice as Device?;
       _connectedDevice ??= Device(name: device.name, address: address);
 
-      // Ensure controllers are open
-      _ensureControllersOpen();
-
       // Listen for incoming data
       _inputSubscription = _bluetooth.onDeviceDataReceived().listen(
         (data) {
-          if (!_responseController!.isClosed) {
-            _responseController!.add(data.toList());
+          if (!_responseController.isClosed) {
+            _responseController.add(data.toList());
           }
 
           // Process for command responses
@@ -339,9 +313,7 @@ class VciBluetoothClassicImpl implements VciInterface {
   @override
   void dispose() {
     disconnect();
-    _responseController?.close();
-    _stateController?.close();
-    _responseController = null;
-    _stateController = null;
+    _responseController.close();
+    _stateController.close();
   }
 }

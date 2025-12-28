@@ -22,7 +22,7 @@ class VciManager {
   DiagnosticService? get diagnosticService => _diagnosticService;
   bool get isConnected => _currentVci?.isConnected ?? false;
 
-  /// Set a new VCI implementation (e.g., switch to simulator)
+  /// Set a new VCI implementation (e.g., switch implementation at runtime)
   Future<void> setVci(VciInterface vci) async {
     // Disconnect existing
     if (_currentVci != null && _currentVci!.isConnected) {
