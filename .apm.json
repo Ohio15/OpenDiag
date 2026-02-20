@@ -1,0 +1,3 @@
+{
+  "description": "Cross-platform vehicle diagnostic application built with Flutter for OBD-II and UDS protocol communication, supporting Bluetooth adapters on Android, iOS, and Windows."
+}
