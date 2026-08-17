@@ -1,45 +1,9 @@
-# Flutter/Dart
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
+__pycache__/
+*.py[cod]
+.pytest_cache/
 build/
-.pub-cache/
-.pub/
-
-# Android
-android/.gradle/
-android/app/debug/
-android/app/profile/
-android/app/release/
-android/local.properties
-android/**/GeneratedPluginRegistrant.java
-*.apk
-*.aab
-
-# iOS
-ios/Pods/
-ios/.symlinks/
-ios/Flutter/Flutter.framework
-ios/Flutter/Flutter.podspec
-ios/Flutter/App.framework
-ios/Flutter/Generated.xcconfig
-ios/Flutter/flutter_export_environment.sh
-ios/Runner.xcworkspace/xcshareddata/
-ios/Runner.xcworkspace/xcuserdata/
-**/DerivedData/
-*.ipa
-
-# Environment
-.env
-.env.local
-
-# IDE
-.vscode/
-.idea/
-*.iml
-*.swp
-
-# OS files
-.DS_Store
-Thumbs.db
+dist/
+*.egg-info/
+.venv/
+venv/
+/smoke_out.cal.json
