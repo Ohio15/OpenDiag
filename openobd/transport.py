@@ -181,6 +181,9 @@ class GtDataSource(DataSource):
         # (non-recording) session can't grow it without limit; ~8k samples
         # is minutes of headroom at the real poll rate.
         self._queue: deque = deque(maxlen=8192)
+        # Serializes serial IO between the poll thread and diagnostics calls
+        # borrowing the link (run_exclusive).
+        self._io_lock = threading.Lock()
         self._thread = None
         self._stop = threading.Event()
         self._t0 = None
@@ -215,10 +218,17 @@ class GtDataSource(DataSource):
         self._thread = threading.Thread(target=self._run, name="gt-poll", daemon=True)
         self._thread.start()
 
+    def run_exclusive(self, fn):
+        """Run fn(gt) with gauge polling held off — lets Diagnostics reuse a
+        live dashboard connection without interleaving serial traffic."""
+        with self._io_lock:
+            return fn(self._gt)
+
     def _run(self):
         while not self._stop.is_set():
             try:
-                vals = self._gt.poll_once()
+                with self._io_lock:
+                    vals = self._gt.poll_once()
                 if vals:
                     s = Sample(t=time.monotonic() - self._t0, values=vals)
                     self._latest = s

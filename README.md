@@ -53,7 +53,32 @@ pyinstaller openobd.spec
 # -> dist/openobd.exe   (single file, windowed, seed bundled)
 ```
 
-## The four tabs
+## The workspaces
+
+Three top-level workspaces separate the workflows. **Dashboard** opens first;
+**Tuning** holds monitoring/scanning/tuning (Editor, Scalars, Log Analysis
+sub-tabs plus the table tree); **Diagnostics** holds troubleshooting, active
+testing, and code clearing:
+
+* **Module Map** — the vehicle network drawn live: PC → OBDX GT → DLC, then
+  the HS-GMLAN (500k) and SW-GMLAN (33.3k) bus rails with every installed
+  module. *Scan Modules* walks the comms pipeline in stages (serial link →
+  interface → DLC battery voltage → HS broadcast → per-module TesterPresent
+  ping) and paints the verdict onto the map, so a failure shows **at the
+  segment where it occurred** — tool link, DLC power, whole-bus, or a single
+  silent module. SW-GMLAN modules are amber "unreachable via this path"
+  (the ELM HS-CAN path can't open the single-wire bus), which is distinct
+  from red "expected but silent". Click any module for its role and address.
+* **Codes & Readiness** — stored / pending / permanent DTCs (modes 03/07/0A)
+  with decoded SAE codes and common-code descriptions, MIL state and count,
+  readiness monitor table, and *Clear Codes* behind a confirmation that
+  spells out the readiness-monitor reset.
+
+Diagnostics shares the dashboard's live GT connection (gauge polling pauses
+around each diagnostic exchange) or opens its own link if nothing is
+connected.
+
+## The tuning tabs
 
 **Editor** — pick a table from the left tree (filter box narrows the 251-table
 list); edit heatmapped cells in place. Changed-vs-stock cells are bold, each

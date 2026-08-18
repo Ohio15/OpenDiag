@@ -43,6 +43,7 @@ import pyqtgraph as pg
 
 from . import editops
 from .calspec import Calibration
+from .diagui import DiagnosticsPage
 from .logbin import (
     Log, Overlay, parse_csv, analyze_log, bin_log_to_table, detect_shift_points,
     CANONICAL, time_axis,
@@ -721,19 +722,32 @@ class MainWindow(QMainWindow):
         self.resize(1180, 760)
         self._build_menu()
 
+        # Top level: Dashboard opens first; Tuning holds the monitor/scan/tune
+        # workflow; Diagnostics holds troubleshooting/active tests/codes.
+        self.dashboard = Dashboard()
+        self.main_tabs = QTabWidget()
+        self.main_tabs.addTab(self.dashboard, "Dashboard")
+
+        tuning = QWidget()
+        tl = QHBoxLayout(tuning); tl.setContentsMargins(0, 0, 0, 0)
         splitter = QSplitter(Qt.Horizontal)
         splitter.addWidget(self._build_tree())
-        self.tabs = QTabWidget()
-        self.tabs.addTab(self._build_editor_tab(), "Editor")
-        self.tabs.addTab(self._build_scalars_tab(), "Scalars")
-        self.tabs.addTab(self._build_log_tab(), "Log Analysis")
-        self.dashboard = Dashboard()
-        self.tabs.addTab(self.dashboard, "Dashboard")
-        splitter.addWidget(self.tabs)
+        self.tune_tabs = QTabWidget()
+        self.tune_tabs.addTab(self._build_editor_tab(), "Editor")
+        self.tune_tabs.addTab(self._build_scalars_tab(), "Scalars")
+        self.tune_tabs.addTab(self._build_log_tab(), "Log Analysis")
+        splitter.addWidget(self.tune_tabs)
         splitter.setStretchFactor(0, 0)
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([300, 880])
-        self.setCentralWidget(splitter)
+        tl.addWidget(splitter)
+        self.main_tabs.addTab(tuning, "Tuning")
+
+        self.diag = DiagnosticsPage(self.dashboard)
+        self.main_tabs.addTab(self.diag, "Diagnostics")
+
+        self.main_tabs.setCurrentIndex(0)
+        self.setCentralWidget(self.main_tabs)
 
         # select first table
         if self.cal.tables:
@@ -861,7 +875,8 @@ class MainWindow(QMainWindow):
         name = item.data(0, Qt.UserRole)
         if name:
             self._select_table(name)
-            self.tabs.setCurrentIndex(0)
+            self.main_tabs.setCurrentIndex(1)   # Tuning workspace
+            self.tune_tabs.setCurrentIndex(0)   # Editor
 
     # -- editor tab -------------------------------------------------------- #
     def _build_editor_tab(self) -> QWidget:
@@ -1483,7 +1498,8 @@ class MainWindow(QMainWindow):
         self._rebuild_plots()
         self._refresh_channel_combos()
         self.dashboard.bind_source(LogReplaySource(self.log, speed=4.0))
-        self.tabs.setCurrentIndex(2)
+        self.main_tabs.setCurrentIndex(1)   # Tuning workspace
+        self.tune_tabs.setCurrentIndex(2)   # Log Analysis
         self.statusBar().showMessage(
             f"Loaded log: {self.log.n_samples} samples, "
             f"{len(self.log.canonical_keys())} mapped channels", 6000)
@@ -1552,7 +1568,7 @@ def main(argv=None):
     win.show()
     if want_gt:
         try:
-            win.tabs.setCurrentWidget(win.dashboard)
+            win.main_tabs.setCurrentIndex(0)   # Dashboard
         except Exception:
             pass
         QTimer.singleShot(300, win.dashboard.connect_gt)

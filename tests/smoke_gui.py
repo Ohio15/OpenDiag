@@ -43,6 +43,41 @@ assert len(win.dashboard.gauges) >= 16, "dashboard gauges missing at startup"
 assert all(g.value is None for g in win.dashboard.gauges.values())
 print("pre-bind dashboard cluster OK:", len(win.dashboard.gauges), "gauges")
 
+# workspace structure: Dashboard opens first; Tuning and Diagnostics follow
+assert win.main_tabs.count() == 3
+assert win.main_tabs.currentIndex() == 0, "Dashboard is not the opening page"
+assert win.main_tabs.tabText(0) == "Dashboard"
+assert win.main_tabs.tabText(1) == "Tuning" and win.tune_tabs.count() == 3
+assert win.main_tabs.tabText(2) == "Diagnostics"
+print("workspace structure OK (Dashboard-first, Tuning, Diagnostics)")
+
+# diagnostics: module map verdict rendering + codes table population using
+# REAL parser output from synthetic ELM strings (no hardware)
+from openobd.vehnet import ScanResult, Status, localize  # noqa: E402
+from openobd.gt import parse_dtc_response, parse_readiness  # noqa: E402
+v = localize(ScanResult(port_open=True, interface_alive=True, dlc_volts=12.5,
+                        hs_responders={"7E8", "7E9"},
+                        pinged={"ebcm": False}))
+win.diag.map_view.set_verdict(v)
+assert v.modules["ecm"] == Status.OK and v.modules["ebcm"] == Status.SILENT
+assert v.failure_point == "module:ebcm"
+win.diag.map_view.grab()  # paints without error
+win.diag._show_module("ebcm")
+assert "EBCM" in win.diag.map_details.toPlainText()
+
+dtcs = {"stored": parse_dtc_response("43 02 03 00 01 71", "03"),
+        "pending": parse_dtc_response("47 01 07 00", "07"),
+        "permanent": []}
+ready = parse_readiness([0x82, 0x07, 0xFF, 0x04])
+win.diag.populate_codes(dtcs, ready)
+assert win.diag.dtc_table.rowCount() == 3
+assert win.diag.dtc_table.item(0, 1).text() == "P0300"
+assert "ON" in win.diag.mil_label.text()
+assert win.diag.ready_table.rowCount() > 0
+print("diagnostics OK: map verdict painted,",
+      win.diag.dtc_table.rowCount(), "DTC rows,",
+      win.diag.ready_table.rowCount(), "monitors")
+
 # select a table that carries stock values (needed by the editor asserts;
 # the historical "WOT Shift Speed — Normal" name no longer exists in the
 # full cal)
@@ -142,7 +177,8 @@ print("scalar edit/dirty OK")
 
 # Wave 1: editor power tools ------------------------------------------------
 from PySide6.QtCore import QItemSelectionModel  # noqa: E402
-win.tabs.setCurrentIndex(0)
+win.main_tabs.setCurrentIndex(1)
+win.tune_tabs.setCurrentIndex(0)
 m = win.current_model
 t = m.table
 orig_00 = t.values[0][0]

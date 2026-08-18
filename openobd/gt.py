@@ -80,6 +80,125 @@ OBDX_VID = 0x0483
 OBDX_PID = 0x5740
 
 
+# --------------------------------------------------------------------------- #
+# DTC / readiness parsing — pure functions, unit-tested without hardware
+# --------------------------------------------------------------------------- #
+def format_dtc(b1: int, b2: int) -> str:
+    """Two DTC bytes -> SAE code string (P0300 style)."""
+    letter = "PCBU"[(b1 >> 6) & 0x3]
+    return f"{letter}{(b1 >> 4) & 0x3}{b1 & 0xF:X}{(b2 >> 4) & 0xF:X}{b2 & 0xF:X}"
+
+
+def _hexonly(s: str) -> str:
+    return "".join(ch for ch in s.upper() if ch in "0123456789ABCDEF")
+
+
+def parse_dtc_response(resp: str, mode: str) -> list[str]:
+    """Parse an ELM response to mode 03/07/0A into DTC strings. Handles CAN
+    framing (count byte after the response mode) and multi-ECU replies by
+    scanning every occurrence of the response-mode marker."""
+    rmode = "%02X" % (int(mode, 16) + 0x40)
+    s = _hexonly(resp)
+    codes: list[str] = []
+    idx = 0
+    while True:
+        i = s.find(rmode, idx)
+        if i < 0:
+            break
+        rest = s[i + 2:]
+        if len(rest) >= 2:
+            n = int(rest[:2], 16)
+            take = rest[2:2 + n * 4] if n <= 8 else ""
+            for j in range(0, len(take) - 3, 4):
+                b1, b2 = int(take[j:j + 2], 16), int(take[j + 2:j + 4], 16)
+                if b1 or b2:
+                    codes.append(format_dtc(b1, b2))
+        idx = i + 2
+    # de-dup preserving order (same code from multiple ECUs)
+    seen: set[str] = set()
+    return [c for c in codes if not (c in seen or seen.add(c))]
+
+
+# Continuous + non-continuous monitors for spark-ignition, OBD-II PID 01.
+_CONT_MONITORS = ["Misfire", "Fuel system", "Components"]
+_SPARK_MONITORS = ["Catalyst", "Heated catalyst", "EVAP system",
+                   "Secondary air", "A/C refrigerant", "O2 sensor",
+                   "O2 heater", "EGR system"]
+
+
+def parse_readiness(data: list[int]) -> dict:
+    """PID 0101 payload (4 bytes) -> MIL, DTC count, monitor table."""
+    if not data or len(data) < 4:
+        return {}
+    a, b, c, d = data[:4]
+    monitors = []
+    for bit, name in enumerate(_CONT_MONITORS):
+        if b & (1 << bit):
+            monitors.append((name, not bool(b & (1 << (bit + 4)))))
+    for bit, name in enumerate(_SPARK_MONITORS):
+        if c & (1 << bit):
+            monitors.append((name, not bool(d & (1 << bit))))
+    return {
+        "mil": bool(a & 0x80),
+        "dtc_count": a & 0x7F,
+        "monitors": monitors,   # (name, complete)
+    }
+
+
+def parse_hs_responders(resp: str) -> set[str]:
+    """Headers-on broadcast reply -> set of responding CAN ids (7E8..7EF)."""
+    return set(re.findall(r"(7E[89A-F])[0-9A-F]{2}4100", _hexonly(resp)))
+
+
+# Common-code descriptions (generic OBD-II; blank when unknown — never guess).
+DTC_DESCRIPTIONS = {
+    "P0011": "Intake camshaft position timing over-advanced",
+    "P0030": "HO2S heater control circuit (bank 1 sensor 1)",
+    "P0053": "HO2S heater resistance (bank 1 sensor 1)",
+    "P0101": "MAF sensor performance",
+    "P0102": "MAF sensor circuit low",
+    "P0106": "MAP sensor performance",
+    "P0113": "IAT sensor circuit high",
+    "P0117": "ECT sensor circuit low",
+    "P0118": "ECT sensor circuit high",
+    "P0121": "TPS performance",
+    "P0128": "Coolant temp below thermostat regulating temperature",
+    "P0131": "HO2S circuit low voltage (bank 1 sensor 1)",
+    "P0135": "HO2S heater performance (bank 1 sensor 1)",
+    "P0171": "Fuel trim system lean (bank 1)",
+    "P0172": "Fuel trim system rich (bank 1)",
+    "P0174": "Fuel trim system lean (bank 2)",
+    "P0175": "Fuel trim system rich (bank 2)",
+    "P0200": "Injector control circuit",
+    "P0300": "Engine misfire detected (random/multiple)",
+    "P0301": "Cylinder 1 misfire detected",
+    "P0302": "Cylinder 2 misfire detected",
+    "P0303": "Cylinder 3 misfire detected",
+    "P0304": "Cylinder 4 misfire detected",
+    "P0305": "Cylinder 5 misfire detected",
+    "P0306": "Cylinder 6 misfire detected",
+    "P0307": "Cylinder 7 misfire detected",
+    "P0308": "Cylinder 8 misfire detected",
+    "P0325": "Knock sensor circuit (bank 1)",
+    "P0332": "Knock sensor circuit low (bank 2)",
+    "P0420": "Catalyst efficiency below threshold (bank 1)",
+    "P0430": "Catalyst efficiency below threshold (bank 2)",
+    "P0442": "EVAP system small leak detected",
+    "P0446": "EVAP vent solenoid performance",
+    "P0455": "EVAP system large leak detected",
+    "P0463": "Fuel level sensor circuit high",
+    "P0521": "Engine oil pressure sensor performance",
+    "P0700": "Transmission control system malfunction (TCM has codes)",
+    "P0711": "Trans fluid temp sensor performance",
+    "P0742": "TCC system stuck on",
+    "P0894": "Transmission component slipping",
+    "U0100": "Lost communication with ECM",
+    "U0101": "Lost communication with TCM",
+    "U0121": "Lost communication with EBCM (ABS)",
+    "U0140": "Lost communication with BCM",
+}
+
+
 class ObdxGt:
     def __init__(self, port: Optional[str] = None, baud: int = 115200,
                  timeout: float = 0.5):
@@ -213,6 +332,57 @@ class ObdxGt:
             except Exception:
                 pass
         return out
+
+    # -- diagnostics -------------------------------------------------------- #
+    def read_dtcs(self) -> dict:
+        """Stored / pending / permanent DTCs (modes 03 / 07 / 0A)."""
+        out = {}
+        for mode, key in (("03", "stored"), ("07", "pending"),
+                          ("0A", "permanent")):
+            resp = self.command(mode, wait=0.15)
+            out[key] = parse_dtc_response(resp, mode)
+        return out
+
+    def clear_dtcs(self) -> bool:
+        """Mode 04 — clears codes AND readiness monitors. Caller confirms."""
+        resp = self.command("04", wait=0.4)
+        return "44" in _hexonly(resp)
+
+    def readiness(self) -> dict:
+        data = self._extract(self.request_raw("0101"), "0101")
+        return parse_readiness(data or [])
+
+    def scan_network(self) -> dict:
+        """One pass over the comms pipeline for the module map:
+        interface -> DLC voltage -> HS broadcast -> per-module physical ping.
+        Returns the raw facts; vehnet.localize() renders the verdict."""
+        facts = {"interface_alive": False, "dlc_volts": None,
+                 "hs_responders": set(), "pinged": {}}
+        if self.command("ATI", wait=0.1):
+            facts["interface_alive"] = True
+        m = re.search(r"([\d.]+)\s*V", self.command("ATRV", wait=0.05))
+        if m:
+            facts["dlc_volts"] = float(m.group(1))
+        # functional broadcast with headers visible
+        self.command("ATH1", wait=0.05)
+        try:
+            resp = self.command("0100", wait=0.5)
+            facts["hs_responders"] = parse_hs_responders(resp)
+        finally:
+            self.command("ATH0", wait=0.05)
+        return facts
+
+    def ping_module(self, req_id: str, resp_id: str) -> bool:
+        """Physically address one module: TesterPresent ($3E, GMLAN single
+        byte), any reply from its response id counts. Header restored after."""
+        self.command("ATH1", wait=0.05)
+        self.command("ATSH" + req_id, wait=0.05)
+        try:
+            resp = self.command("3E", wait=0.25)
+            return resp_id.upper() in _hexonly(resp)
+        finally:
+            self.command("ATSH7E0", wait=0.05)
+            self.command("ATH0", wait=0.05)
 
     # -- GM enhanced (mode 22) --------------------------------------------- #
     def request_did(self, did: str, module: Optional[str] = None) -> Optional[list]:
