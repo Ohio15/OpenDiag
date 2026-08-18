@@ -38,6 +38,11 @@ cal, path = load_default_cal()
 win = MainWindow(cal, path)
 win.show()
 
+# the gauge cluster must exist BEFORE any source is bound (HP Tuners style)
+assert len(win.dashboard.gauges) >= 16, "dashboard gauges missing at startup"
+assert all(g.value is None for g in win.dashboard.gauges.values())
+print("pre-bind dashboard cluster OK:", len(win.dashboard.gauges), "gauges")
+
 # select a table that carries stock values (needed by the editor asserts;
 # the historical "WOT Shift Speed — Normal" name no longer exists in the
 # full cal)

@@ -120,8 +120,19 @@ class Gauge(QWidget):
         self.history: deque = deque(maxlen=120)
         self.min_seen: Optional[float] = None
         self.max_seen: Optional[float] = None
+        self.available = True   # False = bound source doesn't offer this channel
         self.setMinimumSize(190, 90)
         self.setToolTip("Click to reset min/max capture")
+
+    def reset(self):
+        self.value = None
+        self.history.clear()
+        self.min_seen = self.max_seen = None
+        self.update()
+
+    def set_available(self, on: bool):
+        self.available = on
+        self.update()
 
     def set_value(self, v: Optional[float]):
         self.value = v
@@ -148,8 +159,8 @@ class Gauge(QWidget):
         p.setPen(QColor(70, 74, 80))
         p.drawRect(0, 0, w - 1, h - 1)
 
-        # label
-        p.setPen(QColor(150, 200, 255))
+        # label (dimmed when the bound source doesn't offer this channel)
+        p.setPen(QColor(150, 200, 255) if self.available else QColor(95, 105, 118))
         f = QFont(); f.setPointSize(8); p.setFont(f)
         p.drawText(8, 16, self.label)
 
@@ -160,7 +171,7 @@ class Gauge(QWidget):
                        f"▼{self.min_seen:g} ▲{self.max_seen:g}")
 
         # value
-        p.setPen(QColor(240, 240, 240))
+        p.setPen(QColor(240, 240, 240) if self.available else QColor(110, 115, 124))
         fv = QFont(); fv.setPointSize(16); fv.setBold(True); p.setFont(fv)
         txt = "—" if self.value is None else f"{self.value:g}"
         p.drawText(8, 44, txt)
@@ -264,6 +275,17 @@ class Dashboard(QWidget):
         self.grid.setSpacing(6)
         root.addWidget(self.grid_host, 1)
 
+        # The full cluster is visible from the start (HP Tuners style):
+        # every gauge shows "—" until its channel produces data.
+        self._build_gauges()
+
+    def _build_gauges(self):
+        cols = 4
+        for idx, (key, label, unit, lo, hi) in enumerate(GAUGE_SPECS):
+            g = Gauge(key, label, unit, lo, hi)
+            self.gauges[key] = g
+            self.grid.addWidget(g, idx // cols, idx % cols)
+
     def _teardown_source(self):
         """Stop and drop the current source. Always called before a new one is
         bound so a live GT poll thread can't keep running invisibly."""
@@ -283,19 +305,13 @@ class Dashboard(QWidget):
         self._teardown_source()
         self.source = source
         avail = set(source.channels())
-        # (re)build gauges for channels present in the source
-        for i in reversed(range(self.grid.count())):
-            w = self.grid.itemAt(i).widget()
-            if w:
-                w.setParent(None)
-        self.gauges.clear()
-        specs = [s for s in GAUGE_SPECS if s[0] in avail] or GAUGE_SPECS[:6]
-        cols = 4
-        for idx, (key, label, unit, lo, hi) in enumerate(specs):
-            g = Gauge(key, label, unit, lo, hi)
-            self.gauges[key] = g
-            self.grid.addWidget(g, idx // cols, idx % cols)
-        self.status.setText(f"Source bound: {len(self.gauges)} channels ready.")
+        # The cluster is permanent — reset every gauge and dim the ones this
+        # source can't feed instead of rebuilding a filtered grid.
+        for key, g in self.gauges.items():
+            g.reset()
+            g.set_available(key in avail)
+        n = sum(1 for k in self.gauges if k in avail)
+        self.status.setText(f"Source bound: {n} of {len(self.gauges)} gauges live.")
 
         # transport controls only make sense for a seekable replay
         is_replay = hasattr(source, "seek")
