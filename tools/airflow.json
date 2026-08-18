@@ -1,0 +1,16 @@
+[
+ {"x":167,"y":218,"cat":"Engine/Airflow/Manifold Temperature","unit":"F","xunit":"ohm"},
+ {"x":280,"y":195,"cat":"Engine/Airflow/MAP"},
+ {"x":351,"y":195,"cat":"Engine/Airflow/MAP"},
+ {"x":1451,"y":195,"cat":"Engine/Airflow/Cranking VE"},
+ {"x":1521,"y":195,"cat":"Engine/Airflow/Cranking VE"},
+ {"x":1685,"y":195,"cat":"Engine/Airflow/Cylinder Charge Temperature"},
+ {"x":1755,"y":195,"cat":"Engine/Airflow/Cylinder Charge Temperature"},
+ {"x":1232,"y":327,"cat":"Engine/Airflow/Main VE"},
+ {"x":1338,"y":327,"cat":"Engine/Airflow/Main VE"},
+ {"x":1232,"y":353,"cat":"Engine/Airflow/Main VE"},
+ {"x":1338,"y":353,"cat":"Engine/Airflow/Main VE"},
+ {"x":1250,"y":379,"cat":"Engine/Airflow/Main VE"},
+ {"x":1250,"y":405,"cat":"Engine/Airflow/Main VE"},
+ {"x":1356,"y":405,"cat":"Engine/Airflow/Main VE"}
+]
