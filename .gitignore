@@ -8,3 +8,5 @@ dist/
 venv/
 /smoke_out.cal.jsongt_run.log
 _run_gt.bat
+build.log
+_build.bat

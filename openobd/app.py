@@ -59,6 +59,36 @@ GAUGE_SPECS = [
 ]
 
 
+# Column labels for recorded datalogs. Chosen so logbin.map_channel maps them
+# back to the same canonical key when the CSV is reloaded in Log Analysis.
+RECORD_LABELS = {
+    "rpm": "Engine Speed (RPM)",
+    "vss": "Vehicle Speed (mph)",
+    "map": "Manifold Absolute Pressure (kPa)",
+    "maf": "Mass Air Flow (g/s)",
+    "load": "Engine Load (%)",
+    "tps": "Throttle Position (%)",
+    "app": "Accelerator Pedal (%)",
+    "cmd_throttle": "Commanded Throttle (%)",
+    "spark": "Spark Advance (deg)",
+    "ect": "Engine Coolant Temp (F)",
+    "iat": "Intake Air Temp (F)",
+    "stft": "Short Term Fuel Trim (%)",
+    "ltft": "Long Term Fuel Trim (%)",
+    "eq_ratio": "Commanded Equivalence Ratio",
+    "fuel_press": "Fuel Pressure (psi)",
+    "fuel_level": "Fuel Level (%)",
+    "voltage": "Module Voltage (V)",
+    "baro": "Barometric Pressure (kPa)",
+    "ambient": "Ambient Air Temp (F)",
+    "ethanol": "Ethanol (%)",
+}
+RECORD_ORDER = ["rpm", "vss", "map", "maf", "load", "tps", "app",
+                "cmd_throttle", "spark", "ect", "iat", "stft", "ltft",
+                "eq_ratio", "fuel_press", "fuel_level", "voltage", "baro",
+                "ambient", "ethanol"]
+
+
 # --------------------------------------------------------------------------- #
 # A self-contained gauge: label, value, bar, rolling sparkline. No deps.
 # --------------------------------------------------------------------------- #
@@ -140,6 +170,9 @@ class Dashboard(QWidget):
         super().__init__()
         self.source: Optional[DataSource] = None
         self.gauges: dict[str, Gauge] = {}
+        self.recording = False
+        self._rec_rows = []
+        self._rec_keys = []
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._tick)
 
@@ -153,8 +186,11 @@ class Dashboard(QWidget):
         self.btn_stop.setEnabled(False)
         self.btn_connect = QPushButton("🔌 Connect GT Pro")
         self.btn_connect.clicked.connect(self.connect_gt)
+        self.btn_record = QPushButton("⏺ Record")
+        self.btn_record.clicked.connect(self.toggle_record)
         bar.addWidget(self.status, 1)
         bar.addWidget(self.btn_connect)
+        bar.addWidget(self.btn_record)
         bar.addWidget(self.btn_start)
         bar.addWidget(self.btn_stop)
         root.addLayout(bar)
@@ -221,6 +257,55 @@ class Dashboard(QWidget):
         finally:
             self.btn_connect.setEnabled(True)
 
+    def toggle_record(self):
+        if not self.source:
+            self.status.setText("Connect the GT (or load a log) before recording.")
+            return
+        if not self.recording:
+            avail = set(self.source.channels())
+            self._rec_keys = [k for k in RECORD_ORDER if k in avail]
+            self._rec_rows = []
+            self.recording = True
+            self.btn_record.setText("⏺ Recording… (click to save)")
+            self.status.setText("Recording live data…")
+        else:
+            self.recording = False
+            self.btn_record.setText("⏺ Record")
+            self._write_record()
+
+    def _write_record(self):
+        if not self._rec_rows:
+            self.status.setText("Nothing recorded.")
+            return
+        import os as _os, csv as _csv
+        from datetime import datetime as _dt
+        default = _os.path.join(
+            _os.path.expanduser("~"), "Documents",
+            "gt_log_" + _dt.now().strftime("%Y%m%d_%H%M%S") + ".csv")
+        path, _f = QFileDialog.getSaveFileName(self, "Save datalog", default, "CSV (*.csv)")
+        if not path:
+            self.status.setText(f"Recording held ({len(self._rec_rows)} samples) — not saved.")
+            return
+        try:
+            with open(path, "w", newline="", encoding="utf-8") as fh:
+                w = _csv.writer(fh)
+                w.writerow(["Time (s)"] + [RECORD_LABELS[k] for k in self._rec_keys])
+                for t, vals in self._rec_rows:
+                    w.writerow([f"{t:.2f}"] + [
+                        ("" if vals.get(k) is None else f"{vals[k]:g}")
+                        for k in self._rec_keys])
+        except Exception as e:
+            self.status.setText(f"Save failed: {e}")
+            return
+        n = len(self._rec_rows)
+        self.status.setText(f"Saved {n} samples → {path}")
+        win = self.window()
+        if hasattr(win, "load_log_path") and QMessageBox.question(
+                self, "Datalog saved",
+                f"Saved {n} samples to:\n{path}\n\nLoad it into Log Analysis now?"
+                ) == QMessageBox.Yes:
+            win.load_log_path(path)
+
     def _tick(self):
         if not self.source:
             return
@@ -229,6 +314,8 @@ class Dashboard(QWidget):
             return
         for key, g in self.gauges.items():
             g.set_value(s.values.get(key))
+        if self.recording:
+            self._rec_rows.append((s.t, dict(s.values)))
 
 
 # --------------------------------------------------------------------------- #
@@ -630,8 +717,10 @@ class MainWindow(QMainWindow):
     def load_log(self):
         p, _ = QFileDialog.getOpenFileName(
             self, "Load log", "", "Logs (*.csv);;All files (*)")
-        if not p:
-            return
+        if p:
+            self.load_log_path(p)
+
+    def load_log_path(self, p):
         try:
             with open(p, "r", encoding="utf-8", errors="replace") as fh:
                 text = fh.read()
@@ -651,11 +740,11 @@ def load_default_cal() -> tuple[Calibration, Optional[str]]:
     # Candidate locations: dev tree, and PyInstaller's bundled data dir.
     candidates = []
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    candidates.append(os.path.join(here, "data", "2010_silverado_24.cal.json"))
+    candidates.append(os.path.join(here, "data", "2010_silverado_full.cal.json"))
     meipass = getattr(sys, "_MEIPASS", None)
     if meipass:
         candidates.append(os.path.join(meipass, "data",
-                                       "2010_silverado_24.cal.json"))
+                                       "2010_silverado_full.cal.json"))
     for seed_path in candidates:
         if os.path.exists(seed_path):
             # A frozen bundle's seed is read-only; return no path so Save prompts

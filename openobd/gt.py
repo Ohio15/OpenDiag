@@ -59,6 +59,17 @@ PID_TABLE = {
 # canonical keys this transport can ever surface (for gauge pre-build)
 CANONICAL_KEYS = sorted({v[0] for v in PID_TABLE.values()})
 
+# ---- GM enhanced parameters (mode 22 ReadDataByIdentifier) ----------------- #
+# Confirmed on this truck: the E38 ECM answers mode 22 (22 1940 -> 62 1940 28).
+# The T43 TCM did NOT answer 11-bit physical addressing (7E1) in testing, so
+# trans temp / gear likely need a different bus/address or the GM DID map.
+# Populate DID_TABLE once the GM DID -> parameter + scaling is known; entries
+# are polled and merged into the sample exactly like PIDs. Left EMPTY on purpose
+# so no unverified/guessed values ever reach the gauges.
+#   key format:  (module_header_or_None, did_hex) : (canonical_key, decode(list[int]))
+#   example:     (None, "1940"): ("some_engine_param", lambda b: b[0])
+DID_TABLE = {}
+
 OBDX_VID = 0x0483
 OBDX_PID = 0x5740
 
@@ -186,4 +197,36 @@ class ObdxGt:
             m = re.search(r"([\d.]+)\s*V", self.command("ATRV", wait=0.05))
             if m:
                 out["voltage"] = float(m.group(1))
+        for (module, did), (key, fn) in DID_TABLE.items():
+            data = self.request_did(did, module=module)
+            if not data:
+                continue
+            try:
+                out[key] = float(fn(data))
+            except Exception:
+                pass
         return out
+
+    # -- GM enhanced (mode 22) --------------------------------------------- #
+    def request_did(self, did: str, module: Optional[str] = None) -> Optional[list]:
+        """Mode 22 ReadDataByIdentifier. module = 11-bit tx header (e.g. '7E1')
+        to physically address a non-default module; restored to ECM after."""
+        if module:
+            self.command("ATSH" + module, wait=0.05)
+        try:
+            data = self._extract_did(self.command("22" + did, wait=0.0), did)
+        finally:
+            if module:
+                self.command("ATSH7E0", wait=0.05)
+        return data
+
+    @staticmethod
+    def _extract_did(resp: str, did: str) -> Optional[list]:
+        s2 = "".join(ch for ch in resp.upper() if ch in "0123456789ABCDEF")
+        header = "62" + did.upper()
+        idx = s2.find(header)
+        if idx < 0:
+            return None
+        rest = s2[idx + len(header):]
+        rest = rest[:len(rest) - (len(rest) % 2)]
+        return [int(rest[i:i + 2], 16) for i in range(0, len(rest), 2)]

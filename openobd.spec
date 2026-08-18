@@ -2,7 +2,7 @@
 # Build:  pyinstaller openobd.spec   (run from the repo root on Windows)
 # Output: dist/openobd.exe
 #
-# Bundles the seed calibration (data/2010_silverado_24.cal.json) so the exe
+# Bundles the seed calibration (data/2010_silverado_full.cal.json) so the exe
 # opens on the 2010 Silverado #24 calibration with no external files.
 
 block_cipher = None
@@ -11,8 +11,8 @@ a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
-    datas=[('data/2010_silverado_24.cal.json', 'data')],
-    hiddenimports=[],
+    datas=[('data/2010_silverado_full.cal.json', 'data')],
+    hiddenimports=['serial', 'serial.tools', 'serial.tools.list_ports', 'openobd.gt'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
