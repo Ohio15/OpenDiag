@@ -36,7 +36,7 @@ from .logbin import (
     CANONICAL,
 )
 from .model import CalTableModel, HeatmapDelegate
-from .transport import DataSource, LogReplaySource, Sample
+from .transport import DataSource, LogReplaySource, GtDataSource, Sample
 
 # Friendly gauge specs: canonical key -> (label, unit, min, max)
 GAUGE_SPECS = [
@@ -151,7 +151,10 @@ class Dashboard(QWidget):
         self.btn_start.clicked.connect(self.start)
         self.btn_stop.clicked.connect(self.stop)
         self.btn_stop.setEnabled(False)
+        self.btn_connect = QPushButton("🔌 Connect GT Pro")
+        self.btn_connect.clicked.connect(self.connect_gt)
         bar.addWidget(self.status, 1)
+        bar.addWidget(self.btn_connect)
         bar.addWidget(self.btn_start)
         bar.addWidget(self.btn_stop)
         root.addLayout(bar)
@@ -190,9 +193,33 @@ class Dashboard(QWidget):
 
     def stop(self):
         self.timer.stop()
+        if self.source:
+            try:
+                self.source.stop()
+            except Exception:
+                pass
         self.btn_start.setEnabled(True)
         self.btn_stop.setEnabled(False)
         self.status.setText("Stopped.")
+
+    def connect_gt(self):
+        """Connect the OBDX Pro GT and stream live gauges."""
+        self.stop()
+        self.status.setText("Connecting to OBDX Pro GT…")
+        self.btn_connect.setEnabled(False)
+        try:
+            src = GtDataSource()
+            self.bind_source(src)
+            src.start()
+            self.timer.start(100)
+            self.btn_start.setEnabled(False)
+            self.btn_stop.setEnabled(True)
+            dev = getattr(src, "device", "OBDX Pro GT")
+            self.status.setText(f"{dev} live — {len(self.gauges)} gauges @ {getattr(src,'port_name','')}")
+        except Exception as e:
+            self.status.setText(f"GT connect failed: {e}")
+        finally:
+            self.btn_connect.setEnabled(True)
 
     def _tick(self):
         if not self.source:
@@ -644,12 +671,21 @@ def main(argv=None):
     argv = argv if argv is not None else sys.argv
     app = QApplication(argv)
     app.setStyle("Fusion")
-    if len(argv) > 1 and os.path.exists(argv[1]):
-        cal, path = Calibration.load(argv[1]), argv[1]
+    args = argv[1:]
+    want_gt = "--gt" in args
+    paths = [a for a in args if not a.startswith("-") and os.path.exists(a)]
+    if paths:
+        cal, path = Calibration.load(paths[0]), paths[0]
     else:
         cal, path = load_default_cal()
     win = MainWindow(cal, path)
     win.show()
+    if want_gt:
+        try:
+            win.tabs.setCurrentWidget(win.dashboard)
+        except Exception:
+            pass
+        QTimer.singleShot(300, win.dashboard.connect_gt)
     return app.exec()
 
 

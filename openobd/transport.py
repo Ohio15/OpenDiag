@@ -11,6 +11,7 @@ with zero dashboard changes — the same seam `gt.py` implements for the CLI
 from __future__ import annotations
 
 import time
+import threading
 from dataclasses import dataclass
 from typing import Optional
 
@@ -104,16 +105,58 @@ class LogReplaySource(DataSource):
 
 class GtDataSource(DataSource):
     """
-    Placeholder for the OBDX Pro GT live source. When gt.py exists, this wraps
-    it: start() opens the transport and kicks a polling thread that fills a
-    latest-sample slot; channels() reflects the DID/PID set being polled.
-
-    Left intentionally unimplemented so the import graph is ready but no
-    half-built hardware path ships. Raises a clear message if instantiated.
+    Live source backed by the OBDX Pro GT (openobd.gt.ObdxGt), an ELM327 v2.1
+    interface over USB serial. start() opens the transport and spawns a daemon
+    polling thread that fills a latest-sample slot; latest() is non-blocking so
+    the dashboard's 100ms timer never stalls on serial IO. channels() reflects
+    the canonical keys the PID table can surface (gauges pre-build), and after
+    the first poll narrows to what the ECU actually answered.
     """
 
-    def __init__(self, *_, **__):
-        raise NotImplementedError(
-            "GtDataSource is a stub until gt.py (Phase 1) is built. "
-            "Use LogReplaySource with a captured log for now."
-        )
+    def __init__(self, port=None, poll_interval=0.05):
+        from . import gt as _gt  # local import: pyserial only needed on this path
+        self._gt = _gt.ObdxGt(port=port)
+        self._keys = list(_gt.CANONICAL_KEYS)
+        self._interval = poll_interval
+        self._latest = None
+        self._thread = None
+        self._stop = threading.Event()
+        self._t0 = None
+        self.device = "OBDX Pro GT"
+        self.port_name = port
+
+    def channels(self):
+        return list(self._keys)
+
+    def latest(self):
+        return self._latest
+
+    def start(self):
+        self._gt.open()
+        self.device = getattr(self._gt, "device", "OBDX Pro GT")
+        self.port_name = getattr(self._gt, "port_name", None)
+        self._t0 = time.monotonic()
+        vals = self._gt.poll_once()
+        if vals:
+            self._keys = sorted(vals.keys())
+            self._latest = Sample(t=0.0, values=vals)
+        self._stop.clear()
+        self._thread = threading.Thread(target=self._run, name="gt-poll", daemon=True)
+        self._thread.start()
+
+    def _run(self):
+        while not self._stop.is_set():
+            try:
+                vals = self._gt.poll_once()
+                if vals:
+                    self._latest = Sample(t=time.monotonic() - self._t0, values=vals)
+            except Exception:
+                pass
+            self._stop.wait(self._interval)
+
+    def stop(self):
+        self._stop.set()
+        if self._thread:
+            self._thread.join(timeout=1.5)
+            self._thread = None
+        self._gt.close()
