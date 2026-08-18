@@ -68,7 +68,12 @@ CANONICAL_KEYS = sorted({v[0] for v in PID_TABLE.values()})
 # so no unverified/guessed values ever reach the gauges.
 #   key format:  (module_header_or_None, did_hex) : (canonical_key, decode(list[int]))
 #   example:     (None, "1940"): ("some_engine_param", lambda b: b[0])
-DID_TABLE = {}
+DID_TABLE = {
+    # Trans fluid temp: correlated live to the DIC (194 F) on this truck.
+    # ECM DID 1644, byte1, GM standard (byte-40) C -> F. Stable across
+    # engine on/off and distinct from coolant; verify tracking on a drive.
+    (None, "1644"): ("tft", lambda b: (b[1] - 40) * 9 / 5 + 32),
+}
 
 OBDX_VID = 0x0483
 OBDX_PID = 0x5740
@@ -115,6 +120,7 @@ class ObdxGt:
         except Exception:
             self.device = "OBDX Pro GT"
         self._probe_supported()
+        self.command("ATSH7E0", wait=0.1)  # physical ECM addr for mode-22 DIDs
 
     def close(self) -> None:
         if self.ser:
