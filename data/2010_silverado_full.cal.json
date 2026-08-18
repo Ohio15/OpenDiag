@@ -10,7 +10,3320 @@
     "base_tune": "#24 - Claudes Edit 8.7.26",
     "source": "VCM Editor Copy-with-Axis full sweep"
   },
-  "scalars": [],
+  "scalars": [
+    {
+      "name": "Supercharger Boost Reduce IAT",
+      "value": 284.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2936,
+      "category": "Engine",
+      "note": "If IAT is above this value then IAT Max Boost is used."
+    },
+    {
+      "name": "Supercharger Full Boost Enable IAT",
+      "value": 284.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2937,
+      "category": "Engine",
+      "note": "If active, IAT must fall below this value to disable the IAT Max Boost limit."
+    },
+    {
+      "name": "Supercharger IAT Max Boost %",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2938,
+      "category": "Engine",
+      "note": "Maximum Boost % when IAT thresholds are exceeded."
+    },
+    {
+      "name": "Supercharger Boost Reduce ECT",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2973,
+      "category": "Engine",
+      "note": "If ECT is below this value then ECT Max Boost is used."
+    },
+    {
+      "name": "Supercharger Full Boost Enable ECT",
+      "value": 68.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2974,
+      "category": "Engine",
+      "note": "If active, ECT must move above this value to disable the ECT Max Boost limit."
+    },
+    {
+      "name": "Supercharger ECT Max Boost %",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2975,
+      "category": "Engine",
+      "note": "Maximum Boost % when ECT thresholds are met."
+    },
+    {
+      "name": "Supercharger Cam Min Angle",
+      "value": 3.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2971,
+      "category": "Engine",
+      "note": "Minimum camshaft angle for Cam Phaser boost limit."
+    },
+    {
+      "name": "Supercharger Cam Min TPS",
+      "value": 50.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2972,
+      "category": "Engine",
+      "note": "Minimum throttle for Cam Phaser boost limit."
+    },
+    {
+      "name": "Supercharger Cam Max Boost %",
+      "value": 25.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2970,
+      "category": "Engine",
+      "note": "Maximum Boost % for Cam Phaser boost limit."
+    },
+    {
+      "name": "Supercharger COT Max Boost %",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2940,
+      "category": "Engine",
+      "note": "Maximum Boost % when COT EQ threshold is exceeded."
+    },
+    {
+      "name": "Supercharger MAP Disable",
+      "value": 180.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2980,
+      "category": "Engine",
+      "note": "Above this MAP boost control will be disbaled."
+    },
+    {
+      "name": "Supercharger MAP Enable",
+      "value": 140.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2981,
+      "category": "Engine",
+      "note": "MAP must be below this to enable boost control."
+    },
+    {
+      "name": "Supercharger Boost Disable VSS Min",
+      "value": 318.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2941,
+      "category": "Engine",
+      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled."
+    },
+    {
+      "name": "Supercharger Boost Disable TPS Max",
+      "value": 1.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2942,
+      "category": "Engine",
+      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled."
+    },
+    {
+      "name": "Supercharger Boost Ramp",
+      "value": 0.5,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2943,
+      "category": "Engine",
+      "note": "Boost will ramp in at this rate when re-enabled, lower numbers mean slower ramp in."
+    },
+    {
+      "name": "Supercharger Boost Int Gain",
+      "value": 0.125,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2945,
+      "category": "Engine",
+      "note": "Integral gain for boost control."
+    },
+    {
+      "name": "Supercharger Max Torque Gear VSS",
+      "value": 318.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2978,
+      "category": "Engine",
+      "note": "Minimum vehicle speed to enable Supercharger Max Torque Gear table."
+    },
+    {
+      "name": "Supercharger Max Torque Gear Delay",
+      "value": 20.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2979,
+      "category": "Engine",
+      "note": "Time that Gear and VSS limits must be met to enbale Supercharger Gear Torque Mult table."
+    },
+    {
+      "name": "Number Of Cylinders",
+      "value": 8.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2000,
+      "category": "Engine",
+      "note": "Number of cylinders in the engine."
+    },
+    {
+      "name": "Cylinder Volume",
+      "value": 0.66592,
+      "unit": "L",
+      "stock_value": null,
+      "param_id": 2001,
+      "category": "Engine",
+      "note": "The volume (displacement) of one cylinder."
+    },
+    {
+      "name": "Tach Output Resolutions - High",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2040,
+      "category": "Engine",
+      "note": "Number of periods the tach output remains high."
+    },
+    {
+      "name": "Tach Output Resolutions - Low",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2041,
+      "category": "Engine",
+      "note": "Number of periods the tach output remains low."
+    },
+    {
+      "name": "Idle Underspeed Throttle Closed Delay",
+      "value": 0.2,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2199,
+      "category": "Engine",
+      "note": "Adaptive idle may enable after throttle is closed for this amount of time during idle underspeed."
+    },
+    {
+      "name": "Min RPM Reference",
+      "value": 525.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 13540,
+      "category": "Engine",
+      "note": "Minimum allowed current RPM reference in idle mode."
+    },
+    {
+      "name": "Idle Adaptive Max VSS",
+      "value": 1.2,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2196,
+      "category": "Engine",
+      "note": "Vehicle speed must be below this to enable adaptive idle."
+    },
+    {
+      "name": "Idle Adaptive Max VSS - Hyst",
+      "value": 1.2,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2197,
+      "category": "Engine",
+      "note": "Hysteresis value for Idle Adaptive Max VSS."
+    },
+    {
+      "name": "Idle Proportional Enable RPM Delta",
+      "value": 50.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2189,
+      "category": "Engine",
+      "note": "Proportional Idle correction will be calculated and updated if RPM Error is higher than this (positive or negative)."
+    },
+    {
+      "name": "Idle Integral Enable RPM Delta",
+      "value": 15.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2184,
+      "category": "Engine",
+      "note": "Integral Idle correction will be calculated and updated if RPM Error is higher than this (positive or negative)."
+    },
+    {
+      "name": "Idle Effective Area Max",
+      "value": 8191.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2173,
+      "category": "Engine",
+      "note": "Maximum desired effective area in square millimeters."
+    },
+    {
+      "name": "Idle Effective Area Min",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2174,
+      "category": "Engine",
+      "note": "Minimum desired effective area in square millimeters."
+    },
+    {
+      "name": "Idle Effective Area Max - Fail",
+      "value": 60.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2175,
+      "category": "Engine",
+      "note": "Maximum desired effective area in square millimeters when MAP, TPS or MAF fault is indicated."
+    },
+    {
+      "name": "Idle Effective Area Min - Fail",
+      "value": 5.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2176,
+      "category": "Engine",
+      "note": "Minimum desired effective area in square millimeters when MAP, TPS or MAF fault is indicated."
+    },
+    {
+      "name": "Idle Percent Area Max",
+      "value": 2.56,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2177,
+      "category": "Engine",
+      "note": "Maximum percent throttle area from idle."
+    },
+    {
+      "name": "Idle Percent Area Max - Brake",
+      "value": 2.65,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2178,
+      "category": "Engine",
+      "note": "Maximum percent throttle area from idle when brake is applied."
+    },
+    {
+      "name": "Fan Med On Airflow",
+      "value": 2.4,
+      "unit": "lb/h",
+      "stock_value": null,
+      "param_id": 2145,
+      "category": "Engine",
+      "note": "Airflow adder for when medium speed fan transitions to active."
+    },
+    {
+      "name": "Fan Hi On Airflow",
+      "value": 4.8,
+      "unit": "lb/h",
+      "stock_value": null,
+      "param_id": 2146,
+      "category": "Engine",
+      "note": "Airflow adder for when high speed fan transitions to active."
+    },
+    {
+      "name": "Fan Low Off Airflow",
+      "value": 0.0,
+      "unit": "lb/h",
+      "stock_value": null,
+      "param_id": 2147,
+      "category": "Engine",
+      "note": "Airflow subtractor for when low speed fan transitions to off."
+    },
+    {
+      "name": "Fan Med Off Airflow",
+      "value": 0.0,
+      "unit": "lb/h",
+      "stock_value": null,
+      "param_id": 2148,
+      "category": "Engine",
+      "note": "Airflow subtractor for when medium speed fan transitions to off."
+    },
+    {
+      "name": "Fan Hi Off Airflow",
+      "value": 2.0,
+      "unit": "lb/h",
+      "stock_value": null,
+      "param_id": 2149,
+      "category": "Engine",
+      "note": "Airflow subtractor for when high speed fan transitions to off."
+    },
+    {
+      "name": "MAF Steady State Stepdown",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 22210,
+      "category": "Engine",
+      "note": "Value to step down from minimum startup steady state to minimum steady state."
+    },
+    {
+      "name": "MAF S/S Stepdown Delay",
+      "value": 0.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 22211,
+      "category": "Engine",
+      "note": "Time to stay in minimum startup steady state before stepping down to the minimum steady state value."
+    },
+    {
+      "name": "MAP Estimated Max",
+      "value": 105.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 34971,
+      "category": "Engine",
+      "note": "Estimated maximum MAP value."
+    },
+    {
+      "name": "MAP Estimated Min",
+      "value": 10.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 34972,
+      "category": "Engine",
+      "note": "Estimated minimum MAP value."
+    },
+    {
+      "name": "MAP Sensor Linear",
+      "value": 128.2,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4010,
+      "category": "Engine",
+      "note": "The linear calibration of the MAP sensor (slope) in pressure per 5 volts."
+    },
+    {
+      "name": "MAP Sensor Offset",
+      "value": -0.3,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4011,
+      "category": "Engine",
+      "note": "The offset calibration of the MAP sensor. ie. MAP pressure at 0 volts."
+    },
+    {
+      "name": "Barometric Pressure Sensor Slope",
+      "value": 94.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4112,
+      "category": "Engine",
+      "note": "The barometric pressure sensor slope. Typically pressure per volt."
+    },
+    {
+      "name": "Barometric Pressure Sensor Offset",
+      "value": 5.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4113,
+      "category": "Engine",
+      "note": "The barometric pressure sensor offset."
+    },
+    {
+      "name": "Reversion VE Baro High",
+      "value": 98.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 3160,
+      "category": "Engine",
+      "note": "The Baro threshold for the Reversion VE High Altitude table."
+    },
+    {
+      "name": "Reversion VE Baro Low",
+      "value": 84.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 3161,
+      "category": "Engine",
+      "note": "The Baro threshold for the Reversion VE Low Altitude table."
+    },
+    {
+      "name": "Dynamic Airflow High RPM Re-Enable",
+      "value": 3900.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 3033,
+      "category": "Engine",
+      "note": "If enabled, RPM must drop below this to re-enable airmass prediction calculations."
+    },
+    {
+      "name": "RPM Zone Change",
+      "value": 50.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 3066,
+      "category": "Engine",
+      "note": "Zone change will occur when the RPM value is set to be above or below the zone change thresholds."
+    },
+    {
+      "name": "RPM Zone Change with AFM",
+      "value": 50.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 3067,
+      "category": "Engine",
+      "note": "Zone change will occur when the RPM value is set to be above or below the zone change thresholds during AFM mode."
+    },
+    {
+      "name": "MAP Zone Change",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 3079,
+      "category": "Engine",
+      "note": "Zone change will occur when the MAP value is set to be above or below the zone change thresholds."
+    },
+    {
+      "name": "MAP Zone Change with AFM",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 3080,
+      "category": "Engine",
+      "note": "Zone change will occur when the MAP value is set to be above or below the zone change thresholds during AFM mode."
+    },
+    {
+      "name": "Dynamic Airflow Prediction Scaler 1",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 10985,
+      "category": "Engine",
+      "note": "Scales between the current and the 1st upcoming event that is predicted via air per cylinder."
+    },
+    {
+      "name": "Dynamic Airflow Prediction Scaler 2",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 10986,
+      "category": "Engine",
+      "note": "Scales between the 1st and the second upcoming event that is predicted via air per cylinder."
+    },
+    {
+      "name": "MAP Filter Coefficient 1",
+      "value": 0.003799,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 11009,
+      "category": "Engine",
+      "note": "Coefficient filter for MAP 1."
+    },
+    {
+      "name": "MAP Filter Coefficient 2",
+      "value": 0.003799,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 11010,
+      "category": "Engine",
+      "note": "Coefficient filter for MAP 2."
+    },
+    {
+      "name": "Low Baro Threshold",
+      "value": 75.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 3250,
+      "category": "Engine",
+      "note": "Variable camshaft Low Barometric pressure threshold."
+    },
+    {
+      "name": "Med Baro Threshold",
+      "value": 84.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 3251,
+      "category": "Engine",
+      "note": "Variable camshaft Medium Barometric pressure threshold."
+    },
+    {
+      "name": "High Baro Threshold",
+      "value": 94.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 3252,
+      "category": "Engine",
+      "note": "Variable camshaft High Barometric pressure threshold."
+    },
+    {
+      "name": "Cold Start Enable Delay",
+      "value": 4.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 3274,
+      "category": "Engine",
+      "note": "Engine must be running longer than this time to enable variable camshaft during cold start."
+    },
+    {
+      "name": "Cold Start Enable RPM",
+      "value": 8000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 3272,
+      "category": "Engine",
+      "note": "Above this RPM variable camshaft will enable during cold start."
+    },
+    {
+      "name": "Cold Start Disable RPM",
+      "value": 7000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 3273,
+      "category": "Engine",
+      "note": "Below this RPM variable camshaft will disable during cold start."
+    },
+    {
+      "name": "Intake Cam Position Idle",
+      "value": 0.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 3260,
+      "category": "Engine",
+      "note": "Intake cam position when at idle and use idle enabled."
+    },
+    {
+      "name": "Intake Cam Low Oil Temp Enable",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3264,
+      "category": "Engine",
+      "note": "Above this oil temperature variable camshaft will enable."
+    },
+    {
+      "name": "Intake Cam Low Oil Temp Disable",
+      "value": 28.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3265,
+      "category": "Engine",
+      "note": "Below this oil temperature variable camshaft will disable."
+    },
+    {
+      "name": "Intake Cam High Oil Temp Enable",
+      "value": 320.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3267,
+      "category": "Engine",
+      "note": "Below this oil temperature variable camshaft will enable."
+    },
+    {
+      "name": "Intake Cam High Oil Temp Disable",
+      "value": 338.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3266,
+      "category": "Engine",
+      "note": "Above this oil temperature variable camshaft will disable."
+    },
+    {
+      "name": "Exhaust Cam Position Min",
+      "value": 2.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 3263,
+      "category": "Engine",
+      "note": "Exhaust cam position minimum."
+    },
+    {
+      "name": "Exhaust Cam Position Idle",
+      "value": 0.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 3261,
+      "category": "Engine",
+      "note": "Exhaust cam position when at idle and use idle enabled."
+    },
+    {
+      "name": "Exhaust Cam Low Oil Temp Enable",
+      "value": 14.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3268,
+      "category": "Engine",
+      "note": "Above this oil temperature variable camshaft will enable."
+    },
+    {
+      "name": "Exhaust Cam Low Oil Temp Disable",
+      "value": 10.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3269,
+      "category": "Engine",
+      "note": "Below this oil temperature variable camshaft will disable."
+    },
+    {
+      "name": "Exhaust Cam High Oil Temp Enable",
+      "value": 275.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3271,
+      "category": "Engine",
+      "note": "Below this oil temperature variable camshaft will enable."
+    },
+    {
+      "name": "Exhaust Cam High Oil Temp Disable",
+      "value": 284.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 3270,
+      "category": "Engine",
+      "note": "Above this oil temperature variable camshaft will disable."
+    },
+    {
+      "name": "Supercharger Inlet Air Pressure Sensor Offset",
+      "value": 10.34,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4014,
+      "category": "Engine",
+      "note": "The offset calibration of the Supercharger Inlet Pressure sensor. ie. MAP (kPa) at 0V."
+    },
+    {
+      "name": "Flood Clear Enable TPS",
+      "value": 85.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2330,
+      "category": "Engine",
+      "note": "If throttle position is greater than this value then fuel is cut during cranking."
+    },
+    {
+      "name": "Flood Clear Disable TPS",
+      "value": 80.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2331,
+      "category": "Engine",
+      "note": "Fuel is resumed when throttle position is below this value during cranking."
+    },
+    {
+      "name": "Octane Scalar Delta",
+      "value": 1.003,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 8109,
+      "category": "Engine",
+      "note": "The difference between the cylinders will not be allowed to be higher than the set value."
+    },
+    {
+      "name": "Minimum Rail Pressure",
+      "value": 275.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 13541,
+      "category": "Engine",
+      "note": "Minimum expected fuel rail pressure used in injector control calculations."
+    },
+    {
+      "name": "Maximum Rail Pressure",
+      "value": 640.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 13542,
+      "category": "Engine",
+      "note": "Maximum expected fuel rail pressure used in injector control calculations."
+    },
+    {
+      "name": "Short Pulse Limit",
+      "value": 4.0,
+      "unit": "ms",
+      "stock_value": null,
+      "param_id": 3055,
+      "category": "Engine",
+      "note": "Injector Pulses shorter than this will be increased by the amount specified in Short Pulse Adder."
+    },
+    {
+      "name": "Short Pulse Cranking",
+      "value": 4.0,
+      "unit": "ms",
+      "stock_value": null,
+      "param_id": 7977,
+      "category": "Engine",
+      "note": "ECM assumes the engine cranking to be a small pulse if the injector time is lower than the set value."
+    },
+    {
+      "name": "Injector Off-Time",
+      "value": 0.3516,
+      "unit": "ms",
+      "stock_value": null,
+      "param_id": 45524,
+      "category": "Engine",
+      "note": "Duration when injectors are turned off before another injection occurs."
+    },
+    {
+      "name": "O2 Sensor Upper Limit",
+      "value": 550.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 45011,
+      "category": "Engine",
+      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is below the provided voltage level."
+    },
+    {
+      "name": "O2 Sensor Lower Limit",
+      "value": 350.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 45013,
+      "category": "Engine",
+      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is above the provided voltage level."
+    },
+    {
+      "name": "Closed Loop Temperature Threshold",
+      "value": 36.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 28940,
+      "category": "Engine",
+      "note": "Prevents ECM from switching rapidly between temperatures thresholds from Open Loop to Closed Loop"
+    },
+    {
+      "name": "Minimum Coolant Temp Allowed for Purge",
+      "value": 70.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 12009,
+      "category": "Engine",
+      "note": "The minimum coolant temperature that is allowed during the closed loop purge."
+    },
+    {
+      "name": "Enhanced RPM In Closed Loop",
+      "value": 3000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 44003,
+      "category": "Engine",
+      "note": "If RPM is below set value, ECM will enable enhanced closed loop algorithms."
+    },
+    {
+      "name": "Simplified RPM in Closed Loop",
+      "value": 3100.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 44004,
+      "category": "Engine",
+      "note": "Above this engine RPM the ECM will use the simplified closed loop algorithms by using O2 Sensor Rich / Lean Threshold, Bank 1 and Bank 2"
+    },
+    {
+      "name": "LTFT Min ECT",
+      "value": 102.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2502,
+      "category": "Engine",
+      "note": "LTFT learn is disabled below this engine coolant temperature."
+    },
+    {
+      "name": "LTFT Max ECT",
+      "value": 284.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2503,
+      "category": "Engine",
+      "note": "LTFT learn is disabled above this engine coolant temperature."
+    },
+    {
+      "name": "LTM Max Limit",
+      "value": 1.3,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2536,
+      "category": "Engine",
+      "note": "The maximum value to which any long term memory cell can increase."
+    },
+    {
+      "name": "LTM Min Limit",
+      "value": 0.7,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2537,
+      "category": "Engine",
+      "note": "The minimum value to which any long term memory cell can decrease."
+    },
+    {
+      "name": "LTFT Idle Cells Enable TPS",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2511,
+      "category": "Engine",
+      "note": "LTFT idle cells will be used below this throttle position."
+    },
+    {
+      "name": "LTFT Idle Cells Disable TPS",
+      "value": 0.6,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2512,
+      "category": "Engine",
+      "note": "LTFT idle cells will be disabled above this throttle position."
+    },
+    {
+      "name": "LTFT Idle Cells Enable VSS",
+      "value": 2.5,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2513,
+      "category": "Engine",
+      "note": "LTFT idle cells will be used below this vehicle speed."
+    },
+    {
+      "name": "LTFT Idle Cells Disable VSS",
+      "value": 3.7,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2514,
+      "category": "Engine",
+      "note": "LTFT idle cells will be disabled above this vehicle speed."
+    },
+    {
+      "name": "O2 Sensor Rich/Lean Min",
+      "value": 450.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 2518,
+      "category": "Engine",
+      "note": "O2 voltage rich/lean threshold minimum limit."
+    },
+    {
+      "name": "O2 Sensor Rich/Lean Max",
+      "value": 450.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 2519,
+      "category": "Engine",
+      "note": "O2 voltage rich/lean threshold maximum limit."
+    },
+    {
+      "name": "O2 Sensor Not Ready Timer",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2532,
+      "category": "Engine",
+      "note": "If the O2 voltage is out of range for this period, oxygen sensors are considered not ready."
+    },
+    {
+      "name": "O2 Sensor Ready Timer",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 24991,
+      "category": "Engine",
+      "note": "ECM determines if the O2 sensors are ready for the closed loop."
+    },
+    {
+      "name": "TCS EQ Ratio Min",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2521,
+      "category": "Engine",
+      "note": "Minimum EQ Ratio when TCS is active."
+    },
+    {
+      "name": "ETC Reduced Power EQ Ratio",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2522,
+      "category": "Engine",
+      "note": "EQ Ratio when ETC Reduced Power mode is active."
+    },
+    {
+      "name": "Closed Loop Blend Time",
+      "value": 10.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2520,
+      "category": "Engine",
+      "note": "EQ Ratio will be blended from open loop to 1.0 (stoich) over this amount of camshaft reference pulses."
+    },
+    {
+      "name": "Closed Loop Blend Time 2",
+      "value": 10.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 12944,
+      "category": "Engine",
+      "note": "EQ Ratio will be blended from open loop to 1.0 (stoich) over this amount of camshaft reference pulses."
+    },
+    {
+      "name": "Closed Loop Blend Time 3",
+      "value": 10.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 12945,
+      "category": "Engine",
+      "note": "EQ Ratio will be blended from open loop to 1.0 (stoich) over this amount of camshaft reference pulses."
+    },
+    {
+      "name": "Power Enrichment Minimum MAP Hysteresis",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2403,
+      "category": "Engine",
+      "note": "Hysteresis applied to the minimum MAP, below which power enrichment will disable."
+    },
+    {
+      "name": "Power Enrichment Minimum RPM",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2411,
+      "category": "Engine",
+      "note": "The minimum RPM before power enrichment will enable."
+    },
+    {
+      "name": "Power Enrichment Minimum RPM Hysteresis",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2412,
+      "category": "Engine",
+      "note": "Hysteresis applied to the minimum RPM, below which power enrichment will disable."
+    },
+    {
+      "name": "Power Enrichment Mode Throttle",
+      "value": 0.5,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2424,
+      "category": "Engine",
+      "note": "After P.E becomes active, throttle has to drop to a certain value before the ECM drops out of P.E mode."
+    },
+    {
+      "name": "Power Enrich Throttle Bypass Delay",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2425,
+      "category": "Engine",
+      "note": "If the movement rate for the delay timer is higher than the P.E mode check, the delay timer is bypassed."
+    },
+    {
+      "name": "Power Enrich Speed Bypass Delay",
+      "value": 19.9,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2426,
+      "category": "Engine",
+      "note": "If vehicle speed is below a certain value, the delay timer is bypassed."
+    },
+    {
+      "name": "Power Enrich Upper Bypass Delay",
+      "value": 250.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2427,
+      "category": "Engine",
+      "note": "If temperature is set above the current measurement, the delay timer is bypassed."
+    },
+    {
+      "name": "Power Enrich Lower Bypass Delay",
+      "value": -429.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2428,
+      "category": "Engine",
+      "note": "If temperature is set below the current measurement, the delay timer is bypassed."
+    },
+    {
+      "name": "Power Enrichment Mode Timer",
+      "value": 1.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2464,
+      "category": "Engine",
+      "note": "Thresholds must be met for a certain duration before the P.E mode fueling begins. Once this occurs, the delay timer is decremented to 0 when P.E mode fueling begins."
+    },
+    {
+      "name": "Power Enrichment Ramp In Rate",
+      "value": 0.2,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2400,
+      "category": "Engine",
+      "note": "This is the rate at which fuel is added to reach the desired enrichment value. The smaller this value is, the slower the VCM will reach the desired PE equivalence ratio."
+    },
+    {
+      "name": "Power Enrichment Ramp Out Rate",
+      "value": 0.05,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2401,
+      "category": "Engine",
+      "note": "This is the rate at which fuel is removed to reach closed loop EQ Ratio. The smaller this value is, the slower the VCM will reach the desired equivalence ratio."
+    },
+    {
+      "name": "COT Max Enrichment",
+      "value": 1.33,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2200,
+      "category": "Engine",
+      "note": "Maximum allowed enrichment due to COT protection."
+    },
+    {
+      "name": "Piston Protect Enable RPM",
+      "value": 8192.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2418,
+      "category": "Engine",
+      "note": "This RPM value must be exceeded to enable Piston Protection (fuel enrich) control."
+    },
+    {
+      "name": "RPM Limit Extreme Cutoff",
+      "value": 6600.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2068,
+      "category": "Engine",
+      "note": "Above this RPM, regardless of other settings fuel cutoff will be used."
+    },
+    {
+      "name": "RPM Limit Extreme Resume",
+      "value": 6590.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2069,
+      "category": "Engine",
+      "note": "If extreme cutoff active, RPM must drop below this RPM to resume normal limiter operation."
+    },
+    {
+      "name": "Fuel Cutoff RPM Hysteresis",
+      "value": 225.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2062,
+      "category": "Engine",
+      "note": "Fuel will resume when RPM drops below the cutoff RPM by this amount."
+    },
+    {
+      "name": "RPM Limit Accel Coeff",
+      "value": 0.3,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2063,
+      "category": "Engine",
+      "note": "Coefficient used in engine acceleration filter, lower numbers mean more filtering."
+    },
+    {
+      "name": "RPM Limit Lamp RPM",
+      "value": 6000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2064,
+      "category": "Engine",
+      "note": "Above this RPM the engine overspeed lamp will be lit."
+    },
+    {
+      "name": "Maximum ECT to Disable DFCO",
+      "value": 44.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2292,
+      "category": "Engine",
+      "note": "Below this ECT, DFCO will be disabled."
+    },
+    {
+      "name": "Minimum RPM to Allow DFCO",
+      "value": 1200.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2290,
+      "category": "Engine",
+      "note": "Above this engine speed, DFCO will be allowed."
+    },
+    {
+      "name": "Maximum RPM to Disable DFCO",
+      "value": 900.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2291,
+      "category": "Engine",
+      "note": "Below this engine speed, DFCO will be disabled."
+    },
+    {
+      "name": "Minimum RPM Rate to Disable DFCO",
+      "value": 1800.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 18698,
+      "category": "Engine",
+      "note": "Above this engine speed rate, DFCO will be disabled."
+    },
+    {
+      "name": "CFCO Enable RPM",
+      "value": 500.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2298,
+      "category": "Engine",
+      "note": "RPM must be above this value to enable CFCO."
+    },
+    {
+      "name": "CFCO Enable ECT",
+      "value": 122.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2299,
+      "category": "Engine",
+      "note": "ECT must be above this value to enable CFCO."
+    },
+    {
+      "name": "DoD Enable ERT",
+      "value": 30.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2435,
+      "category": "Engine",
+      "note": "Minimum engine run time before DoD can enable."
+    },
+    {
+      "name": "DoD Enable VSS P/N",
+      "value": 0.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2450,
+      "category": "Engine",
+      "note": "If vehicle speed is below this, DoD will stay enabled when in P/N."
+    },
+    {
+      "name": "DoD Minimum VSS",
+      "value": 11.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2480,
+      "category": "Engine",
+      "note": "If vehicle speed is below this, DoD will disable if active."
+    },
+    {
+      "name": "DoD Minimum VSS Hyst",
+      "value": 1.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 2481,
+      "category": "Engine",
+      "note": "If vehicle speed is above Minimum VSS plus this value, DoD can enable if not active."
+    },
+    {
+      "name": "DoD Enable ECT",
+      "value": 97.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2436,
+      "category": "Engine",
+      "note": "Minimum engine coolant temp before DoD can enable."
+    },
+    {
+      "name": "DoD Enable ECT Hyst",
+      "value": 39.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2437,
+      "category": "Engine",
+      "note": "Hysteresis value for Enable ECT."
+    },
+    {
+      "name": "DoD Disable RPM",
+      "value": 3100.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2438,
+      "category": "Engine",
+      "note": "DoD is disabled if RPM is above this value."
+    },
+    {
+      "name": "DoD Disable RPM Hyst",
+      "value": 3200.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2439,
+      "category": "Engine",
+      "note": "DoD is disabled if RPM is above this value, hysteresis value."
+    },
+    {
+      "name": "DoD TPS Max",
+      "value": 6.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2441,
+      "category": "Engine",
+      "note": "TPS must be below this for DoD to enable."
+    },
+    {
+      "name": "DoD TPS Max Hyst",
+      "value": 0.5,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2442,
+      "category": "Engine",
+      "note": "Hysteresis value for TPS Max."
+    },
+    {
+      "name": "DoD TPS Delta Max",
+      "value": 0.1,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2440,
+      "category": "Engine",
+      "note": "TPS change (12.5ms) must be below this for DoD to enable (12.5ms)."
+    },
+    {
+      "name": "Transient Fuel MAP Filter",
+      "value": 0.25,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2279,
+      "category": "Engine",
+      "note": "Filter coefficient for the filtered MAP calculation."
+    },
+    {
+      "name": "Transient Fuel Enable Delay",
+      "value": 100.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2287,
+      "category": "Engine",
+      "note": "Transient fuel will not enable until this many crank reference pulses are detected."
+    },
+    {
+      "name": "Transient Fuel Delta MAP",
+      "value": 2.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2288,
+      "category": "Engine",
+      "note": "Filtered MAP change required for transient fuel calculations."
+    },
+    {
+      "name": "Transient Fuel Delta TPS",
+      "value": 1.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2289,
+      "category": "Engine",
+      "note": "TPS change required for transient fuel calculations."
+    },
+    {
+      "name": "Fuel Delta Min Increase",
+      "value": 0.0625,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2282,
+      "category": "Engine",
+      "note": "Minimum commanded fuel delta to add correction (only compensate for reasonably sized transients)."
+    },
+    {
+      "name": "Transient Fuel Max",
+      "value": 2048.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2278,
+      "category": "Engine",
+      "note": "Maximum Transient fuel mass allowed."
+    },
+    {
+      "name": "Maximum Ethanol Percentage",
+      "value": 80.000313,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 3133,
+      "category": "Engine",
+      "note": "Maximum reported ethanol percentage."
+    },
+    {
+      "name": "Composition Change Threshold",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 3146,
+      "category": "Engine",
+      "note": "Minimum composition change to update flex fuel composition."
+    },
+    {
+      "name": "Composition Change Delay Volume",
+      "value": 0.0,
+      "unit": "L",
+      "stock_value": null,
+      "param_id": 3147,
+      "category": "Engine",
+      "note": "Volume of fuel required to be used by the engine before new composition reaches the engine."
+    },
+    {
+      "name": "Composition Change Transition Volume",
+      "value": 0.0,
+      "unit": "L",
+      "stock_value": null,
+      "param_id": 3148,
+      "category": "Engine",
+      "note": "Volume of fuel used by the engine during a fuel composition transition, after the delay volume is used."
+    },
+    {
+      "name": "Spark Smoothing Max Torque Delta",
+      "value": 59.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2666,
+      "category": "Engine",
+      "note": "Maximum allowed torque correction, positive and negative, made by spark smoothing alogorithm."
+    },
+    {
+      "name": "Spark Smoothing Max Torque Bias",
+      "value": 36.88,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2667,
+      "category": "Engine",
+      "note": "Maximum allowed torque bias used by spark smoothing alogorithm."
+    },
+    {
+      "name": "Spark Smoothing Max Torque Loss",
+      "value": 51.63,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2668,
+      "category": "Engine",
+      "note": "Maximum allowed torque reduction caused by spark smoothing alogorithm."
+    },
+    {
+      "name": "Bidir Retard Max",
+      "value": 10.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2786,
+      "category": "Engine",
+      "note": "Maximum allowed retard when using bidirectional scanner VCM controls."
+    },
+    {
+      "name": "Knock Retard Disable Time",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2740,
+      "category": "Engine",
+      "note": "Knock retard will be disabled for this many crank refernce pulses when burst knock is active."
+    },
+    {
+      "name": "Knock Retard Max Step",
+      "value": 6.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2736,
+      "category": "Engine",
+      "note": "Maximum change in knock retard per crank reference pulse."
+    },
+    {
+      "name": "Knock Retard Maximum RPM",
+      "value": 8000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2734,
+      "category": "Engine",
+      "note": "Knock retard is disabled above this RPM."
+    },
+    {
+      "name": "Knock Retard Minimum RPM",
+      "value": 7900.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2735,
+      "category": "Engine",
+      "note": "Knock retard is enabled below this RPM."
+    },
+    {
+      "name": "Knock Retard Fault Mult",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2739,
+      "category": "Engine",
+      "note": "Knock retard multiplier when a fault is detected (P0325, P0326, P0327, P0332)."
+    },
+    {
+      "name": "Knock Retard Valid Max",
+      "value": 2.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2738,
+      "category": "Engine",
+      "note": "Maximum allowed knock retard before the ECM considers it false knock."
+    },
+    {
+      "name": "Knock Learn Min MAP",
+      "value": 35.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2700,
+      "category": "Engine",
+      "note": "MAP must be above this to enable knock learn."
+    },
+    {
+      "name": "Knock Learn Min IAT",
+      "value": -40.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2706,
+      "category": "Engine",
+      "note": "Inlet air temperature must be above this to enable knock learn."
+    },
+    {
+      "name": "Knock Learn Min RPM",
+      "value": 400.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2703,
+      "category": "Engine",
+      "note": "RPM must be above this to enable knock learn."
+    },
+    {
+      "name": "Knock Learn Min Coolant Temp",
+      "value": 131.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2704,
+      "category": "Engine",
+      "note": "Engine coolant temperature must be above this to enable knock learn."
+    },
+    {
+      "name": "Knock Learn Up Thresh",
+      "value": 1.5,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2708,
+      "category": "Engine",
+      "note": "Knock Learn factor is incremented (moved towards low octane) if knock retard exceeds this value."
+    },
+    {
+      "name": "Knock Learn Fault",
+      "value": 0.998,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2709,
+      "category": "Engine",
+      "note": "Knock Learn factor when a fault is detected (P0325, P0326, P0327, P0332)."
+    },
+    {
+      "name": "Burst Knock Hold Time",
+      "value": 16.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2742,
+      "category": "Engine",
+      "note": "Time in crank reference pulses that burst knock retard will hold before decay begins."
+    },
+    {
+      "name": "Burst Knock Decay Time",
+      "value": 6.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2743,
+      "category": "Engine",
+      "note": "Time in crank reference pulses that burst knock retard will be decayed after the hold time."
+    },
+    {
+      "name": "Burst Knock Learn Thresh",
+      "value": 12.0,
+      "unit": "\u00b0",
+      "stock_value": null,
+      "param_id": 2744,
+      "category": "Engine",
+      "note": "Burst knock will learn down if no knock detected during burst enable."
+    },
+    {
+      "name": "Burst Knock Learn Down",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2747,
+      "category": "Engine",
+      "note": "Burst knock learn down step size."
+    },
+    {
+      "name": "Burst Knock Learn Up",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2748,
+      "category": "Engine",
+      "note": "Burst knock learn up step size."
+    },
+    {
+      "name": "Burst Knock Learn Min",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2745,
+      "category": "Engine",
+      "note": "Burst knock learn minimum value."
+    },
+    {
+      "name": "Burst Knock Learn Fault",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 2746,
+      "category": "Engine",
+      "note": "Burst knock learn values when a fault is detected (P0325, P0326, P0327, P0332)."
+    },
+    {
+      "name": "Static Retard Enable Cylair",
+      "value": 0.13,
+      "unit": "g",
+      "stock_value": null,
+      "param_id": 2785,
+      "category": "Engine",
+      "note": "Cylinder airmass must be above this to enable static retard."
+    },
+    {
+      "name": "Knock Sensor Transient Mode Airmass",
+      "value": 0.02,
+      "unit": "g",
+      "stock_value": null,
+      "param_id": 2958,
+      "category": "Engine",
+      "note": "Minimum airmass required for knock sensor transient operation."
+    },
+    {
+      "name": "Knock Sensor Transient Mode RPM Decrease",
+      "value": -200.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2959,
+      "category": "Engine",
+      "note": "Minimum RPM decrease required for knock sensor transient operation."
+    },
+    {
+      "name": "Knock Sensor Transient Mode RPM Increase",
+      "value": 120.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2960,
+      "category": "Engine",
+      "note": "Minimum RPM increase required for knock sensor transient operation."
+    },
+    {
+      "name": "Knock Sensor Transient Mode TPS Decrease",
+      "value": -10.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2961,
+      "category": "Engine",
+      "note": "Minimum TPS decrease required for knock sensor transient operation."
+    },
+    {
+      "name": "Knock Sensor Transient Mode TPS Increase",
+      "value": 5.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2962,
+      "category": "Engine",
+      "note": "Minimum TPS increase required for knock sensor transient operation."
+    },
+    {
+      "name": "Trans Input Torque Limit",
+      "value": 6000.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2810,
+      "category": "Engine",
+      "note": "Maximum allowed transmission input torque."
+    },
+    {
+      "name": "Trans Output Torque Limit",
+      "value": 5900.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2811,
+      "category": "Engine",
+      "note": "Maximum allowed transmission output torque."
+    },
+    {
+      "name": "Front Axle Torque Limit",
+      "value": 96672.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2812,
+      "category": "Engine",
+      "note": "Maximum Front Axle Torque (4WD applications)."
+    },
+    {
+      "name": "Front Propshaft Torque Limit",
+      "value": 96672.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2813,
+      "category": "Engine",
+      "note": "Maximum Front Propshaft Torque (4WD applications)."
+    },
+    {
+      "name": "Rear Axle Torque Limit",
+      "value": 96672.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2814,
+      "category": "Engine",
+      "note": "Maximum Rear Axle Torque."
+    },
+    {
+      "name": "Rear Propshaft Torque Limit",
+      "value": 96672.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2815,
+      "category": "Engine",
+      "note": "Maximum Rear Propshaft Torque."
+    },
+    {
+      "name": "Fast Torque Exit Disable",
+      "value": 7.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2851,
+      "category": "Engine",
+      "note": "If Fast Torque Exit is active the difference between driver demanded torque and engine torque must be less than this to disable."
+    },
+    {
+      "name": "Fast Torque Exit ETC Limit",
+      "value": 7.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2852,
+      "category": "Engine",
+      "note": "If Fast Torque Exit is active the ETC limit will be set to this amount below the driver demanded torque."
+    },
+    {
+      "name": "TCS Enable ECT",
+      "value": -40.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2861,
+      "category": "Engine",
+      "note": "Above this coolant temp torque reduction for TCS will be allowed."
+    },
+    {
+      "name": "Delivered Torque Max",
+      "value": 350.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2869,
+      "category": "Engine",
+      "note": "Maximum engine torque range for delivered torque signal to TCS system. ie. at this torque Duty Cycle Max will be commanded."
+    },
+    {
+      "name": "Delivered Torque Min",
+      "value": -70.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 2870,
+      "category": "Engine",
+      "note": "Minimum engine torque range for delivered torque signal to TCS system. ie. at this torque Duty Cycle Min will be commanded."
+    },
+    {
+      "name": "Delivered Torque Duty Cycle Max",
+      "value": 90.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2871,
+      "category": "Engine",
+      "note": "Maximum allowed duty cycle for delivered torque signal to TCS system."
+    },
+    {
+      "name": "Delivered Torque Duty Cycle Min",
+      "value": 30.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2872,
+      "category": "Engine",
+      "note": "Minimum allowed duty cycle for delivered torque signal to TCS system."
+    },
+    {
+      "name": "TCS Duty Cycle Hi",
+      "value": 90.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2874,
+      "category": "Engine",
+      "note": "Below this input duty cycle traction control is active."
+    },
+    {
+      "name": "TCS Duty Cycle Low",
+      "value": 30.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2873,
+      "category": "Engine",
+      "note": "Above this input duty cycle traction control is active."
+    },
+    {
+      "name": "TCS Fail Duty Cycle Hi",
+      "value": 95.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2875,
+      "category": "Engine",
+      "note": "Below this input duty cycle traction control is failed."
+    },
+    {
+      "name": "TCS Fail Duty Cycle Low",
+      "value": 5.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2876,
+      "category": "Engine",
+      "note": "Above this input duty cycle traction control is failed."
+    },
+    {
+      "name": "Traction Control RPM Enable",
+      "value": 600.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2803,
+      "category": "Engine",
+      "note": "If the TCS is disabled due to RPM falling below Traction Control Disable, then it must be greater than the set value before TCS can be active."
+    },
+    {
+      "name": "Traction Control RPM Disable",
+      "value": 550.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2804,
+      "category": "Engine",
+      "note": "If engine RPM falls below the set value, then the TCS will be disabled"
+    },
+    {
+      "name": "Traction Control Runtime Enable",
+      "value": 2.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2805,
+      "category": "Engine",
+      "note": "Engine runtime must be on for a certain time before the traction control system seeks torque reduction"
+    },
+    {
+      "name": "Torque Loss Runtime",
+      "value": 0.5,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 12582,
+      "category": "Engine",
+      "note": "Engine runtime before spark is reduced by Traction Control System."
+    },
+    {
+      "name": "Oil Pressure Low Hyst",
+      "value": 34.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 4150,
+      "category": "Engine Diagnostics",
+      "note": "Oil pressure low warning hysteresis value."
+    },
+    {
+      "name": "Oil Pressure Low Delay",
+      "value": 2.5,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 4151,
+      "category": "Engine Diagnostics",
+      "note": "Oil pressure must be low for this time to enable lamp."
+    },
+    {
+      "name": "Oil Press Warning Delay",
+      "value": 15.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 4152,
+      "category": "Engine Diagnostics",
+      "note": "The delay for the oil pressure warning to occur after oil pressure has been determined to be low."
+    },
+    {
+      "name": "Oil Temperature High",
+      "value": 493.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 4160,
+      "category": "Engine Diagnostics",
+      "note": "Oil temperature high warning level."
+    },
+    {
+      "name": "Oil Temperature High Hyst",
+      "value": 50.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 4161,
+      "category": "Engine Diagnostics",
+      "note": "Oil temperature high warning hysteresis value."
+    },
+    {
+      "name": "MAF Freq Test ERT Min",
+      "value": 1.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 4002,
+      "category": "Engine Diagnostics",
+      "note": "Minimum engine run time before MAF frequency tests can be enabled."
+    },
+    {
+      "name": "MAF Freq Test IGNV Min",
+      "value": 8.0,
+      "unit": "V",
+      "stock_value": null,
+      "param_id": 4003,
+      "category": "Engine Diagnostics",
+      "note": "Minimum ignition voltage before MAF frequency tests can be enabled."
+    },
+    {
+      "name": "MAF Freq Test RPM Min",
+      "value": 300.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 4004,
+      "category": "Engine Diagnostics",
+      "note": "Minimum RPM before MAF frequency tests can be enabled."
+    },
+    {
+      "name": "MAF Freq Test Enable Delay",
+      "value": 1.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 4005,
+      "category": "Engine Diagnostics",
+      "note": "Enable delay before MAF tests will run once enabled."
+    },
+    {
+      "name": "MAF Freq Test High Count Thresh",
+      "value": 400.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 4006,
+      "category": "Engine Diagnostics",
+      "note": "Number of high frequency counts above the fail frequency before MAF DTC P0103 will be set."
+    },
+    {
+      "name": "MAF Freq Test Low Count Thresh",
+      "value": 400.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 4007,
+      "category": "Engine Diagnostics",
+      "note": "Number of low frequency counts below the fail frequency before MAF DTC P0102 will be set."
+    },
+    {
+      "name": "P0101, P0106, P0121 Perf Test - Min ECT",
+      "value": 255.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 4040,
+      "category": "Engine Diagnostics",
+      "note": "Below this engine coolant temperature, P0101, P0106 and P0121 tests will not run."
+    },
+    {
+      "name": "P0101, P0106, P0121 Perf Test - Max ECT",
+      "value": 257.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 4041,
+      "category": "Engine Diagnostics",
+      "note": "Above this engine coolant temperature, P0101, P0106 and P0121 tests will not run."
+    },
+    {
+      "name": "MAP Error Check 1",
+      "value": 15.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2994,
+      "category": "Engine Diagnostics",
+      "note": "Determines if the first MAP value is wrong if error value is larger than set value."
+    },
+    {
+      "name": "MAP Error Check 2",
+      "value": 15.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 2995,
+      "category": "Engine Diagnostics",
+      "note": "Determines if the second MAP value is wrong if error value is larger than set value."
+    },
+    {
+      "name": "Upstream Catalyst Rich Thresh",
+      "value": 600.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 45682,
+      "category": "Engine Diagnostics",
+      "note": "Above this threshold O2 sensor values will be considered rich for pre catalyst."
+    },
+    {
+      "name": "Downstream Lean Thresh",
+      "value": 300.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 45683,
+      "category": "Engine Diagnostics",
+      "note": "Below this threshold O2 sensor values will be considered lean for post catalyst."
+    },
+    {
+      "name": "Downstream Rich Thresh",
+      "value": 600.0,
+      "unit": "mV",
+      "stock_value": null,
+      "param_id": 45684,
+      "category": "Engine Diagnostics",
+      "note": "Above this threshold O2 sensor values will be considered rich for post catalyst."
+    },
+    {
+      "name": "Shift Torque Factor 2-3",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5601,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 3-4",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5602,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 4-5",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5603,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 5-6",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5604,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 1-3",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5605,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 1-4",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5606,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 2-4",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5607,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 2-6",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5608,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 3-5",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5609,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 4-6",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5610,
+      "category": "Transmission",
+      "note": "Multiplies the shift torque by this factor."
+    },
+    {
+      "name": "Shift Torque Factor 1-2 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5611,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 2-3 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5612,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 3-4 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5613,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 4-5 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5614,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 5-6 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5615,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 1-3 Adder",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5616,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 1-4 Adder",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5617,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 2-4 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5618,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 2-6 Adder",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5619,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 3-5 Adder",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5620,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Shift Torque Factor 4-6 Adder",
+      "value": 1.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5621,
+      "category": "Transmission",
+      "note": "Adds to the Shift Torque Factor."
+    },
+    {
+      "name": "Cmd Gear Max Vehicle Speed",
+      "value": 100.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 6041,
+      "category": "Transmission",
+      "note": "VSS must below this for Commanded Gear PCM Control to engage."
+    },
+    {
+      "name": "C.A.G.S. Min Coolant Temp",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 5310,
+      "category": "Transmission",
+      "note": "Minimum Engine Coolant Temp required for C.A.G.S. routine."
+    },
+    {
+      "name": "C.A.G.S. Enable Speed",
+      "value": 0.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 5320,
+      "category": "Transmission",
+      "note": "Speed to enable C.A.G.S. routine."
+    },
+    {
+      "name": "C.A.G.S. Disable Speed",
+      "value": 0.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 5321,
+      "category": "Transmission",
+      "note": "Speed to disable C.A.G.S. routine."
+    },
+    {
+      "name": "C.A.G.S. Enable Baro",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5330,
+      "category": "Transmission",
+      "note": "Baro to enable C.A.G.S. routine."
+    },
+    {
+      "name": "C.A.G.S. Disable Baro",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5331,
+      "category": "Transmission",
+      "note": "Baro to disable C.A.G.S. routine."
+    },
+    {
+      "name": "Maximum Line Pressure B",
+      "value": 1900.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5101,
+      "category": "Transmission",
+      "note": "Line pressure maximum value, in some cases this value may be calibrated as actual line pressure after the regulator gain has been applied."
+    },
+    {
+      "name": "Maximum Clutch Pressure",
+      "value": 1500.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5102,
+      "category": "Transmission",
+      "note": "Clutch pressure maximum value, in some cases this value may be calibrated as actual line pressure after the regulator gain has been applied."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 2-3 Oncoming",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5251,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 2-3 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 3-4 Oncoming",
+      "value": 31.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5252,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 3-4 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 4-5 Oncoming",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5253,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 4-5 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 5-6 Oncoming",
+      "value": 50.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5254,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 5-6 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 1-2 Oncoming Special",
+      "value": 55.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5255,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 1-2 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 2-3 Oncoming Special",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5256,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 2-3 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 3-4 Oncoming Special",
+      "value": 31.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5257,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 3-4 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 4-5 Oncoming Special",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5258,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 4-5 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 5-6 Oncoming Special",
+      "value": 50.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5259,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 5-6 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 1-2 Min Oncoming",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5260,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 1-2 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 2-3 Min Oncoming",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5261,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 2-3 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 3-4 Min Oncoming",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5262,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 3-4 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 4-5 Min Oncoming",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5263,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 4-5 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 5-6 Min Oncoming",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5264,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 5-6 shift."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 1-2 Min Oncoming Special",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5265,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 1-2 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 2-3 Min Oncoming Special",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5266,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 2-3 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 3-4 Min Oncoming Special",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5267,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 3-4 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 4-5 Min Oncoming Special",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5268,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 4-5 shift, when in special mode."
+    },
+    {
+      "name": "Shift Adapt Preset Volume 5-6 Min Oncoming Special",
+      "value": 1023.969,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5269,
+      "category": "Transmission",
+      "note": "Minimum Oncoming clutch adapt volume preset for 5-6 shift, when in special mode."
+    },
+    {
+      "name": "Shift Max Adapt Volume 2-3",
+      "value": 40.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5221,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 2-3 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 3-4",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5222,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 3-4 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 4-5",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5223,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 4-5 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 5-6",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5224,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 5-6 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 1-3",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5225,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 1-3 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 1-4",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5226,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 1-4 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 2-4",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5227,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 2-4 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 2-6",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5228,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 2-6 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 3-5",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5229,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 3-5 shift."
+    },
+    {
+      "name": "Shift Max Adapt Volume 4-6",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5230,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 4-6 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 2-3",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5232,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 2-3 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 3-4",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5233,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 3-4 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 4-5",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5234,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 4-5 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 5-6",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5235,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 5-6 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 1-3",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5236,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 1-3 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 1-4",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5237,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 1-4 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 2-4",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5238,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 2-4 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 2-6",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5239,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 2-6 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 3-5",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5240,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 3-5 shift."
+    },
+    {
+      "name": "Shift Min Adapt Volume 4-6",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5241,
+      "category": "Transmission",
+      "note": "Minimum clutch adapt volume for 4-6 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 2-1",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5570,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 2-1 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 3-2",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5569,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 3-2 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 4-3",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5568,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 4-3 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 5-4",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5567,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 5-4 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 6-5",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5566,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 6-5 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 3-1",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5576,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 3-1 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 4-1",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5575,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 4-1 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 4-2",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5574,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 4-2 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 5-3",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5573,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 5-3 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 6-2",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5572,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 6-2 shift."
+    },
+    {
+      "name": "Base Shift Time Minimum PD 6-4",
+      "value": 0.1494,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 5571,
+      "category": "Transmission",
+      "note": "Base desired shift minimum time for power downshift 6-4 shift."
+    },
+    {
+      "name": "TCC Pressure Regulator Gain",
+      "value": 1.5,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 5670,
+      "category": "Transmission",
+      "note": "The gain of the TCC pressure regulator valve."
+    },
+    {
+      "name": "TCC Pressure Regulator Offset",
+      "value": 184.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5671,
+      "category": "Transmission",
+      "note": "The offset of the TCC pressure regulator valve."
+    },
+    {
+      "name": "TCC Desired Slip Min AC On",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 5630,
+      "category": "Transmission",
+      "note": "TCC Desired Slip Minimum with AC On."
+    },
+    {
+      "name": "TCC Desired Slip DoD Off Transition",
+      "value": 35.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 5631,
+      "category": "Transmission",
+      "note": "TCC Desired Slip for DoD transitoning from V4 to V8 mode."
+    },
+    {
+      "name": "TCC Desired Slip DoD On Transition",
+      "value": 55.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 5632,
+      "category": "Transmission",
+      "note": "TCC Desired Slip for DoD transitoning from V8 to V4 mode."
+    },
+    {
+      "name": "TCC Adapt Trans Temp Max",
+      "value": 302.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 5651,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled above this trans temp."
+    },
+    {
+      "name": "TCC Adapt TPS Min",
+      "value": 2.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 5652,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled below this throttle position."
+    },
+    {
+      "name": "TCC Adapt TPS Max",
+      "value": 99.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 5653,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled above this throttle position."
+    },
+    {
+      "name": "TCC Adapt Torque Min",
+      "value": 0.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 5654,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled below this engine torque."
+    },
+    {
+      "name": "TCC Adapt Torque Max",
+      "value": 300.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 5655,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled above this engine torque."
+    },
+    {
+      "name": "TCC Adapt VSS Min",
+      "value": 11.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 5656,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled below this vehicle speed."
+    },
+    {
+      "name": "TCC Adapt VSS Max",
+      "value": 318.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 5657,
+      "category": "Transmission",
+      "note": "TCC Adapt will be disabled above this vehicle speed."
+    },
+    {
+      "name": "TCC Adapt Pressure Min",
+      "value": -150.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5660,
+      "category": "Transmission",
+      "note": "TCC Adapt Pressure Lower Limit."
+    },
+    {
+      "name": "TCC Adapt Pressure Max",
+      "value": 150.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 5661,
+      "category": "Transmission",
+      "note": "TCC Adapt Pressure Upper Limit."
+    },
+    {
+      "name": "Trans Stall Torque Reduction Enable RPM",
+      "value": 8000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 5410,
+      "category": "Transmission",
+      "note": "If Engine RPM is greater than this stall torque reduction mode is enabled."
+    },
+    {
+      "name": "Trans Stall Torque Reduction Disable RPM",
+      "value": 8000.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 5411,
+      "category": "Transmission",
+      "note": "If Engine RPM is less than this stall torque reduction mode is disabled."
+    },
+    {
+      "name": "TCC Limit Torque Reduction Max Torque",
+      "value": 461.0,
+      "unit": "lb\u00b7ft",
+      "stock_value": null,
+      "param_id": 5420,
+      "category": "Transmission",
+      "note": "Maximum TCC Limit Torque. Should be set higher than maximum engine torque when TCC Limit is disabled."
+    },
+    {
+      "name": "Trans Overtemp Set Time",
+      "value": 60.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 6031,
+      "category": "Trans Diagnostics",
+      "note": "The minimum time required to set an overtemp condition once the Set Temp qualification is met."
+    },
+    {
+      "name": "Trans Overtemp Clear Time",
+      "value": 5.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 6033,
+      "category": "Trans Diagnostics",
+      "note": "The minimum time required to clear an overtemp condition once the Clear Temp qualification is met."
+    },
+    {
+      "name": "Pressure Sensor Offset",
+      "value": 12.5,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 6989,
+      "category": "Fuel System",
+      "note": "Fuel line pressure sensor offset."
+    },
+    {
+      "name": "Pressure Sensor Gain",
+      "value": 8.75,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 6990,
+      "category": "Fuel System",
+      "note": "Fuel line pressure sensor gain."
+    },
+    {
+      "name": "Low Flow Fuel Pressure",
+      "value": 300.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7031,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure under low flow conditions."
+    },
+    {
+      "name": "Cold Fuel Pressure",
+      "value": 400.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7032,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure when the engine is cold ie. not high flow conditions and closed loop fuel not active."
+    },
+    {
+      "name": "Default Fuel Pressure",
+      "value": 400.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7034,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure under default conditions."
+    },
+    {
+      "name": "Fault Fuel Pressure",
+      "value": 400.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7035,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure under ECT or IAT sensor fault conditions."
+    },
+    {
+      "name": "Hot Soak VSS",
+      "value": 0.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 7040,
+      "category": "Fuel System",
+      "note": "Below this vehicle speed hot soak will be used to calculate fuel pressure."
+    },
+    {
+      "name": "Hot Soak Factor",
+      "value": 0.75,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 7041,
+      "category": "Fuel System",
+      "note": "Weighting factor between ECT and Injector Tip Temperature for hoat soak maximum temperature calculation used in Hot Soak Fuel Pressure table."
+    },
+    {
+      "name": "Low Flow Pressure Transition Rate",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7022,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the low flow fuel pressure."
+    },
+    {
+      "name": "Cold Pressure Transition Rate",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7023,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the cold engine fuel pressure."
+    },
+    {
+      "name": "Hot Fuel Pressure Transition Rate",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7026,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the hot fuel pressure."
+    },
+    {
+      "name": "Default Pressure Transition Rate",
+      "value": 100.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7025,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the default fuel pressure."
+    },
+    {
+      "name": "Cranking Pressure Transition Rate",
+      "value": 5.0,
+      "unit": "kPa",
+      "stock_value": null,
+      "param_id": 7020,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the cranking fuel pressure."
+    },
+    {
+      "name": "Fuel Pump Duty Cycle Min",
+      "value": 10.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 7010,
+      "category": "Fuel System",
+      "note": "Minimum duty cycle of the fuel pump."
+    },
+    {
+      "name": "Fuel Pump Duty Cycle Max",
+      "value": 90.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 7011,
+      "category": "Fuel System",
+      "note": "Maximum duty cycle of the fuel pump."
+    },
+    {
+      "name": "Primary Fuel Tank Capacity",
+      "value": 270.51,
+      "unit": "gal",
+      "stock_value": null,
+      "param_id": 7002,
+      "category": "Fuel System",
+      "note": "Maximum capacity of the primary fuel tank."
+    },
+    {
+      "name": "Fuel Tank Primary Capacity Gauge",
+      "value": 26.15,
+      "unit": "gal",
+      "stock_value": null,
+      "param_id": 7003,
+      "category": "Fuel System",
+      "note": "Maximum capacity of the primary fuel tank for the gauge."
+    },
+    {
+      "name": "Fuel Tank Sender Max %",
+      "value": 60.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 7004,
+      "category": "Fuel System",
+      "note": "Maximum allowed percentage for the fuel tank sender input."
+    },
+    {
+      "name": "Fuel Tank Sender Min %",
+      "value": 10.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 7005,
+      "category": "Fuel System",
+      "note": "Minimum allowed percentage for the fuel tank sender input."
+    },
+    {
+      "name": "Alternator Serial Request Init",
+      "value": 60.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8155,
+      "category": "System",
+      "note": "The serial message value is initialized to this prior to any alternator duty cycle serial messages being received."
+    },
+    {
+      "name": "Alternator Override DC Max",
+      "value": 90.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8150,
+      "category": "System",
+      "note": "Maximum Duty Cycle requested by override voltage."
+    },
+    {
+      "name": "Alternator DC Min",
+      "value": 36.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8160,
+      "category": "System",
+      "note": "Minimum Duty Cycle used as limit for default action."
+    },
+    {
+      "name": "Alternator Default Time",
+      "value": 120.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8161,
+      "category": "System",
+      "note": "Serial communications must be lost or duty cycle below minimum for this amount of time, before alternator duty cycle will be defaulted to 100%."
+    },
+    {
+      "name": "Alternator Startup DC",
+      "value": 80.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8162,
+      "category": "System",
+      "note": "Duty Cycle used for Alternator Startup DC Time after engine is started."
+    },
+    {
+      "name": "Alternator Startup DC Time",
+      "value": 0.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8163,
+      "category": "System",
+      "note": "Alternator Startup DC will be used for this time after engine is started."
+    },
+    {
+      "name": "Alternator Max Stall Off Time",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8140,
+      "category": "System",
+      "note": "Maximum cumulative off time due to stall protect per key cycle."
+    },
+    {
+      "name": "Fuel System Voltage Delay",
+      "value": 5.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8141,
+      "category": "System",
+      "note": "Startup delay before Minimum Fuel System Voltage will be requested."
+    },
+    {
+      "name": "Airflow System Minimum Voltage",
+      "value": 12.0,
+      "unit": "V",
+      "stock_value": null,
+      "param_id": 8142,
+      "category": "System",
+      "note": "Minimum system voltage required by airflow system."
+    },
+    {
+      "name": "Diagnostic System Voltage Delay",
+      "value": 5.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8144,
+      "category": "System",
+      "note": "Startup delay before Diagnostic Boost Voltage can be requested."
+    },
+    {
+      "name": "Diagnostic Minimum Voltage Low",
+      "value": 11.2,
+      "unit": "V",
+      "stock_value": null,
+      "param_id": 8143,
+      "category": "System",
+      "note": "Minimum system voltage required by diagnostic systems to trigger voltage boost logic."
+    },
+    {
+      "name": "Diagnostic System Low Voltage Delay",
+      "value": 5.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8145,
+      "category": "System",
+      "note": "Delay that system voltage must be low before Diagnostic Boost Voltage can be requested."
+    },
+    {
+      "name": "Diagnostic Boost Voltage",
+      "value": 12.8,
+      "unit": "V",
+      "stock_value": null,
+      "param_id": 8148,
+      "category": "System",
+      "note": "Minimum system voltage required by diagnostic systems."
+    },
+    {
+      "name": "Diagnostic Boost Voltage Max Time",
+      "value": 600.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 8149,
+      "category": "System",
+      "note": "Maximum time that Diagnostic Boost Voltage required by diagnostic systems can be requested."
+    },
+    {
+      "name": "Number of Fans Fitted",
+      "value": 2.0,
+      "unit": "",
+      "stock_value": null,
+      "param_id": 8001,
+      "category": "System",
+      "note": "Number of engine cooling fans fitted to the vehicle."
+    },
+    {
+      "name": "Fan PWM Freq",
+      "value": 128.0,
+      "unit": "Hz",
+      "stock_value": null,
+      "param_id": 8051,
+      "category": "System",
+      "note": "This should be set to: 2 for EV, 20 for MRF or 128 for PWM Electric and Discrete."
+    },
+    {
+      "name": "ECT Override Limit",
+      "value": 241.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 8055,
+      "category": "System",
+      "note": "If ECT is higher than this value, anything that is modifying ECT Fan % such as Vehicle Speed Adjust, VCM Controls etc. will be disabled."
+    },
+    {
+      "name": "ECT Fan % Adjust Vehicle Speed Hi",
+      "value": 40.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 8053,
+      "category": "System",
+      "note": "If vehicle speed is above this value ECT Fan % adjustment based on vehicle speed will be enabled."
+    },
+    {
+      "name": "ECT Fan % Adjust Vehicle Speed Max",
+      "value": 99.0,
+      "unit": "mph",
+      "stock_value": null,
+      "param_id": 8054,
+      "category": "System",
+      "note": "Reference vehicle speed for ECT Fan % adjustment. ECT Fan % will progressively reduce to zero as the vehicle approaches this speed."
+    },
+    {
+      "name": "Ignition Off Fan Enable ECT A",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 8080,
+      "category": "System",
+      "note": ""
+    },
+    {
+      "name": "Ignition Off Fan Disable ECT",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 8085,
+      "category": "System",
+      "note": ""
+    },
+    {
+      "name": "Ignition Off Fan Hi Enable ECT",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 8089,
+      "category": "System",
+      "note": "Above this ECT, high speed ignition off fan mode is enabled."
+    },
+    {
+      "name": "Ignition Off Fan Hi Disable ECT",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 8090,
+      "category": "System",
+      "note": "Below this ECT, high speed ignition off fan mode is disabled."
+    },
+    {
+      "name": "Ignition Off Fan %",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8087,
+      "category": "System",
+      "note": "Commanded Fan percent for ignition off fan"
+    },
+    {
+      "name": "Ignition Off Fan Hi %",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8088,
+      "category": "System",
+      "note": "Commanded Fan percent for high speed ignition off fan."
+    },
+    {
+      "name": "Intercooler Pump ERT Min",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": null,
+      "param_id": 2946,
+      "category": "System",
+      "note": "Minimum engine run time to enable intercooler pump."
+    },
+    {
+      "name": "Intercooler Pump IAT Min",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2947,
+      "category": "System",
+      "note": "Below this IAT the intercooler pump will be disabled."
+    },
+    {
+      "name": "Intercooler Pump MAT Min",
+      "value": 50.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2948,
+      "category": "System",
+      "note": "Below this MAT (IAT2) the intercooler pump will be disabled."
+    },
+    {
+      "name": "A/C Re-Enable RPM",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 8020,
+      "category": "System",
+      "note": "If Disabled, RPM at which the A/C system will be re-enabled."
+    },
+    {
+      "name": "A/C Disable TPS",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8023,
+      "category": "System",
+      "note": "Throttle Position at which the A/C system will be disabled."
+    },
+    {
+      "name": "A/C Re-Enable TPS",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 8022,
+      "category": "System",
+      "note": "If disabled, Throttle Position at which the A/C system will be re-enabled."
+    }
+  ],
   "tables": [
     {
       "name": "TCC Desired Pressure",
