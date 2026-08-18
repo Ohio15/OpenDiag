@@ -115,6 +115,23 @@ class Log:
         return [c.canonical for c in self.channels if c.canonical]
 
 
+def time_axis(log: Log, fallback_dt: float = 0.1) -> list[float]:
+    """Zero-based seconds for every sample: the log's time channel normalized
+    to start at 0 (gaps hold the last value), or fallback_dt spacing when no
+    time channel is present. Shared by the replay source and the chart view."""
+    tser = log.series("time")
+    if tser and any(v is not None for v in tser):
+        base = next(v for v in tser if v is not None)
+        out: list[float] = []
+        last = 0.0
+        for v in tser:
+            if v is not None:
+                last = v - base
+            out.append(last)
+        return out
+    return [i * fallback_dt for i in range(log.n_samples)]
+
+
 def _to_float(s: str) -> Optional[float]:
     s = s.strip()
     if s == "" or s.upper() in ("N/A", "NA", "---", "NAN"):

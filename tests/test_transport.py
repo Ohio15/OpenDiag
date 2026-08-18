@@ -36,6 +36,42 @@ def test_drain_before_start_is_empty():
     assert src.drain() == []
 
 
+def test_pause_freezes_position():
+    src = LogReplaySource(make_log(50), speed=1000.0)
+    src.start()
+    time.sleep(0.01)
+    src.pause()
+    p1 = src.position()
+    time.sleep(0.02)
+    assert src.position() == p1, "position advanced while paused"
+    src.resume()
+    time.sleep(0.01)
+    assert src.position() >= p1, "position went backwards after resume"
+
+
+def test_seek_moves_cursor_and_limits_drain():
+    log = make_log(50, dt=0.1)   # duration 4.9s
+    src = LogReplaySource(log, speed=1.0)
+    src.start()
+    src.pause()
+    src.seek(2.0)
+    assert abs(src.position() - 2.0) < 1e-9
+    s = src.latest()
+    assert s is not None and abs(s.t - 2.0) < 0.11
+    # the recorder must not receive the skipped-over samples
+    assert src.drain() == []
+
+
+def test_set_speed_composes_without_jump():
+    src = LogReplaySource(make_log(50), speed=1.0)
+    src.start()
+    src.pause()
+    src.seek(1.0)
+    src.set_speed(8.0)
+    assert abs(src.position() - 1.0) < 1e-9, "speed change moved the position"
+    assert src.duration() == 4.9
+
+
 def test_drain_resumes_after_loop_restart():
     log = make_log(5, dt=0.01)
     src = LogReplaySource(log, speed=10000.0)

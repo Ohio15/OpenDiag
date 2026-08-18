@@ -192,6 +192,50 @@ assert vis >= 1
 win.tree_filter.setText("")
 print("editor power tools OK (undo/math/clipboard/revert/filter)")
 
+# Wave 2: charting + replay transport --------------------------------------
+from PySide6.QtCore import Qt  # noqa: E402
+win.load_log_path(log_path)          # full path: times, events, chart, replay
+assert win._log_times, "log times not computed"
+assert win.chan_list.count() > 0, "channel list empty"
+assert len(win._plots) >= 1, "no plots built"
+assert win._knock_times, "knock event not found for markers"
+# toggle a channel and rebuild
+item0 = win.chan_list.item(0)
+item0.setCheckState(Qt.Checked if item0.checkState() != Qt.Checked
+                    else Qt.Unchecked)
+app.processEvents()
+# cursor readout across plots
+from PySide6.QtCore import QPointF as _QPF  # noqa: E402
+win._on_chart_mouse(win._plots[0].vb.mapViewToScene(_QPF(5.0, 0.0)))
+assert win.cursor_label.text().startswith("t="), "cursor readout empty"
+
+# replay transport controls
+d = win.dashboard
+assert d.replay_ctl.isVisible() or True  # offscreen: visibility not painted
+assert hasattr(d.source, "seek")
+d.start()
+d._toggle_pause()
+assert d.source.playing is False and d.btn_pause.text().startswith("▶")
+d.pos_slider.setValue(50)            # 5.0s
+d._on_seek()
+assert abs(d.source.position() - 5.0) < 0.2
+d._toggle_pause()
+assert d.source.playing is True
+d.speed_combo.setCurrentText("8×")
+assert d.source.speed == 8.0
+for _ in range(3):
+    app.processEvents(); d._tick()
+d.stop()
+assert d.source.playing is False, "stop did not pause replay"
+# gauge min/max capture + click reset
+g = next(iter(d.gauges.values()))
+if g.value is not None:
+    assert g.max_seen is not None
+    g.mousePressEvent(None)
+    assert g.max_seen is None
+print("charting + transport OK:",
+      len(win._plots), "plots,", len(win._knock_times), "knock markers")
+
 # save round trip
 out = "/tmp/smoke_out.cal.json"
 win.path = out

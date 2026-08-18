@@ -10,13 +10,14 @@ with zero dashboard changes — the same seam `gt.py` implements for the CLI
 """
 from __future__ import annotations
 
+import bisect
 import time
 import threading
 from collections import deque
 from dataclasses import dataclass
 from typing import Optional
 
-from .logbin import Log
+from .logbin import Log, time_axis
 
 
 @dataclass
@@ -51,42 +52,79 @@ class DataSource:
 
 class LogReplaySource(DataSource):
     """
-    Replays a parsed Log as if it were live. Advances an internal cursor by
-    wall-clock time scaled by `speed`. If the log has no time channel, samples
-    are spaced at `fallback_dt` seconds.
+    Replays a parsed Log as if it were live, with transport controls:
+    pause()/resume(), set_speed(), seek(t), position()/duration(). Elapsed
+    log-time accumulates in _elapsed_base; while playing, wall-clock since the
+    last anchor (scaled by speed) is added on top, so pause/speed changes and
+    seeks compose without drift.
     """
 
     def __init__(self, log: Log, speed: float = 1.0, fallback_dt: float = 0.1):
         self.log = log
         self.speed = speed
-        self.fallback_dt = fallback_dt
         self._keys = [c.canonical for c in log.channels if c.canonical]
-        self._t0_wall: Optional[float] = None
-        self._times = self._build_times()
+        self._times = time_axis(log, fallback_dt)
         self._cursor = 0
         self._drained = -1  # last sample index handed out by drain()
-
-    def _build_times(self) -> list[float]:
-        tser = self.log.series("time")
-        if tser and any(v is not None for v in tser):
-            base = next(v for v in tser if v is not None)
-            out = []
-            last = 0.0
-            for v in tser:
-                if v is not None:
-                    last = v - base
-                out.append(last)
-            return out
-        return [i * self.fallback_dt for i in range(self.log.n_samples)]
+        self._started = False
+        self.playing = False
+        self._elapsed_base = 0.0
+        self._wall_anchor: Optional[float] = None
 
     def channels(self) -> list[str]:
         return list(self._keys)
 
+    # -- transport ---------------------------------------------------------- #
+    def duration(self) -> float:
+        return self._times[-1] if self._times else 0.0
+
+    def _elapsed(self) -> float:
+        e = self._elapsed_base
+        if self.playing and self._wall_anchor is not None:
+            e += (time.monotonic() - self._wall_anchor) * self.speed
+        return e
+
+    def position(self) -> float:
+        return min(self._elapsed(), self.duration())
+
     def start(self) -> None:
-        self._t0_wall = time.monotonic()
+        self._started = True
+        self.playing = True
+        self._elapsed_base = 0.0
+        self._wall_anchor = time.monotonic()
         self._cursor = 0
         self._drained = -1
 
+    def stop(self) -> None:
+        self.pause()
+
+    def pause(self) -> None:
+        self._elapsed_base = self._elapsed()
+        self.playing = False
+        self._wall_anchor = None
+
+    def resume(self) -> None:
+        if self._started and not self.playing:
+            self._wall_anchor = time.monotonic()
+            self.playing = True
+
+    def set_speed(self, speed: float) -> None:
+        self._elapsed_base = self._elapsed()
+        if self.playing:
+            self._wall_anchor = time.monotonic()
+        self.speed = speed
+
+    def seek(self, t: float) -> None:
+        self._started = True
+        self._elapsed_base = max(0.0, min(t, self.duration()))
+        if self.playing:
+            self._wall_anchor = time.monotonic()
+        i = bisect.bisect_right(self._times, self._elapsed_base) - 1
+        self._cursor = max(0, i)
+        # don't flood the recorder with every sample the seek skipped over
+        self._drained = self._cursor
+
+    # -- samples -------------------------------------------------------------- #
     def _sample_at(self, i: int) -> Sample:
         vals: dict[str, float] = {}
         for ch in self.log.channels:
@@ -97,15 +135,16 @@ class LogReplaySource(DataSource):
         return Sample(t=self._times[i] if i < len(self._times) else 0.0, values=vals)
 
     def latest(self) -> Optional[Sample]:
-        if self._t0_wall is None or self.log.n_samples == 0:
+        if not self._started or self.log.n_samples == 0:
             return None
-        elapsed = (time.monotonic() - self._t0_wall) * self.speed
-        # advance cursor to the last sample whose log-time <= elapsed
+        elapsed = self._elapsed()
         i = self._cursor
+        # advance cursor to the last sample whose log-time <= elapsed
         while i + 1 < len(self._times) and self._times[i + 1] <= elapsed:
             i += 1
-        # loop the replay
-        if i >= len(self._times) - 1 and elapsed > self._times[-1]:
+        # loop the replay (only while actually playing)
+        if (self.playing and i >= len(self._times) - 1
+                and elapsed > self._times[-1]):
             self.start()
             i = 0
         self._cursor = i
@@ -114,7 +153,7 @@ class LogReplaySource(DataSource):
     def drain(self) -> list[Sample]:
         # latest() advances the cursor (the dashboard tick calls it first);
         # hand out everything between the last drain and the cursor.
-        if self._t0_wall is None:
+        if not self._started:
             return []
         out = [self._sample_at(i)
                for i in range(self._drained + 1, self._cursor + 1)]

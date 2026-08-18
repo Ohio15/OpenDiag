@@ -35,14 +35,22 @@ from PySide6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTableView, QTabWidget, QSplitter, QLabel,
     QComboBox, QCheckBox, QPushButton, QFileDialog, QTextEdit, QTableWidget,
     QTableWidgetItem, QHeaderView, QMessageBox, QGroupBox, QLineEdit,
+    QSlider, QListWidget, QListWidgetItem,
 )
+
+import numpy as np
+import pyqtgraph as pg
 
 from . import editops
 from .calspec import Calibration
 from .logbin import (
     Log, Overlay, parse_csv, analyze_log, bin_log_to_table, detect_shift_points,
-    CANONICAL,
+    CANONICAL, time_axis,
 )
+
+pg.setConfigOption("background", (28, 30, 34))
+pg.setConfigOption("foreground", (200, 203, 208))
+pg.setConfigOptions(antialias=True)
 from .model import CalTableModel, HeatmapDelegate
 from .transport import DataSource, LogReplaySource, GtDataSource, Sample
 
@@ -110,12 +118,22 @@ class Gauge(QWidget):
         self.vmax = float(vmax)
         self.value: Optional[float] = None
         self.history: deque = deque(maxlen=120)
+        self.min_seen: Optional[float] = None
+        self.max_seen: Optional[float] = None
         self.setMinimumSize(190, 90)
+        self.setToolTip("Click to reset min/max capture")
 
     def set_value(self, v: Optional[float]):
         self.value = v
         if v is not None:
             self.history.append(v)
+            self.min_seen = v if self.min_seen is None else min(self.min_seen, v)
+            self.max_seen = v if self.max_seen is None else max(self.max_seen, v)
+        self.update()
+
+    def mousePressEvent(self, _event):
+        self.min_seen = self.max_seen = None
+        self.history.clear()
         self.update()
 
     def _frac(self, v: float) -> float:
@@ -134,6 +152,12 @@ class Gauge(QWidget):
         p.setPen(QColor(150, 200, 255))
         f = QFont(); f.setPointSize(8); p.setFont(f)
         p.drawText(8, 16, self.label)
+
+        # min/max capture, top-right
+        if self.min_seen is not None:
+            p.setPen(QColor(150, 155, 162))
+            p.drawText(0, 6, w - 8, 12, Qt.AlignRight,
+                       f"▼{self.min_seen:g} ▲{self.max_seen:g}")
 
         # value
         p.setPen(QColor(240, 240, 240))
@@ -212,6 +236,29 @@ class Dashboard(QWidget):
         bar.addWidget(self.btn_stop)
         root.addLayout(bar)
 
+        # replay transport controls (hidden for live sources)
+        self.replay_ctl = QWidget()
+        rb = QHBoxLayout(self.replay_ctl)
+        rb.setContentsMargins(0, 0, 0, 0)
+        self.btn_pause = QPushButton("⏸ Pause")
+        self.btn_pause.clicked.connect(self._toggle_pause)
+        rb.addWidget(self.btn_pause)
+        rb.addWidget(QLabel("Speed:"))
+        self.speed_combo = QComboBox()
+        self.speed_combo.addItems(["0.5×", "1×", "2×", "4×", "8×"])
+        self.speed_combo.setCurrentText("4×")
+        self.speed_combo.currentTextChanged.connect(self._on_speed)
+        rb.addWidget(self.speed_combo)
+        self.pos_slider = QSlider(Qt.Horizontal)
+        self.pos_slider.sliderReleased.connect(self._on_seek)
+        self.pos_slider.sliderMoved.connect(
+            lambda v: self.time_label.setText(self._fmt_pos(v / 10.0)))
+        rb.addWidget(self.pos_slider, 1)
+        self.time_label = QLabel("0.0 / 0.0s")
+        rb.addWidget(self.time_label)
+        self.replay_ctl.setVisible(False)
+        root.addWidget(self.replay_ctl)
+
         self.grid_host = QWidget()
         self.grid = QGridLayout(self.grid_host)
         self.grid.setSpacing(6)
@@ -249,6 +296,44 @@ class Dashboard(QWidget):
             self.gauges[key] = g
             self.grid.addWidget(g, idx // cols, idx % cols)
         self.status.setText(f"Source bound: {len(self.gauges)} channels ready.")
+
+        # transport controls only make sense for a seekable replay
+        is_replay = hasattr(source, "seek")
+        self.replay_ctl.setVisible(is_replay)
+        if is_replay:
+            dur = source.duration()
+            self.pos_slider.setRange(0, int(dur * 10))
+            self.btn_pause.setText("⏸ Pause")
+            self.speed_combo.blockSignals(True)
+            self.speed_combo.setCurrentText(f"{source.speed:g}×")
+            self.speed_combo.blockSignals(False)
+            self.time_label.setText(self._fmt_pos(0.0))
+
+    # -- replay transport ---------------------------------------------------- #
+    def _fmt_pos(self, pos: float) -> str:
+        dur = self.source.duration() if hasattr(self.source, "duration") else 0.0
+        return f"{pos:.1f} / {dur:.1f}s"
+
+    def _toggle_pause(self):
+        if not (self.source and hasattr(self.source, "pause")):
+            return
+        if self.source.playing:
+            self.source.pause()
+            self.btn_pause.setText("▶ Resume")
+        else:
+            self.source.resume()
+            self.btn_pause.setText("⏸ Pause")
+
+    def _on_speed(self, text: str):
+        if self.source and hasattr(self.source, "set_speed"):
+            try:
+                self.source.set_speed(float(text.rstrip("×")))
+            except ValueError:
+                pass
+
+    def _on_seek(self):
+        if self.source and hasattr(self.source, "seek"):
+            self.source.seek(self.pos_slider.value() / 10.0)
 
     def start(self):
         if not self.source:
@@ -389,6 +474,12 @@ class Dashboard(QWidget):
             # drain() is lossless and duplicate-free — unlike sampling
             # latest() at the 10 Hz paint rate.
             self._record_samples(self.source.drain())
+        if self.replay_ctl.isVisible() and not self.pos_slider.isSliderDown():
+            pos = self.source.position()
+            self.pos_slider.blockSignals(True)
+            self.pos_slider.setValue(int(pos * 10))
+            self.pos_slider.blockSignals(False)
+            self.time_label.setText(self._fmt_pos(pos))
 
 
 # --------------------------------------------------------------------------- #
@@ -911,22 +1002,137 @@ class MainWindow(QMainWindow):
         w = QWidget(); lay = QVBoxLayout(w)
         bar = QHBoxLayout()
         b = QPushButton("Load Log…"); b.clicked.connect(self.load_log)
-        bar.addWidget(b); bar.addStretch(1)
+        bar.addWidget(b)
+        self.events_chk = QCheckBox("Event markers")
+        self.events_chk.setChecked(True)
+        self.events_chk.setToolTip("Knock events (red) and shifts (cyan)")
+        self.events_chk.toggled.connect(self._rebuild_plots)
+        bar.addWidget(self.events_chk)
+        self.cursor_label = QLabel("")
+        self.cursor_label.setStyleSheet("color:#9aa0a6;")
+        bar.addWidget(self.cursor_label, 1)
         lay.addLayout(bar)
+
+        # chart state
+        self._log_times: list[float] = []
+        self._plots: list = []
+        self._vlines: list = []
+        self._knock_times: list[float] = []
+        self._shift_times: list[float] = []
+
+        split = QSplitter(Qt.Vertical)
+        top = QSplitter(Qt.Horizontal)
+        self.chan_list = QListWidget()
+        self.chan_list.setMaximumWidth(180)
+        self.chan_list.itemChanged.connect(self._rebuild_plots)
+        top.addWidget(self.chan_list)
+        self.plot_area = pg.GraphicsLayoutWidget()
+        self.plot_area.scene().sigMouseMoved.connect(self._on_chart_mouse)
+        top.addWidget(self.plot_area)
+        top.setStretchFactor(0, 0); top.setStretchFactor(1, 1)
+        split.addWidget(top)
+
         self.log_report = QTextEdit(); self.log_report.setReadOnly(True)
         self.log_report.setFont(QFont("Consolas", 10))
         self.log_report.setPlainText(
             "No log loaded.\n\nLoad a VCM Scanner CSV export (Log File → Export "
-            "Log File → CSV) or a plain CSV. The report shows regime trims, "
-            "knock events, and fuel-pressure flags; the Editor tab can then "
-            "overlay the log onto any table.")
-        lay.addWidget(self.log_report)
+            "Log File → CSV) or a plain CSV. Channels plot above with a synced "
+            "cursor; this report shows regime trims, knock events, and "
+            "fuel-pressure flags; the Editor tab can then overlay the log onto "
+            "any table.")
+        split.addWidget(self.log_report)
+        split.setSizes([460, 220])
+        lay.addWidget(split, 1)
         return w
 
-    def _render_report(self):
+    # -- charting ------------------------------------------------------------ #
+    _PLOT_DEFAULTS = ["rpm", "vss", "app", "tps", "spark", "knock_retard"]
+
+    def _populate_channels(self):
+        self.chan_list.blockSignals(True)
+        self.chan_list.clear()
+        keys = [k for k in self.log.canonical_keys() if k != "time"]
+        present = set(keys)
+        # default to the tuning staples that are actually in the log (max 4)
+        want = [k for k in self._PLOT_DEFAULTS if k in present][:4] or keys[:3]
+        for k in keys:
+            it = QListWidgetItem(k)
+            it.setFlags(it.flags() | Qt.ItemIsUserCheckable)
+            it.setCheckState(Qt.Checked if k in want else Qt.Unchecked)
+            self.chan_list.addItem(it)
+        self.chan_list.blockSignals(False)
+
+    def _checked_channels(self) -> list[str]:
+        return [self.chan_list.item(i).text()
+                for i in range(self.chan_list.count())
+                if self.chan_list.item(i).checkState() == Qt.Checked]
+
+    def _rebuild_plots(self, *_a):
+        self.plot_area.clear()
+        self._plots = []; self._vlines = []
+        if not self.log or not self._log_times:
+            return
+        times = np.asarray(self._log_times, dtype=float)
+        keys = self._checked_channels()
+        first = None
+        for i, key in enumerate(keys):
+            p = self.plot_area.addPlot(row=i, col=0)
+            ser = self.log.series(key)
+            y = np.array([np.nan if v is None else v for v in ser], dtype=float)
+            n = min(len(times), len(y))
+            p.plot(times[:n], y[:n],
+                   pen=pg.mkPen((120, 170, 240), width=1.4), connect="finite")
+            p.setLabel("left", key)
+            p.showGrid(x=True, y=True, alpha=0.15)
+            if first is None:
+                first = p
+            else:
+                p.setXLink(first)
+            if i < len(keys) - 1:
+                p.getAxis("bottom").setStyle(showValues=False)
+            if self.events_chk.isChecked():
+                for t_ev in self._knock_times:
+                    p.addItem(pg.InfiniteLine(
+                        pos=t_ev, angle=90,
+                        pen=pg.mkPen((220, 70, 60, 150), width=1,
+                                     style=Qt.DashLine)), ignoreBounds=True)
+                for t_ev in self._shift_times:
+                    p.addItem(pg.InfiniteLine(
+                        pos=t_ev, angle=90,
+                        pen=pg.mkPen((80, 200, 220, 130), width=1,
+                                     style=Qt.DashLine)), ignoreBounds=True)
+            vline = pg.InfiniteLine(
+                angle=90, movable=False,
+                pen=pg.mkPen((235, 235, 235, 120), width=1))
+            vline.setVisible(False)
+            p.addItem(vline, ignoreBounds=True)
+            self._vlines.append(vline)
+            self._plots.append(p)
+
+    def _on_chart_mouse(self, scene_pos):
+        if not self._plots or not self.log or not self._log_times:
+            return
+        x = self._plots[0].vb.mapSceneToView(scene_pos).x()
+        import bisect
+        i = bisect.bisect_right(self._log_times, x) - 1
+        if i < 0 or i >= self.log.n_samples:
+            for vl in self._vlines:
+                vl.setVisible(False)
+            self.cursor_label.setText("")
+            return
+        for vl in self._vlines:
+            vl.setPos(x); vl.setVisible(True)
+        parts = [f"t={self._log_times[i]:.2f}s"]
+        for key in self._checked_channels():
+            ser = self.log.series(key)
+            v = ser[i] if i < len(ser) else None
+            parts.append(f"{key}={v:g}" if v is not None else f"{key}=—")
+        self.cursor_label.setText("   ".join(parts))
+
+    def _render_report(self, rep=None):
         if not self.log:
             return
-        rep = analyze_log(self.log)
+        rep = rep or analyze_log(self.log)
         L = []
         L.append(f"Source: {self.log.source}")
         L.append(f"Samples: {rep.n_samples}"
@@ -1058,7 +1264,27 @@ class MainWindow(QMainWindow):
             self.log = parse_csv(text, source=os.path.basename(p))
         except Exception as e:
             QMessageBox.critical(self, "Load log failed", str(e)); return
-        self._render_report()
+        self._log_times = time_axis(self.log)
+        rep = analyze_log(self.log)
+        # Event marker positions. The chart axis is zero-based (time_axis
+        # subtracts the log's first timestamp); analyzer events carry RAW
+        # timestamps, so index into _log_times (knock has a sample index)
+        # or subtract the base (shifts only carry time_s).
+        raw_t = [v for v in self.log.series("time") if v is not None]
+        t_base = raw_t[0] if raw_t else 0.0
+        self._knock_times = []
+        for e in rep.knock_events:
+            i = e.get("sample")
+            if i is not None and i < len(self._log_times):
+                self._knock_times.append(self._log_times[i])
+            elif e.get("time_s") is not None:
+                self._knock_times.append(float(e["time_s"]) - t_base)
+        self._shift_times = [float(s.time_s) - t_base
+                             for s in detect_shift_points(self.log)
+                             if s.time_s is not None]
+        self._render_report(rep)
+        self._populate_channels()
+        self._rebuild_plots()
         self._refresh_channel_combos()
         self.dashboard.bind_source(LogReplaySource(self.log, speed=4.0))
         self.tabs.setCurrentIndex(2)

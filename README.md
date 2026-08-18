@@ -55,26 +55,36 @@ pyinstaller openobd.spec
 
 ## The four tabs
 
-**Editor** — pick a table from the left tree; edit heatmapped cells in place.
-Changed-vs-stock cells are bold, and each cell's tooltip shows stock + Δ.
-"Revert cell → stock" undoes one cell. The **overlay** dropdown drops a loaded
-log onto the grid (operation-count histogram, or mean of a chosen value
-channel). *Overlays are meant for RPM×load breakpoint tables* (VE, spark) which
-arrive with the Phase 3 calibration dump — for the shift **setpoint** tables the
+**Editor** — pick a table from the left tree (filter box narrows the 251-table
+list); edit heatmapped cells in place. Changed-vs-stock cells are bold, each
+cell's tooltip shows stock + Δ, and **Next Δ** cycles through changed cells.
+Full editing suite: **undo/redo** (Ctrl+Z/Y), selection **math**
+(set / + / − / × / %-scale with an Amount field; +/- keys nudge), linear
+**interpolation** (↔ / ↕ / 2-D bilinear), **copy/paste as TSV** (round-trips
+through Excel), and revert selection / whole table to stock — all undoable.
+The **overlay** dropdown drops a loaded log onto the grid (operation-count
+histogram, or mean of a chosen value channel). *Overlays are meant for
+RPM×load breakpoint tables* (VE, spark) — for the shift **setpoint** tables the
 meaningful log view is the observed-shift report (below), not a cell overlay.
 
 **Scalars** — final drive ratios, tire circumferences, DoD flag: editable, with
 stock + Δ and the HPT parameter-ID breadcrumb.
 
 **Log Analysis** — load a VCM Scanner CSV export (Log File → Export Log File →
-CSV) or a plain CSV. Reports regime trims (idle/cruise/PE), knock events (real
-KR channel, or a timing-collapse heuristic when KR isn't logged), fuel-pressure
-sag, and **observed shift points** (from a `gear` channel, or inferred from RPM
-drops) so you can compare real WOT shifts to the setpoint tables.
+CSV) or a plain CSV. Stacked **time-series charts** (pyqtgraph) with a synced
+crosshair cursor and per-channel readout; pick channels from the checklist,
+with knock (red) and shift (cyan) **event markers** on every pane. Below the
+charts, the text report: regime trims (idle/cruise/PE), knock events (real KR
+channel, or a timing-collapse heuristic when KR isn't logged), fuel-pressure
+sag, and **observed shift points** (from a `gear` channel, or inferred from
+RPM drops) so you can compare real WOT shifts to the setpoint tables.
 
-**Dashboard** — a gauge cluster with rolling sparklines. Today it's fed by a
-`LogReplaySource` (replays a loaded log as if live). When `gt.py` lands, a
-`GtDataSource` implementing the same `DataSource` interface drops in unchanged.
+**Dashboard** — a gauge cluster with rolling sparklines and min/max capture
+(click a gauge to reset). Replay has full transport controls — pause/resume,
+speed (0.5–8×), and a seek slider. **⏺ Record** streams every sample losslessly
+to disk (drain-based, not UI-tick-sampled) and offers the saved CSV straight
+back to Log Analysis. Fed by a `LogReplaySource` or live by `GtDataSource`
+(OBDX Pro GT), both behind the same `DataSource` seam.
 
 ## Architecture
 
@@ -83,6 +93,8 @@ openobd/
   calspec.py     data model: Calibration / Table / Axis / Scalar + .cal.json I/O   [stdlib only]
   logbin.py      log parse (VCM Scanner + plain CSV), channel mapping,
                  table binning (overlay), regime/knock analysis, shift detection   [stdlib only]
+  editops.py     selection math / interpolation / TSV clipboard as pure
+                 change-map planners (the GUI wraps them in undo commands)         [stdlib only]
   transport.py   DataSource seam: LogReplaySource now, GtDataSource stub for gt.py [stdlib only]
   seed_2010_silverado.py   builds the #24 seed calibration from the change sheet
   model.py       Qt table model + heatmap delegate                                 [PySide6]
