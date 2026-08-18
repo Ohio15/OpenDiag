@@ -17,18 +17,18 @@ Run:  python -m openobd.app  [optional path to a .cal.json]
 from __future__ import annotations
 
 import csv
+import math
 import os
 import shutil
 import sys
 import tempfile
 import threading
-from collections import deque
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, QPointF, QEvent, Signal
+from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, Signal
 from PySide6.QtGui import (
     QAction, QColor, QPainter, QPalette, QPen, QPolygonF, QFont,
-    QUndoCommand, QUndoStack,
+    QLinearGradient, QRadialGradient, QUndoCommand, QUndoStack,
 )
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
@@ -54,24 +54,29 @@ pg.setConfigOptions(antialias=True)
 from .model import CalTableModel, HeatmapDelegate
 from .transport import DataSource, LogReplaySource, GtDataSource, Sample
 
-# Friendly gauge specs: canonical key -> (label, unit, min, max)
-GAUGE_SPECS = [
-    ("rpm", "Engine Speed", "RPM", 0, 6500),
-    ("vss", "Vehicle Speed", "mph", 0, 120),
-    ("map", "MAP", "kPa", 0, 105),
-    ("tps", "Throttle", "%", 0, 100),
-    ("app", "Pedal", "%", 0, 100),
-    ("spark", "Spark Adv", "°", -10, 45),
-    ("knock_retard", "Knock Retard", "°", 0, 15),
-    ("ect", "Coolant", "°F", 0, 260),
-    ("iat", "Intake Air", "°F", 0, 200),
-    ("tft", "Trans Temp", "°F", 0, 300),
-    ("stft", "STFT", "%", -25, 25),
-    ("ltft", "LTFT", "%", -25, 25),
-    ("fuel_press", "Fuel Press", "psi", 0, 75),
-    ("voltage", "Voltage", "V", 10, 15),
-    ("gear", "Gear", "", 0, 6),
-    ("ethanol", "Ethanol", "%", 0, 100),
+# HP-Tuners-style cluster layout.
+# Dials: key, label, unit, min, max, large?, display divisor, yellow-from, red-from
+DIAL_SPECS = [
+    ("maf",  "MAF",   "g/s", 0,   100, False, 1,    None, None),
+    ("map",  "MAP",   "kPa", 0,   105, False, 1,    None, None),
+    ("rpm",  "RPM",   "rpm", 0,  7000, True,  1000, 5500, 6200),
+    ("vss",  "Speed", "mph", 0,   160, True,  1,    None, None),
+    ("ect",  "ECT",   "°F",  100, 260, False, 1,    215,  235),
+    ("iat",  "IAT",   "°F",  20,  180, False, 1,    120,  150),
+]
+# Bars: key, label, unit, min, max, red-above, red-below
+BAR_SPECS = [
+    ("knock_retard", "KR",      "°",   0,   10, 0.5,  None),
+    ("spark",        "Advance", "°",  -10,  45, None, None),
+    ("tps",          "TPS",     "%",   0,  100, None, None),
+    ("app",          "Pedal",   "%",   0,  100, None, None),
+    ("stft",         "STFT",    "%",  -25,  25, 10,   -10),
+    ("ltft",         "LTFT",    "%",  -25,  25, 10,   -10),
+    ("fuel_press",   "Fuel",    "psi", 0,   75, None, 40),
+    ("voltage",      "Volts",   "V",   10,  15, None, 12),
+    ("tft",          "Trans",   "°F",  80, 300, 240,  None),
+    ("gear",         "Gear",    "",    0,    6, None, None),
+    ("ethanol",      "EtOH",    "%",   0,  100, None, None),
 ]
 
 
@@ -106,9 +111,22 @@ RECORD_ORDER = ["rpm", "vss", "map", "maf", "load", "tps", "app",
 
 
 # --------------------------------------------------------------------------- #
-# A self-contained gauge: label, value, bar, rolling sparkline. No deps.
+# HP-Tuners-style gauges: round dials with needles and vertical bars. Pure
+# QPainter, no deps.
 # --------------------------------------------------------------------------- #
-class Gauge(QWidget):
+def _nice_step(span: float, target: int = 8) -> float:
+    """A 1/2/2.5/5×10^k step giving roughly `target` major ticks."""
+    raw = span / max(1, target)
+    mag = 10.0 ** math.floor(math.log10(raw)) if raw > 0 else 1.0
+    for m in (1.0, 2.0, 2.5, 5.0, 10.0):
+        if raw <= m * mag:
+            return m * mag
+    return 10.0 * mag
+
+
+class GaugeBase(QWidget):
+    """Shared value/min-max/availability plumbing for dials and bars."""
+
     def __init__(self, key, label, unit, vmin, vmax):
         super().__init__()
         self.key = key
@@ -117,16 +135,13 @@ class Gauge(QWidget):
         self.vmin = float(vmin)
         self.vmax = float(vmax)
         self.value: Optional[float] = None
-        self.history: deque = deque(maxlen=120)
         self.min_seen: Optional[float] = None
         self.max_seen: Optional[float] = None
         self.available = True   # False = bound source doesn't offer this channel
-        self.setMinimumSize(190, 90)
-        self.setToolTip("Click to reset min/max capture")
+        self.setToolTip(f"{label} — click to reset min/max capture")
 
     def reset(self):
         self.value = None
-        self.history.clear()
         self.min_seen = self.max_seen = None
         self.update()
 
@@ -137,74 +152,218 @@ class Gauge(QWidget):
     def set_value(self, v: Optional[float]):
         self.value = v
         if v is not None:
-            self.history.append(v)
             self.min_seen = v if self.min_seen is None else min(self.min_seen, v)
             self.max_seen = v if self.max_seen is None else max(self.max_seen, v)
         self.update()
 
     def mousePressEvent(self, _event):
         self.min_seen = self.max_seen = None
-        self.history.clear()
         self.update()
 
     def _frac(self, v: float) -> float:
         span = (self.vmax - self.vmin) or 1.0
         return max(0.0, min(1.0, (v - self.vmin) / span))
 
+
+class DialGauge(GaugeBase):
+    """Round analog dial: radial blue face, tick ring, yellow/red zones, a
+    needle (parked at min until data arrives), digital readout."""
+
+    SWEEP_START = 225.0   # degrees, math orientation (0=east, CCW+)
+    SWEEP = 270.0         # clockwise sweep from SWEEP_START
+
+    def __init__(self, key, label, unit, vmin, vmax, large=False,
+                 divisor=1.0, yellow_from=None, red_from=None):
+        super().__init__(key, label, unit, vmin, vmax)
+        self.divisor = float(divisor)
+        self.yellow_from = yellow_from
+        self.red_from = red_from
+        side = 240 if large else 140
+        self.setMinimumSize(side, side)
+
+    def _angle(self, v: float) -> float:
+        return self.SWEEP_START - self.SWEEP * self._frac(v)
+
+    def _pt(self, cx, cy, r, ang_deg):
+        a = math.radians(ang_deg)
+        return QPointF(cx + r * math.cos(a), cy - r * math.sin(a))
+
     def paintEvent(self, _):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         w, h = self.width(), self.height()
-        p.fillRect(0, 0, w, h, QColor(28, 30, 34))
-        p.setPen(QColor(70, 74, 80))
-        p.drawRect(0, 0, w - 1, h - 1)
+        side = min(w, h)
+        cx, cy = w / 2.0, h / 2.0
+        r = side / 2.0 - 3
 
-        # label (dimmed when the bound source doesn't offer this channel)
-        p.setPen(QColor(150, 200, 255) if self.available else QColor(95, 105, 118))
-        f = QFont(); f.setPointSize(8); p.setFont(f)
-        p.drawText(8, 16, self.label)
+        dim = not self.available
 
-        # min/max capture, top-right
-        if self.min_seen is not None:
+        # bezel + face
+        p.setPen(QPen(QColor(65, 70, 78) if dim else QColor(185, 190, 198),
+                      max(2.0, side * 0.018)))
+        grad = QRadialGradient(cx, cy, r)
+        if dim:
+            grad.setColorAt(0.0, QColor(30, 36, 48))
+            grad.setColorAt(1.0, QColor(14, 17, 24))
+        else:
+            grad.setColorAt(0.0, QColor(38, 74, 150))
+            grad.setColorAt(0.55, QColor(24, 48, 104))
+            grad.setColorAt(1.0, QColor(8, 14, 30))
+        p.setBrush(grad)
+        p.drawEllipse(QPointF(cx, cy), r, r)
+
+        # colored zones (arcs just inside the tick ring)
+        arc_r = r * 0.86
+        arc_rect = QRectF(cx - arc_r, cy - arc_r, 2 * arc_r, 2 * arc_r)
+        for start_v, color in ((self.yellow_from, QColor(235, 200, 60)),
+                               (self.red_from, QColor(215, 45, 40))):
+            if start_v is None or dim:
+                continue
+            a0 = self._angle(self.vmax)
+            a1 = self._angle(max(start_v, self.vmin))
+            p.setPen(QPen(color, max(3.0, side * 0.03), Qt.SolidLine, Qt.FlatCap))
+            p.setBrush(Qt.NoBrush)
+            p.drawArc(arc_rect, int(a0 * 16), int((a1 - a0) * 16))
+
+        # ticks + numerals
+        step = _nice_step(self.vmax - self.vmin)
+        minor = step / 4.0
+        tick_pen_c = QColor(120, 126, 136) if dim else QColor(238, 240, 244)
+        num_font = QFont()
+        num_font.setPointSizeF(max(6.0, side * 0.052))
+        num_font.setBold(True)
+        p.setFont(num_font)
+        v = self.vmin
+        while v <= self.vmax + 1e-9:
+            ang = self._angle(v)
+            is_major = abs((v - self.vmin) % step) < 1e-6 \
+                or abs(step - (v - self.vmin) % step) < 1e-6
+            ln = r * (0.13 if is_major else 0.065)
+            p.setPen(QPen(tick_pen_c, max(1.2, side * (0.012 if is_major else 0.007))))
+            p.drawLine(self._pt(cx, cy, r * 0.97, ang),
+                       self._pt(cx, cy, r * 0.97 - ln, ang))
+            if is_major:
+                lbl = f"{v / self.divisor:g}"
+                lp = self._pt(cx, cy, r * 0.68, ang)
+                rect = QRectF(lp.x() - side * 0.09, lp.y() - side * 0.05,
+                              side * 0.18, side * 0.1)
+                p.setPen(tick_pen_c)
+                p.drawText(rect, Qt.AlignCenter, lbl)
+            v += minor
+
+        # unit + name
+        p.setPen(QColor(120, 126, 136) if dim else QColor(200, 208, 220))
+        f2 = QFont(); f2.setPointSizeF(max(6.0, side * 0.055)); p.setFont(f2)
+        p.drawText(QRectF(cx - r, cy - r * 0.52, 2 * r, side * 0.12),
+                   Qt.AlignCenter, self.unit)
+        p.drawText(QRectF(cx - r, cy + r * 0.62, 2 * r, side * 0.13),
+                   Qt.AlignCenter, self.label)
+
+        # digital readout + min/max
+        p.setPen(QColor(130, 136, 146) if dim else QColor(245, 246, 248))
+        f3 = QFont(); f3.setPointSizeF(max(7.0, side * 0.07)); f3.setBold(True)
+        p.setFont(f3)
+        txt = "—" if self.value is None else f"{self.value:g}"
+        p.drawText(QRectF(cx - r, cy + r * 0.30, 2 * r, side * 0.16),
+                   Qt.AlignCenter, txt)
+        if self.max_seen is not None:
             p.setPen(QColor(150, 155, 162))
-            p.drawText(0, 6, w - 8, 12, Qt.AlignRight,
+            f4 = QFont(); f4.setPointSizeF(max(5.5, side * 0.042)); p.setFont(f4)
+            p.drawText(QRectF(cx - r, cy + r * 0.47, 2 * r, side * 0.1),
+                       Qt.AlignCenter,
                        f"▼{self.min_seen:g} ▲{self.max_seen:g}")
 
-        # value
-        p.setPen(QColor(240, 240, 240) if self.available else QColor(110, 115, 124))
-        fv = QFont(); fv.setPointSize(16); fv.setBold(True); p.setFont(fv)
+        # needle (parked at vmin when no data yet)
+        needle_v = self.vmin if self.value is None else self.value
+        ang = self._angle(needle_v)
+        tip = self._pt(cx, cy, r * 0.88, ang)
+        left = self._pt(cx, cy, r * 0.07, ang + 100)
+        right = self._pt(cx, cy, r * 0.07, ang - 100)
+        tail = self._pt(cx, cy, r * 0.16, ang + 180)
+        needle = QPolygonF([tip, left, tail, right])
+        p.setPen(Qt.NoPen)
+        p.setBrush(QColor(105, 110, 120) if dim or self.value is None
+                   else QColor(240, 90, 60))
+        p.drawPolygon(needle)
+        # hub
+        hub = QRadialGradient(cx, cy, r * 0.14)
+        hub.setColorAt(0.0, QColor(210, 214, 220))
+        hub.setColorAt(1.0, QColor(90, 95, 104))
+        p.setBrush(hub)
+        p.drawEllipse(QPointF(cx, cy), r * 0.11, r * 0.11)
+        p.end()
+
+
+class BarGauge(GaugeBase):
+    """Vertical bar with a blue gradient fill, side scale, and red zones —
+    the HP Tuners bar-cluster look."""
+
+    def __init__(self, key, label, unit, vmin, vmax,
+                 red_above=None, red_below=None):
+        super().__init__(key, label, unit, vmin, vmax)
+        self.red_above = red_above
+        self.red_below = red_below
+        self.setMinimumSize(66, 170)
+
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        dim = not self.available
+
+        # name (top) and value (bottom)
+        p.setPen(QColor(120, 126, 136) if dim else QColor(225, 228, 232))
+        f = QFont(); f.setPointSizeF(8.5); f.setBold(True); p.setFont(f)
+        p.drawText(QRectF(0, 2, w, 14), Qt.AlignCenter, self.label)
         txt = "—" if self.value is None else f"{self.value:g}"
-        p.drawText(8, 44, txt)
-        p.setPen(QColor(160, 160, 160))
-        fu = QFont(); fu.setPointSize(8); p.setFont(fu)
-        p.drawText(8 + p.fontMetrics().horizontalAdvance(txt) + 40, 44, self.unit)
+        p.drawText(QRectF(0, h - 16, w, 14), Qt.AlignCenter, txt)
 
-        # bar
-        bar_y = h - 26
-        p.fillRect(8, bar_y, w - 16, 6, QColor(50, 54, 60))
-        if self.value is not None:
+        # bar frame
+        top, bot = 20, h - 20
+        bar_w = max(18, int(w * 0.34))
+        bx = 6
+        p.setPen(QPen(QColor(150, 155, 164) if not dim else QColor(70, 75, 84), 1.4))
+        p.setBrush(QColor(12, 14, 20))
+        p.drawRect(QRectF(bx, top, bar_w, bot - top))
+
+        # fill
+        if self.value is not None and not dim:
             frac = self._frac(self.value)
-            col = QColor(80, 190, 120)
-            if self.key == "knock_retard" and self.value >= 1:
-                col = QColor(220, 70, 60)
-            elif self.key in ("stft", "ltft") and abs(self.value) > 10:
-                col = QColor(230, 180, 50)
-            p.fillRect(8, bar_y, int((w - 16) * frac), 6, col)
+            fill_top = bot - (bot - top) * frac
+            grad = QLinearGradient(0, bot, 0, top)
+            grad.setColorAt(0.0, QColor(20, 45, 110))
+            grad.setColorAt(0.7, QColor(60, 120, 220))
+            grad.setColorAt(1.0, QColor(130, 185, 255))
+            p.setPen(Qt.NoPen)
+            p.setBrush(grad)
+            p.drawRect(QRectF(bx + 1.5, fill_top, bar_w - 3, bot - fill_top))
 
-        # sparkline
-        if len(self.history) >= 2:
-            spark_top = 50
-            spark_h = bar_y - spark_top - 4
-            lo = min(self.history); hi = max(self.history)
-            span = (hi - lo) or 1.0
-            pts = QPolygonF()
-            n = len(self.history)
-            for i, val in enumerate(self.history):
-                x = 8 + (w - 16) * (i / (n - 1))
-                y = spark_top + spark_h * (1 - (val - lo) / span)
-                pts.append(QPointF(x, y))
-            p.setPen(QPen(QColor(120, 170, 240), 1.2))
-            p.drawPolyline(pts)
+        # side scale: ticks, labels, red zones
+        sx = bx + bar_w + 3
+        step = _nice_step(self.vmax - self.vmin, target=5)
+        tick_c = QColor(110, 116, 126) if dim else QColor(225, 165, 60)
+        f2 = QFont(); f2.setPointSizeF(6.5); p.setFont(f2)
+
+        def y_of(v):
+            return bot - (bot - top) * self._frac(v)
+
+        for zone_v, above in ((self.red_above, True), (self.red_below, False)):
+            if zone_v is None or dim:
+                continue
+            y0 = y_of(zone_v)
+            y1 = top if above else bot
+            p.setPen(QPen(QColor(215, 45, 40), 2.5))
+            p.drawLine(QPointF(sx, y0), QPointF(sx, y1))
+
+        v = self.vmin
+        while v <= self.vmax + 1e-9:
+            y = y_of(v)
+            p.setPen(QPen(tick_c, 1.0))
+            p.drawLine(QPointF(sx + 3, y), QPointF(sx + 8, y))
+            p.setPen(tick_c)
+            p.drawText(QRectF(sx + 9, y - 6, w - sx - 9, 12),
+                       Qt.AlignLeft | Qt.AlignVCenter, f"{v:g}")
+            v += step
         p.end()
 
 
@@ -270,21 +429,42 @@ class Dashboard(QWidget):
         self.replay_ctl.setVisible(False)
         root.addWidget(self.replay_ctl)
 
-        self.grid_host = QWidget()
-        self.grid = QGridLayout(self.grid_host)
-        self.grid.setSpacing(6)
-        root.addWidget(self.grid_host, 1)
+        self.cluster_host = QWidget()
+        root.addWidget(self.cluster_host, 1)
 
         # The full cluster is visible from the start (HP Tuners style):
-        # every gauge shows "—" until its channel produces data.
+        # every gauge shows "—" / a parked needle until data arrives.
         self._build_gauges()
 
     def _build_gauges(self):
-        cols = 4
-        for idx, (key, label, unit, lo, hi) in enumerate(GAUGE_SPECS):
-            g = Gauge(key, label, unit, lo, hi)
+        cluster = QVBoxLayout(self.cluster_host)
+        cluster.setSpacing(4)
+
+        dials = {}
+        for key, label, unit, lo, hi, large, div, yel, red in DIAL_SPECS:
+            dials[key] = DialGauge(key, label, unit, lo, hi, large=large,
+                                   divisor=div, yellow_from=yel, red_from=red)
+            self.gauges[key] = dials[key]
+
+        # dial row: small pairs flank the two large dials, HP Tuners layout
+        dial_row = QHBoxLayout()
+        left_col = QVBoxLayout()
+        left_col.addWidget(dials["maf"]); left_col.addWidget(dials["map"])
+        dial_row.addLayout(left_col, 1)
+        dial_row.addWidget(dials["rpm"], 2)
+        dial_row.addWidget(dials["vss"], 2)
+        right_col = QVBoxLayout()
+        right_col.addWidget(dials["ect"]); right_col.addWidget(dials["iat"])
+        dial_row.addLayout(right_col, 1)
+        cluster.addLayout(dial_row, 3)
+
+        bar_row = QHBoxLayout()
+        bar_row.setSpacing(4)
+        for key, label, unit, lo, hi, ra, rb in BAR_SPECS:
+            g = BarGauge(key, label, unit, lo, hi, red_above=ra, red_below=rb)
             self.gauges[key] = g
-            self.grid.addWidget(g, idx // cols, idx % cols)
+            bar_row.addWidget(g, 1)
+        cluster.addLayout(bar_row, 2)
 
     def _teardown_source(self):
         """Stop and drop the current source. Always called before a new one is
