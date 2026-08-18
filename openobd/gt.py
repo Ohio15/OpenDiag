@@ -74,6 +74,7 @@ DID_TABLE = {
     # engine on/off and distinct from coolant; verify tracking on a drive.
     (None, "1644"): ("tft", lambda b: (b[1] - 40) * 9 / 5 + 32),
 }
+CANONICAL_KEYS = sorted(set(CANONICAL_KEYS) | {v[0] for v in DID_TABLE.values()})
 
 OBDX_VID = 0x0483
 OBDX_PID = 0x5740
