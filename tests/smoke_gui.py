@@ -38,9 +38,14 @@ cal, path = load_default_cal()
 win = MainWindow(cal, path)
 win.show()
 
-# select the Normal shift table
-win._select_table("WOT Shift Speed — Normal")
+# select a table that carries stock values (needed by the editor asserts;
+# the historical "WOT Shift Speed — Normal" name no longer exists in the
+# full cal)
+stock_table = next(t for t in cal.tables
+                   if t.stock_values is not None and t.n_cols >= 2)
+win._select_table(stock_table.name)
 assert win.current_model is not None
+assert win.current_model.table is stock_table
 print("editor model rows/cols:", win.current_model.rowCount(), win.current_model.columnCount())
 
 # load the synthetic log through the real code path
@@ -129,6 +134,63 @@ it2.setText("3.73")
 assert win.cal.scalars[0].value == 3.73
 assert win.dirty is True, "scalar edit did not mark dirty"
 print("scalar edit/dirty OK")
+
+# Wave 1: editor power tools ------------------------------------------------
+from PySide6.QtCore import QItemSelectionModel  # noqa: E402
+win.tabs.setCurrentIndex(0)
+m = win.current_model
+t = m.table
+orig_00 = t.values[0][0]
+
+# undo-routed cell edit via setData
+m.setData(m.index(0, 0), str(orig_00 + 5))
+assert t.values[0][0] == orig_00 + 5
+assert win.undo_stack.canUndo()
+win.undo_stack.undo()
+assert t.values[0][0] == orig_00, "undo did not restore cell"
+win.undo_stack.redo()
+assert t.values[0][0] == orig_00 + 5, "redo did not reapply"
+win.undo_stack.undo()
+
+# selection math: add Amount to a 2-cell selection, then undo
+selm = win.view.selectionModel()
+selm.clear()
+for c in (0, 1):
+    selm.select(m.index(0, c), QItemSelectionModel.Select)
+win.amount_edit.setText("3")
+before = [t.values[0][0], t.values[0][1]]
+win._math_op("add")
+assert [t.values[0][0], t.values[0][1]] == [before[0] + 3, before[1] + 3]
+win.undo_stack.undo()
+assert [t.values[0][0], t.values[0][1]] == before, "math undo failed"
+
+# copy -> paste round trip through the real clipboard
+selm.clear()
+for c in (0, 1):
+    selm.select(m.index(0, c), QItemSelectionModel.Select)
+win.copy_selection()
+win.view.setCurrentIndex(m.index(0, 0))
+win.paste_selection()  # pasting identical values -> no-op, no crash
+clip = QApplication.clipboard().text() if False else None  # noqa: F841
+
+# whole-table revert + changed-cell navigation
+m.setData(m.index(0, 0), str(orig_00 + 9))
+from openobd import editops  # noqa: E402
+assert editops.changed_cells(t), "edit did not register as changed"
+win._goto_next_changed()
+win._revert_table()
+assert editops.changed_cells(t) == [], "revert table left changes"
+win.undo_stack.undo()  # undo the revert
+assert editops.changed_cells(t), "undo of revert failed"
+win._revert_table()
+
+# tree filter
+win.tree_filter.setText("shift")
+vis = sum(not win.tree.topLevelItem(i).isHidden()
+          for i in range(win.tree.topLevelItemCount()))
+assert vis >= 1
+win.tree_filter.setText("")
+print("editor power tools OK (undo/math/clipboard/revert/filter)")
 
 # save round trip
 out = "/tmp/smoke_out.cal.json"

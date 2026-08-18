@@ -64,6 +64,9 @@ class CalTableModel(QAbstractTableModel):
         self.overlay: Optional[Overlay] = None
         self.overlay_mode = self.OVERLAY_NONE
         self.show_heatmap = True
+        # When set, in-place edits are routed here (r, c, old, new) so the
+        # window can wrap them in an undo command instead of a direct write.
+        self.edit_hook = None
 
     # -- shape ------------------------------------------------------------- #
     def rowCount(self, parent=QModelIndex()) -> int:
@@ -177,9 +180,22 @@ class CalTableModel(QAbstractTableModel):
             fv = float(value)
         except (TypeError, ValueError):
             return False
-        self.table.values[index.row()][index.column()] = fv
+        r, c = index.row(), index.column()
+        old = self.table.values[r][c]
+        if fv == old:
+            return True
+        if self.edit_hook is not None:
+            self.edit_hook(r, c, old, fv)
+            return True
+        self.table.values[r][c] = fv
         self.dataChanged.emit(index, index)
         return True
+
+    def refresh_all(self) -> None:
+        """Repaint every cell after an external write to the Table."""
+        self.dataChanged.emit(
+            self.index(0, 0),
+            self.index(self.rowCount() - 1, self.columnCount() - 1))
 
     # -- helpers used by the window --------------------------------------- #
     def revert_cell(self, r: int, c: int) -> None:

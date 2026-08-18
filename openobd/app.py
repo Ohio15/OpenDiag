@@ -25,17 +25,19 @@ import threading
 from collections import deque
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, QPointF, Signal
+from PySide6.QtCore import Qt, QTimer, QPointF, QEvent, Signal
 from PySide6.QtGui import (
     QAction, QColor, QPainter, QPalette, QPen, QPolygonF, QFont,
+    QUndoCommand, QUndoStack,
 )
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QTreeWidget, QTreeWidgetItem, QTableView, QTabWidget, QSplitter, QLabel,
     QComboBox, QCheckBox, QPushButton, QFileDialog, QTextEdit, QTableWidget,
-    QTableWidgetItem, QHeaderView, QMessageBox, QGroupBox,
+    QTableWidgetItem, QHeaderView, QMessageBox, QGroupBox, QLineEdit,
 )
 
+from . import editops
 from .calspec import Calibration
 from .logbin import (
     Log, Overlay, parse_csv, analyze_log, bin_log_to_table, detect_shift_points,
@@ -390,6 +392,31 @@ class Dashboard(QWidget):
 
 
 # --------------------------------------------------------------------------- #
+# Undo command shared by every table mutation (cell edit, math, paste, revert)
+# --------------------------------------------------------------------------- #
+class BulkEditCommand(QUndoCommand):
+    """Applies a {(r, c): (old, new)} change map to a Table. Holds the Table
+    itself (not the Qt model) so undo keeps working after the user switches
+    tables and back."""
+
+    def __init__(self, win: "MainWindow", table, changes, text: str):
+        super().__init__(text)
+        self.win = win
+        self.table = table
+        self.changes = changes
+
+    def redo(self):
+        for (r, c), (_old, new) in self.changes.items():
+            self.table.values[r][c] = new
+        self.win._table_touched(self.table)
+
+    def undo(self):
+        for (r, c), (old, _new) in self.changes.items():
+            self.table.values[r][c] = old
+        self.win._table_touched(self.table)
+
+
+# --------------------------------------------------------------------------- #
 # Main window
 # --------------------------------------------------------------------------- #
 class MainWindow(QMainWindow):
@@ -401,6 +428,7 @@ class MainWindow(QMainWindow):
         self.shift_events = cal.metadata.get("shift_events")
         self.current_model: Optional[CalTableModel] = None
         self.dirty = False
+        self.undo_stack = QUndoStack(self)
 
         self.setWindowTitle(self._title())
         self.resize(1180, 760)
@@ -469,6 +497,27 @@ class MainWindow(QMainWindow):
         m.addSeparator()
         qa = QAction("Quit", self); qa.triggered.connect(self.close); m.addAction(qa)
 
+        e = self.menuBar().addMenu("&Edit")
+        undo = self.undo_stack.createUndoAction(self, "Undo")
+        undo.setShortcut("Ctrl+Z")
+        redo = self.undo_stack.createRedoAction(self, "Redo")
+        redo.setShortcut("Ctrl+Y")
+        e.addAction(undo); e.addAction(redo)
+        e.addSeparator()
+        for label, slot, keys in [
+            ("Copy selection", self.copy_selection, "Ctrl+C"),
+            ("Paste", self.paste_selection, "Ctrl+V"),
+        ]:
+            a = QAction(label, self)
+            a.setShortcut(keys)
+            a.triggered.connect(slot)
+            e.addAction(a)
+        e.addSeparator()
+        rs = QAction("Revert selection → stock", self)
+        rs.triggered.connect(self._revert_selected); e.addAction(rs)
+        rt = QAction("Revert whole table → stock", self)
+        rt.triggered.connect(self._revert_table); e.addAction(rt)
+
         h = self.menuBar().addMenu("&Help")
         ab = QAction("About", self); ab.triggered.connect(self._about); h.addAction(ab)
 
@@ -484,6 +533,14 @@ class MainWindow(QMainWindow):
 
     # -- left tree --------------------------------------------------------- #
     def _build_tree(self) -> QWidget:
+        host = QWidget(); lay = QVBoxLayout(host)
+        lay.setContentsMargins(0, 0, 0, 0); lay.setSpacing(2)
+        self.tree_filter = QLineEdit()
+        self.tree_filter.setPlaceholderText("Filter tables…")
+        self.tree_filter.setClearButtonEnabled(True)
+        self.tree_filter.textChanged.connect(self._filter_tree)
+        lay.addWidget(self.tree_filter)
+
         self.tree = QTreeWidget()
         self.tree.setHeaderLabels(["Tables"])
         cats: dict[str, QTreeWidgetItem] = {}
@@ -497,7 +554,21 @@ class MainWindow(QMainWindow):
             cats[cat].addChild(leaf)
         self.tree.expandAll()
         self.tree.itemClicked.connect(self._on_tree_click)
-        return self.tree
+        lay.addWidget(self.tree, 1)
+        return host
+
+    def _filter_tree(self, text: str):
+        needle = text.strip().lower()
+        for i in range(self.tree.topLevelItemCount()):
+            cat = self.tree.topLevelItem(i)
+            any_visible = False
+            for j in range(cat.childCount()):
+                leaf = cat.child(j)
+                full = (leaf.data(0, Qt.UserRole) or "").lower()
+                hit = not needle or needle in full or needle in leaf.text(0).lower()
+                leaf.setHidden(not hit)
+                any_visible = any_visible or hit
+            cat.setHidden(not any_visible)
 
     def _on_tree_click(self, item, _col):
         name = item.data(0, Qt.UserRole)
@@ -530,15 +601,51 @@ class MainWindow(QMainWindow):
             cb.addItem("(none)")
             cb.currentIndexChanged.connect(self._apply_overlay)
 
-        self.revert_btn = QPushButton("Revert cell → stock")
-        self.revert_btn.clicked.connect(self._revert_selected)
-        ctl.addWidget(self.revert_btn)
+        self.next_delta_btn = QPushButton("Next Δ")
+        self.next_delta_btn.setToolTip("Jump to the next changed-vs-stock cell")
+        self.next_delta_btn.clicked.connect(self._goto_next_changed)
+        ctl.addWidget(self.next_delta_btn)
         ctl.addStretch(1)
         lay.addLayout(ctl)
+
+        # selection-math toolbar (HP Tuners staples). +/- keys nudge by Amount.
+        math_bar = QHBoxLayout()
+        math_bar.addWidget(QLabel("Amount:"))
+        self.amount_edit = QLineEdit("1")
+        self.amount_edit.setFixedWidth(70)
+        self.amount_edit.setToolTip(
+            "Operand for the math buttons and the +/- key nudge")
+        math_bar.addWidget(self.amount_edit)
+        for label, tip, fn in [
+            ("=", "Set selection to Amount", lambda: self._math_op("set")),
+            ("+", "Add Amount to selection", lambda: self._math_op("add")),
+            ("−", "Subtract Amount from selection",
+             lambda: self._math_op("add", negate=True)),
+            ("×", "Multiply selection by Amount", lambda: self._math_op("mul")),
+            ("%", "Scale selection by Amount percent",
+             lambda: self._math_op("pct")),
+        ]:
+            b = QPushButton(label); b.setFixedWidth(34); b.setToolTip(tip)
+            b.clicked.connect(fn)
+            math_bar.addWidget(b)
+        math_bar.addSpacing(12)
+        for label, mode in [("Interp ↔", "h"), ("Interp ↕", "v"),
+                            ("Interp 2D", "2d")]:
+            b = QPushButton(label)
+            b.setToolTip("Linear interpolation across the selection")
+            b.clicked.connect(lambda _=False, m=mode: self._interp(m))
+            math_bar.addWidget(b)
+        math_bar.addSpacing(12)
+        rb = QPushButton("Revert sel → stock")
+        rb.clicked.connect(self._revert_selected)
+        math_bar.addWidget(rb)
+        math_bar.addStretch(1)
+        lay.addLayout(math_bar)
 
         self.view = QTableView()
         self.view.setItemDelegate(HeatmapDelegate(self.view))
         self.view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.view.installEventFilter(self)  # +/- nudge keys
         lay.addWidget(self.view, 1)
 
         self.table_info = QLabel(""); self.table_info.setWordWrap(True)
@@ -553,29 +660,145 @@ class MainWindow(QMainWindow):
         events = self.shift_events if "Shift Speed" in name else None
         self.current_model = CalTableModel(t, shift_events=events)
         self.current_model.dataChanged.connect(self._mark_dirty)
+        self.current_model.edit_hook = self._on_cell_edit
         self.current_model.show_heatmap = self.heat_chk.isChecked()
         self.view.setModel(self.current_model)
-        changed = sum(
-            t.cell_changed(r, c)
-            for r in range(t.n_rows) for c in range(t.n_cols)
-        )
+        self._update_table_info()
+        self._apply_overlay()
+
+    def _update_table_info(self):
+        if not self.current_model:
+            return
+        t = self.current_model.table
+        changed = len(editops.changed_cells(t))
         pid = f" · HPT id {t.param_id}" if t.param_id else ""
         self.table_info.setText(
             f"<b>{t.name}</b> ({t.unit}){pid} · {changed} cell(s) changed vs "
             f"stock<br>{t.note}"
         )
-        self._apply_overlay()
 
     def _toggle_heat(self):
         if self.current_model:
             self.current_model.set_heatmap(self.heat_chk.isChecked())
 
+    # -- editing: undo plumbing --------------------------------------------- #
+    def _on_cell_edit(self, r, c, old, new):
+        self.undo_stack.push(BulkEditCommand(
+            self, self.current_model.table, {(r, c): (old, new)}, "edit cell"))
+
+    def _table_touched(self, table):
+        """Called by undo commands after writing to a Table."""
+        self._mark_dirty()
+        if self.current_model and self.current_model.table is table:
+            self.current_model.refresh_all()
+            self._update_table_info()
+
+    def _push_changes(self, changes, text):
+        if not changes:
+            self.statusBar().showMessage(f"{text}: no cells affected", 3000)
+            return
+        self.undo_stack.push(BulkEditCommand(
+            self, self.current_model.table, changes, text))
+        self.statusBar().showMessage(f"{text}: {len(changes)} cell(s)", 3000)
+
+    def _selected_cells(self):
+        if not self.current_model:
+            return []
+        sel = self.view.selectionModel()
+        idxs = sel.selectedIndexes() if sel else []
+        if not idxs:
+            cur = self.view.currentIndex()
+            idxs = [cur] if cur.isValid() else []
+        return [(i.row(), i.column()) for i in idxs]
+
+    def _amount(self) -> Optional[float]:
+        try:
+            return float(self.amount_edit.text())
+        except ValueError:
+            self.statusBar().showMessage(
+                f"Amount is not a number: {self.amount_edit.text()!r}", 4000)
+            return None
+
+    def _math_op(self, op: str, negate: bool = False):
+        cells = self._selected_cells()
+        amt = self._amount()
+        if not cells or amt is None:
+            return
+        if negate:
+            amt = -amt
+        label = {"set": "set", "add": "add", "mul": "multiply", "pct": "scale %"}[op]
+        self._push_changes(
+            editops.apply_math(self.current_model.table, cells, op, amt), label)
+
+    def _interp(self, mode: str):
+        cells = self._selected_cells()
+        if len(cells) < 2:
+            self.statusBar().showMessage("Select a range to interpolate", 3000)
+            return
+        self._push_changes(
+            editops.interpolate(self.current_model.table, cells, mode),
+            f"interpolate {mode}")
+
     def _revert_selected(self):
+        cells = self._selected_cells()
+        if not cells:
+            return
+        self._push_changes(
+            editops.revert_cells(self.current_model.table, cells),
+            "revert selection to stock")
+
+    def _revert_table(self):
         if not self.current_model:
             return
-        idx = self.view.currentIndex()
-        if idx.isValid():
-            self.current_model.revert_cell(idx.row(), idx.column())
+        t = self.current_model.table
+        self._push_changes(
+            editops.revert_cells(t, editops.all_cells(t)),
+            "revert table to stock")
+
+    # -- clipboard ----------------------------------------------------------- #
+    def copy_selection(self):
+        cells = self._selected_cells()
+        if not cells:
+            return
+        QApplication.clipboard().setText(
+            editops.to_tsv(self.current_model.table, cells))
+        self.statusBar().showMessage(f"Copied {len(cells)} cell(s)", 3000)
+
+    def paste_selection(self):
+        if not self.current_model:
+            return
+        grid = editops.parse_tsv(QApplication.clipboard().text())
+        if not grid:
+            self.statusBar().showMessage("Clipboard has no numeric grid", 3000)
+            return
+        cur = self.view.currentIndex()
+        r0, c0 = (cur.row(), cur.column()) if cur.isValid() else (0, 0)
+        self._push_changes(
+            editops.paste_grid(self.current_model.table, r0, c0, grid), "paste")
+
+    # -- navigation ----------------------------------------------------------- #
+    def _goto_next_changed(self):
+        if not self.current_model:
+            return
+        t = self.current_model.table
+        changed = editops.changed_cells(t)
+        if not changed:
+            self.statusBar().showMessage("No changed cells in this table", 3000)
+            return
+        cur = self.view.currentIndex()
+        pos = (cur.row(), cur.column()) if cur.isValid() else (-1, -1)
+        nxt = next((rc for rc in changed if rc > pos), changed[0])
+        idx = self.current_model.index(*nxt)
+        self.view.setCurrentIndex(idx)
+        self.view.scrollTo(idx)
+
+    def eventFilter(self, obj, event):
+        # +/- on the grid nudges the selection by Amount (HP Tuners style).
+        if obj is self.view and event.type() == QEvent.KeyPress:
+            if event.key() in (Qt.Key_Plus, Qt.Key_Minus) and self.current_model:
+                self._math_op("add", negate=event.key() == Qt.Key_Minus)
+                return True
+        return super().eventFilter(obj, event)
 
     def _refresh_channel_combos(self):
         keys = ["(none)"] + (self.log.canonical_keys() if self.log else [])
