@@ -46,6 +46,12 @@ def heat_color(frac: float, alpha: int = 210) -> QColor:
     return QColor(r, g, b, alpha)
 
 
+def text_color_for(bg: QColor) -> QColor:
+    """Black or white, whichever reads better on bg (WCAG-ish luminance)."""
+    lum = 0.299 * bg.red() + 0.587 * bg.green() + 0.114 * bg.blue()
+    return QColor(15, 15, 15) if lum >= 140 else QColor(235, 235, 235)
+
+
 class CalTableModel(QAbstractTableModel):
     OVERLAY_NONE = 0
     OVERLAY_COUNT = 1
@@ -95,10 +101,13 @@ class CalTableModel(QAbstractTableModel):
             return f"{val:g}"
 
         if role == Qt.BackgroundRole:
-            return QBrush(self._bg_color(r, c, val))
+            bg = self._bg_color(r, c, val)
+            return QBrush(bg) if bg is not None else None
 
         if role == Qt.ForegroundRole:
-            return QBrush(QColor(20, 20, 20))
+            bg = self._bg_color(r, c, val)
+            # No explicit background -> let the palette pick the text color.
+            return QBrush(text_color_for(bg)) if bg is not None else None
 
         if role == Qt.FontRole and self.table.cell_changed(r, c):
             f = QFont()
@@ -112,15 +121,16 @@ class CalTableModel(QAbstractTableModel):
             return int(Qt.AlignCenter)
         return None
 
-    def _bg_color(self, r: int, c: int, val: float) -> QColor:
-        # Overlay tint takes precedence when active.
+    def _bg_color(self, r: int, c: int, val: float) -> Optional[QColor]:
+        # Overlay tint takes precedence when active; cells the log never
+        # touched keep the palette background (None).
         if self.overlay and self.overlay_mode == self.OVERLAY_COUNT:
             counts = self.overlay.count_grid()
             mx = max((max(row) for row in counts), default=0)
             cnt = counts[r][c] if r < len(counts) and c < len(counts[r]) else 0
             if mx > 0 and cnt > 0:
                 return heat_color(cnt / mx)
-            return QColor(245, 245, 245)
+            return None
         if self.overlay and self.overlay_mode == self.OVERLAY_MEAN:
             means = self.overlay.mean_grid()
             flat = [m for row in means for m in row if m is not None]
@@ -130,10 +140,10 @@ class CalTableModel(QAbstractTableModel):
                 if m is not None:
                     span = (hi - lo) or 1.0
                     return heat_color((m - lo) / span)
-            return QColor(245, 245, 245)
+            return None
 
         if not self.show_heatmap:
-            return QColor(255, 255, 255)
+            return None
         lo, hi = self.table.vmin_vmax()
         span = (hi - lo) or 1.0
         return heat_color((val - lo) / span, alpha=170)

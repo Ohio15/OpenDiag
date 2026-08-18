@@ -76,9 +76,59 @@ vals = {k: g.value for k, g in win.dashboard.gauges.items()}
 print("dashboard gauge sample:", {k: v for k, v in vals.items() if v is not None})
 win.dashboard.stop()
 
-# scalar edit path
+# recording path: drain-based, streamed to a temp CSV (bypass the save dialog)
+import tempfile, csv as _csv  # noqa: E402
+# speed chosen so the 19.9s log does NOT loop during ~0.16s of ticking
+# (a looped replay legitimately repeats timestamps)
+win.dashboard.bind_source(LogReplaySource(win.log, speed=50.0))
+win.dashboard.start()
+d = win.dashboard
+avail = set(d.source.channels())
+from openobd.app import RECORD_ORDER  # noqa: E402
+d._rec_keys = [k for k in RECORD_ORDER if k in avail]
+d._rec_file = tempfile.NamedTemporaryFile(
+    "w", newline="", encoding="utf-8", suffix=".csv", delete=False)
+d._rec_writer = _csv.writer(d._rec_file)
+d._rec_count = 0
+d.source.drain()
+d.recording = True
+import time as _time  # noqa: E402
+for _ in range(8):
+    _time.sleep(0.02)
+    app.processEvents()
+    d._tick()
+d.recording = False
+rec_n = d._rec_count
+d._rec_file.close()
+with open(d._rec_file.name) as fh:
+    rec_rows = fh.read().strip().splitlines()
+os.unlink(d._rec_file.name)
+d._rec_file = d._rec_writer = None
+assert rec_n == len(rec_rows), f"row count mismatch: {rec_n} vs {len(rec_rows)}"
+times = [r.split(",")[0] for r in rec_rows]
+assert len(times) == len(set(times)), "duplicate samples in recording"
+print("recording OK:", rec_n, "unique samples streamed")
+win.dashboard.stop()
+
+# teardown-on-rebind: old source must be stopped
+old_src = win.dashboard.source
+win.dashboard.bind_source(LogReplaySource(win.log, speed=1.0))
+assert win.dashboard.source is not old_src
+print("rebind teardown OK")
+
+# scalar edit path + dirty tracking + invalid-input restore
+assert win.dirty is False
 win.cal.scalars[0].value = 4.10
 win._set_scalar_row(0, win.cal.scalars[0])
+it = win.scalar_tbl.item(0, 1)
+it.setText("not-a-number")   # triggers _on_scalar_edit -> restore
+assert win.scalar_tbl.item(0, 1).text() == f"{win.cal.scalars[0].value:g}", \
+    "invalid scalar text not reverted"
+it2 = win.scalar_tbl.item(0, 1)
+it2.setText("3.73")
+assert win.cal.scalars[0].value == 3.73
+assert win.dirty is True, "scalar edit did not mark dirty"
+print("scalar edit/dirty OK")
 
 # save round trip
 out = "/tmp/smoke_out.cal.json"

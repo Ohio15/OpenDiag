@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import time
 import threading
+from collections import deque
 from dataclasses import dataclass
 from typing import Optional
 
@@ -35,6 +36,12 @@ class DataSource:
         """Non-blocking: the most recent sample, or None if not started."""
         raise NotImplementedError
 
+    def drain(self) -> list[Sample]:
+        """All samples produced since the last drain() call, oldest first.
+        Lossless (up to an internal bound) — the recorder reads this, so it
+        never misses samples between UI ticks nor sees duplicates."""
+        return []
+
     def start(self) -> None:
         pass
 
@@ -57,6 +64,7 @@ class LogReplaySource(DataSource):
         self._t0_wall: Optional[float] = None
         self._times = self._build_times()
         self._cursor = 0
+        self._drained = -1  # last sample index handed out by drain()
 
     def _build_times(self) -> list[float]:
         tser = self.log.series("time")
@@ -77,6 +85,7 @@ class LogReplaySource(DataSource):
     def start(self) -> None:
         self._t0_wall = time.monotonic()
         self._cursor = 0
+        self._drained = -1
 
     def _sample_at(self, i: int) -> Sample:
         vals: dict[str, float] = {}
@@ -102,6 +111,16 @@ class LogReplaySource(DataSource):
         self._cursor = i
         return self._sample_at(i)
 
+    def drain(self) -> list[Sample]:
+        # latest() advances the cursor (the dashboard tick calls it first);
+        # hand out everything between the last drain and the cursor.
+        if self._t0_wall is None:
+            return []
+        out = [self._sample_at(i)
+               for i in range(self._drained + 1, self._cursor + 1)]
+        self._drained = self._cursor
+        return out
+
 
 class GtDataSource(DataSource):
     """
@@ -119,6 +138,10 @@ class GtDataSource(DataSource):
         self._keys = list(_gt.CANONICAL_KEYS)
         self._interval = poll_interval
         self._latest = None
+        # Recorder queue, filled by the poll thread. Bounded so an idle
+        # (non-recording) session can't grow it without limit; ~8k samples
+        # is minutes of headroom at the real poll rate.
+        self._queue: deque = deque(maxlen=8192)
         self._thread = None
         self._stop = threading.Event()
         self._t0 = None
@@ -131,6 +154,14 @@ class GtDataSource(DataSource):
     def latest(self):
         return self._latest
 
+    def drain(self):
+        out = []
+        while True:
+            try:
+                out.append(self._queue.popleft())
+            except IndexError:
+                return out
+
     def start(self):
         self._gt.open()
         self.device = getattr(self._gt, "device", "OBDX Pro GT")
@@ -140,6 +171,7 @@ class GtDataSource(DataSource):
         if vals:
             self._keys = sorted(vals.keys())
             self._latest = Sample(t=0.0, values=vals)
+            self._queue.append(self._latest)
         self._stop.clear()
         self._thread = threading.Thread(target=self._run, name="gt-poll", daemon=True)
         self._thread.start()
@@ -149,7 +181,9 @@ class GtDataSource(DataSource):
             try:
                 vals = self._gt.poll_once()
                 if vals:
-                    self._latest = Sample(t=time.monotonic() - self._t0, values=vals)
+                    s = Sample(t=time.monotonic() - self._t0, values=vals)
+                    self._latest = s
+                    self._queue.append(s)
             except Exception:
                 pass
             self._stop.wait(self._interval)

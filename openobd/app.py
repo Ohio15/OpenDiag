@@ -16,13 +16,19 @@ Run:  python -m openobd.app  [optional path to a .cal.json]
 """
 from __future__ import annotations
 
+import csv
 import os
+import shutil
 import sys
+import tempfile
+import threading
 from collections import deque
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, QPointF
-from PySide6.QtGui import QAction, QColor, QPainter, QPen, QPolygonF, QFont
+from PySide6.QtCore import Qt, QTimer, QPointF, Signal
+from PySide6.QtGui import (
+    QAction, QColor, QPainter, QPalette, QPen, QPolygonF, QFont,
+)
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QTreeWidget, QTreeWidgetItem, QTableView, QTabWidget, QSplitter, QLabel,
@@ -166,15 +172,24 @@ class Gauge(QWidget):
 
 
 class Dashboard(QWidget):
+    # GT connect runs on a worker thread (serial open + first poll can take
+    # seconds); these marshal the result back onto the GUI thread.
+    gt_ready = Signal(object)
+    gt_error = Signal(str)
+
     def __init__(self):
         super().__init__()
         self.source: Optional[DataSource] = None
         self.gauges: dict[str, Gauge] = {}
         self.recording = False
-        self._rec_rows = []
+        self._rec_file = None          # open csv file the recorder streams to
+        self._rec_writer = None
+        self._rec_count = 0
         self._rec_keys = []
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._tick)
+        self.gt_ready.connect(self._on_gt_ready)
+        self.gt_error.connect(self._on_gt_error)
 
         root = QVBoxLayout(self)
         bar = QHBoxLayout()
@@ -200,7 +215,23 @@ class Dashboard(QWidget):
         self.grid.setSpacing(6)
         root.addWidget(self.grid_host, 1)
 
+    def _teardown_source(self):
+        """Stop and drop the current source. Always called before a new one is
+        bound so a live GT poll thread can't keep running invisibly."""
+        if self.recording:
+            self._finalize_record()
+        self.timer.stop()
+        if self.source:
+            try:
+                self.source.stop()
+            except Exception:
+                pass
+        self.source = None
+        self.btn_start.setEnabled(True)
+        self.btn_stop.setEnabled(False)
+
     def bind_source(self, source: DataSource):
+        self._teardown_source()
         self.source = source
         avail = set(source.channels())
         # (re)build gauges for channels present in the source
@@ -228,6 +259,8 @@ class Dashboard(QWidget):
         self.status.setText("Replaying…")
 
     def stop(self):
+        if self.recording:
+            self._finalize_record()
         self.timer.stop()
         if self.source:
             try:
@@ -239,23 +272,40 @@ class Dashboard(QWidget):
         self.status.setText("Stopped.")
 
     def connect_gt(self):
-        """Connect the OBDX Pro GT and stream live gauges."""
-        self.stop()
+        """Connect the OBDX Pro GT on a worker thread (serial IO blocks)."""
         self.status.setText("Connecting to OBDX Pro GT…")
         self.btn_connect.setEnabled(False)
-        try:
-            src = GtDataSource()
-            self.bind_source(src)
-            src.start()
-            self.timer.start(100)
-            self.btn_start.setEnabled(False)
-            self.btn_stop.setEnabled(True)
-            dev = getattr(src, "device", "OBDX Pro GT")
-            self.status.setText(f"{dev} live — {len(self.gauges)} gauges @ {getattr(src,'port_name','')}")
-        except Exception as e:
-            self.status.setText(f"GT connect failed: {e}")
-        finally:
-            self.btn_connect.setEnabled(True)
+
+        def worker():
+            try:
+                src = GtDataSource()
+                src.start()
+            except Exception as e:
+                try:
+                    self.gt_error.emit(str(e))
+                except RuntimeError:
+                    pass  # widget destroyed while connecting
+                return
+            try:
+                self.gt_ready.emit(src)
+            except RuntimeError:
+                src.stop()
+
+        threading.Thread(target=worker, name="gt-connect", daemon=True).start()
+
+    def _on_gt_ready(self, src):
+        self.bind_source(src)          # tears down the old source first
+        self.timer.start(100)
+        self.btn_start.setEnabled(False)
+        self.btn_stop.setEnabled(True)
+        self.btn_connect.setEnabled(True)
+        dev = getattr(src, "device", "OBDX Pro GT")
+        self.status.setText(
+            f"{dev} live — {len(self.gauges)} gauges @ {getattr(src, 'port_name', '')}")
+
+    def _on_gt_error(self, msg):
+        self.btn_connect.setEnabled(True)
+        self.status.setText(f"GT connect failed: {msg}")
 
     def toggle_record(self):
         if not self.source:
@@ -264,40 +314,52 @@ class Dashboard(QWidget):
         if not self.recording:
             avail = set(self.source.channels())
             self._rec_keys = [k for k in RECORD_ORDER if k in avail]
-            self._rec_rows = []
+            try:
+                self._rec_file = tempfile.NamedTemporaryFile(
+                    "w", newline="", encoding="utf-8",
+                    prefix="openobd_rec_", suffix=".csv", delete=False)
+            except Exception as e:
+                self.status.setText(f"Can't start recording: {e}")
+                return
+            self._rec_writer = csv.writer(self._rec_file)
+            self._rec_writer.writerow(
+                ["Time (s)"] + [RECORD_LABELS[k] for k in self._rec_keys])
+            self._rec_count = 0
+            self.source.drain()  # discard the pre-record backlog
             self.recording = True
             self.btn_record.setText("⏺ Recording… (click to save)")
             self.status.setText("Recording live data…")
         else:
-            self.recording = False
-            self.btn_record.setText("⏺ Record")
-            self._write_record()
+            self._finalize_record()
 
-    def _write_record(self):
-        if not self._rec_rows:
+    def _finalize_record(self):
+        self.recording = False
+        self.btn_record.setText("⏺ Record")
+        if self.source:  # flush anything produced since the last tick
+            self._record_samples(self.source.drain())
+        tmp_path = self._rec_file.name
+        self._rec_file.close()
+        self._rec_file = self._rec_writer = None
+        if not self._rec_count:
+            os.unlink(tmp_path)
             self.status.setText("Nothing recorded.")
             return
-        import os as _os, csv as _csv
         from datetime import datetime as _dt
-        default = _os.path.join(
-            _os.path.expanduser("~"), "Documents",
+        default = os.path.join(
+            os.path.expanduser("~"), "Documents",
             "gt_log_" + _dt.now().strftime("%Y%m%d_%H%M%S") + ".csv")
-        path, _f = QFileDialog.getSaveFileName(self, "Save datalog", default, "CSV (*.csv)")
+        path, _f = QFileDialog.getSaveFileName(
+            self, "Save datalog", default, "CSV (*.csv)")
         if not path:
-            self.status.setText(f"Recording held ({len(self._rec_rows)} samples) — not saved.")
+            self.status.setText(
+                f"Not saved — {self._rec_count} samples kept at {tmp_path}")
             return
         try:
-            with open(path, "w", newline="", encoding="utf-8") as fh:
-                w = _csv.writer(fh)
-                w.writerow(["Time (s)"] + [RECORD_LABELS[k] for k in self._rec_keys])
-                for t, vals in self._rec_rows:
-                    w.writerow([f"{t:.2f}"] + [
-                        ("" if vals.get(k) is None else f"{vals[k]:g}")
-                        for k in self._rec_keys])
+            shutil.move(tmp_path, path)
         except Exception as e:
-            self.status.setText(f"Save failed: {e}")
+            self.status.setText(f"Save failed: {e} (data at {tmp_path})")
             return
-        n = len(self._rec_rows)
+        n = self._rec_count
         self.status.setText(f"Saved {n} samples → {path}")
         win = self.window()
         if hasattr(win, "load_log_path") and QMessageBox.question(
@@ -305,6 +367,13 @@ class Dashboard(QWidget):
                 f"Saved {n} samples to:\n{path}\n\nLoad it into Log Analysis now?"
                 ) == QMessageBox.Yes:
             win.load_log_path(path)
+
+    def _record_samples(self, samples):
+        for s in samples:
+            self._rec_writer.writerow([f"{s.t:.2f}"] + [
+                ("" if s.values.get(k) is None else f"{s.values[k]:g}")
+                for k in self._rec_keys])
+            self._rec_count += 1
 
     def _tick(self):
         if not self.source:
@@ -315,7 +384,9 @@ class Dashboard(QWidget):
         for key, g in self.gauges.items():
             g.set_value(s.values.get(key))
         if self.recording:
-            self._rec_rows.append((s.t, dict(s.values)))
+            # drain() is lossless and duplicate-free — unlike sampling
+            # latest() at the 10 Hz paint rate.
+            self._record_samples(self.source.drain())
 
 
 # --------------------------------------------------------------------------- #
@@ -329,6 +400,7 @@ class MainWindow(QMainWindow):
         self.log: Optional[Log] = None
         self.shift_events = cal.metadata.get("shift_events")
         self.current_model: Optional[CalTableModel] = None
+        self.dirty = False
 
         self.setWindowTitle(self._title())
         self.resize(1180, 760)
@@ -356,7 +428,29 @@ class MainWindow(QMainWindow):
     def _title(self) -> str:
         veh = self.cal.metadata.get("vehicle", "calibration")
         name = os.path.basename(self.path) if self.path else "unsaved"
-        return f"OpenOBD — {veh}  [{name}]"
+        star = " *" if self.dirty else ""
+        return f"OpenOBD — {veh}  [{name}]{star}"
+
+    def _mark_dirty(self, *_a):
+        if not self.dirty:
+            self.dirty = True
+            self.setWindowTitle(self._title())
+
+    def closeEvent(self, event):
+        if not self.dirty:
+            return super().closeEvent(event)
+        ans = QMessageBox.question(
+            self, "Unsaved changes",
+            "The calibration has unsaved edits. Save before closing?",
+            QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
+            QMessageBox.Save)
+        if ans == QMessageBox.Cancel:
+            return event.ignore()
+        if ans == QMessageBox.Save:
+            self.save_cal()
+            if self.dirty:  # save failed or Save As was cancelled
+                return event.ignore()
+        super().closeEvent(event)
 
     def _build_menu(self):
         m = self.menuBar().addMenu("&File")
@@ -448,7 +542,7 @@ class MainWindow(QMainWindow):
         lay.addWidget(self.view, 1)
 
         self.table_info = QLabel(""); self.table_info.setWordWrap(True)
-        self.table_info.setStyleSheet("color:#555; padding:4px;")
+        self.table_info.setStyleSheet("color:#9aa0a6; padding:4px;")
         lay.addWidget(self.table_info)
         return w
 
@@ -458,6 +552,7 @@ class MainWindow(QMainWindow):
             return
         events = self.shift_events if "Shift Speed" in name else None
         self.current_model = CalTableModel(t, shift_events=events)
+        self.current_model.dataChanged.connect(self._mark_dirty)
         self.current_model.show_heatmap = self.heat_chk.isChecked()
         self.view.setModel(self.current_model)
         changed = sum(
@@ -517,7 +612,10 @@ class MainWindow(QMainWindow):
                 self.log, self.current_model.table,
                 x_channel=xk, y_channel=yk, value_channel=vk,
             )
-        except Exception:
+        except Exception as e:
+            # Clear rather than leave a stale overlay on screen, and say why.
+            self.current_model.set_overlay(None, CalTableModel.OVERLAY_NONE)
+            self.statusBar().showMessage(f"Overlay failed: {e}", 6000)
             return
         m = (CalTableModel.OVERLAY_COUNT if mode == 1
              else CalTableModel.OVERLAY_MEAN)
@@ -536,7 +634,7 @@ class MainWindow(QMainWindow):
         self.scalar_tbl.itemChanged.connect(self._on_scalar_edit)
         lay.addWidget(self.scalar_tbl)
         note = QLabel(self.cal.metadata.get("safety", ""))
-        note.setWordWrap(True); note.setStyleSheet("color:#a33; padding:6px;")
+        note.setWordWrap(True); note.setStyleSheet("color:#e07b72; padding:6px;")
         lay.addWidget(note)
         return w
 
@@ -561,7 +659,7 @@ class MainWindow(QMainWindow):
             d = s.value - s.stock_value
             delta = f"{d:+g}" if d else ""
         self.scalar_tbl.setItem(
-            r, 4, item(delta, color=QColor(190, 60, 50) if delta else None))
+            r, 4, item(delta, color=QColor(235, 110, 100) if delta else None))
         self.scalar_tbl.setItem(r, 5, item(s.category))
         self.scalar_tbl.blockSignals(False)
 
@@ -574,7 +672,14 @@ class MainWindow(QMainWindow):
         try:
             v = float(it.text())
         except ValueError:
+            # Restore the display so the cell never shows a value the model
+            # doesn't hold.
+            self._set_scalar_row(r, self.cal.scalars[r])
+            self.statusBar().showMessage(
+                f"Not a number: {it.text()!r} — edit reverted", 4000)
             return
+        if v != self.cal.scalars[r].value:
+            self._mark_dirty()
         self.cal.scalars[r].value = v
         self._set_scalar_row(r, self.cal.scalars[r])
 
@@ -670,8 +775,10 @@ class MainWindow(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Open failed", str(e)); return
         self.path = p
-        # rebuild UI by re-instantiating (simplest, robust)
+        # rebuild UI by re-instantiating (simplest, robust). Keep a Python
+        # reference on the QApplication or the new window gets GC'd.
         new = MainWindow(self.cal, p)
+        QApplication.instance()._openobd_main = new
         new.show()
         self.close()
 
@@ -680,6 +787,7 @@ class MainWindow(QMainWindow):
             return self.save_cal_as()
         try:
             self.cal.save(self.path)
+            self.dirty = False
             self.setWindowTitle(self._title())
             self.statusBar().showMessage(f"Saved {self.path}", 4000)
         except Exception as e:
@@ -756,10 +864,38 @@ def load_default_cal() -> tuple[Calibration, Optional[str]]:
     return s.build_with_labels(), None
 
 
+def apply_dark_theme(app: QApplication) -> None:
+    """App-wide dark Fusion palette (dark mode is the primary theme)."""
+    app.setStyle("Fusion")
+    p = QPalette()
+    window = QColor(37, 39, 43)
+    base = QColor(28, 30, 34)
+    text = QColor(222, 224, 228)
+    disabled = QColor(120, 124, 130)
+    highlight = QColor(53, 106, 195)
+    p.setColor(QPalette.Window, window)
+    p.setColor(QPalette.WindowText, text)
+    p.setColor(QPalette.Base, base)
+    p.setColor(QPalette.AlternateBase, window)
+    p.setColor(QPalette.ToolTipBase, QColor(48, 50, 56))
+    p.setColor(QPalette.ToolTipText, text)
+    p.setColor(QPalette.Text, text)
+    p.setColor(QPalette.PlaceholderText, disabled)
+    p.setColor(QPalette.Button, QColor(45, 48, 53))
+    p.setColor(QPalette.ButtonText, text)
+    p.setColor(QPalette.BrightText, QColor(255, 120, 110))
+    p.setColor(QPalette.Link, QColor(120, 170, 240))
+    p.setColor(QPalette.Highlight, highlight)
+    p.setColor(QPalette.HighlightedText, QColor(245, 246, 248))
+    for role in (QPalette.WindowText, QPalette.Text, QPalette.ButtonText):
+        p.setColor(QPalette.Disabled, role, disabled)
+    app.setPalette(p)
+
+
 def main(argv=None):
     argv = argv if argv is not None else sys.argv
     app = QApplication(argv)
-    app.setStyle("Fusion")
+    apply_dark_theme(app)
     args = argv[1:]
     want_gt = "--gt" in args
     paths = [a for a in args if not a.startswith("-") and os.path.exists(a)]
