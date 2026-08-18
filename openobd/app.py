@@ -27,7 +27,7 @@ from typing import Optional
 
 from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, Signal
 from PySide6.QtGui import (
-    QAction, QColor, QPainter, QPalette, QPen, QPolygonF, QFont,
+    QAction, QColor, QIcon, QPainter, QPalette, QPen, QPolygonF, QFont,
     QLinearGradient, QRadialGradient, QUndoCommand, QUndoStack,
 )
 from PySide6.QtWidgets import (
@@ -1553,9 +1553,25 @@ def apply_dark_theme(app: QApplication) -> None:
     app.setPalette(p)
 
 
+def app_icon_path() -> Optional[str]:
+    # Candidate locations: dev tree, and PyInstaller's bundled data dir.
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    candidates = [os.path.join(here, "assets", "openobd.ico")]
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        candidates.append(os.path.join(meipass, "assets", "openobd.ico"))
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return None
+
+
 def main(argv=None):
     argv = argv if argv is not None else sys.argv
     app = QApplication(argv)
+    icon_path = app_icon_path()
+    if icon_path:
+        app.setWindowIcon(QIcon(icon_path))
     apply_dark_theme(app)
     args = argv[1:]
     want_gt = "--gt" in args

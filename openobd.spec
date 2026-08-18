@@ -11,7 +11,8 @@ a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
-    datas=[('data/2010_silverado_full.cal.json', 'data')],
+    datas=[('data/2010_silverado_full.cal.json', 'data'),
+           ('assets/openobd.ico', 'assets')],
     hiddenimports=['serial', 'serial.tools', 'serial.tools.list_ports',
                    'openobd.gt', 'pyqtgraph'],
     hookspath=[],
@@ -46,4 +47,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='assets/openobd.ico',
 )
