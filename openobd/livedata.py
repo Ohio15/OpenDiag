@@ -21,10 +21,13 @@ Live Data
 
   Field selection and lane grouping live in ONE shared model (chanlayout):
   hiding a field removes it from the tiles AND the chart, adding it back
-  restores both, and the chart's lanes are user-groupable (Fields… button,
-  right-click a tile, or right-click a chart lane) with the layout persisted
-  across sessions. Channels that cannot chart are labeled tile-only, never
-  silently dropped.
+  restores both. The graph is composed by DRAGGING tiles onto the graphed-
+  channels row table above the chart (drop on a row = join its lane, below
+  the rows = new lane) — the table is the row-per-trace legend with live
+  values, and once customized it shows exactly what plots. Menus (Fields…
+  button, tile / chart-lane / table right-click) mirror every drag action.
+  The layout persists across sessions; channels that cannot chart are
+  labeled tile-only and refused as drops visibly, never silently dropped.
 
 Active Tests
   A DISPLAY-ONLY reflection of vehicle-control state, polled on its own timer and
@@ -43,17 +46,17 @@ import sqlite3
 from datetime import datetime
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QColor, QFont
+from PySide6.QtGui import QColor, QDrag, QFont
 from PySide6.QtWidgets import (
-    QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel, QMenu,
-    QPushButton, QScrollArea, QSizePolicy, QSplitter, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget,
+    QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView,
+    QLabel, QMenu, QPushButton, QScrollArea, QSizePolicy, QSplitter,
+    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget,
 )
 
 from . import chanlayout, ctljournal, tmstore
 from .appsettings import app_settings
 from .chanlayout import ChannelLayout
-from .stripchart import ChartPane, chartable_names
+from .stripchart import ChartPane, channel_mime, chartable_names
 from .tmstore import TmSessionReader, TmSessionError
 
 # The states, and the ONLY colors each may take. Each means exactly one thing.
@@ -86,9 +89,11 @@ class ValueTile(QFrame):
         super().__init__()
         self.channel = name
         self._unit = unit
+        self._press_pos = None
         self.setFrameShape(QFrame.StyledPanel)
         self.setMinimumWidth(128)
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        self.setCursor(Qt.OpenHandCursor)   # tiles drag onto the graph table
         lay = QVBoxLayout(self)
         lay.setContentsMargins(8, 4, 8, 4)
         lay.setSpacing(0)
@@ -130,6 +135,33 @@ class ValueTile(QFrame):
         self._value.setText("—")
         self._state.setText(message[:44])
         self._apply("failed")
+
+    # -- drag source --------------------------------------------------------- #
+    # A tile drags its channel name (stripchart.CHANNEL_MIME); the graphed-
+    # channels table above the chart is the drop target that adds the field
+    # to the graph. Whether the drop is legal (chartable) is the TARGET's
+    # decision — a text field drags fine but is refused visibly.
+    def mousePressEvent(self, event):   # noqa: N802
+        if event.button() == Qt.LeftButton:
+            self._press_pos = event.position().toPoint()
+        super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):   # noqa: N802
+        self._press_pos = None
+        super().mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, event):   # noqa: N802
+        if (self._press_pos is not None
+                and event.buttons() & Qt.LeftButton
+                and (event.position().toPoint() - self._press_pos
+                     ).manhattanLength()
+                >= QApplication.startDragDistance()):
+            self._press_pos = None
+            drag = QDrag(self)
+            drag.setMimeData(channel_mime(self.channel))
+            drag.setPixmap(self.grab())
+            drag.exec(Qt.CopyAction)
+        super().mouseMoveEvent(event)
 
     def _apply(self, state: str):
         bg, accent, text = STATE_COLORS.get(state, STATE_COLORS["notread"])
@@ -214,6 +246,11 @@ class LiveDataPage(QWidget):
         # Right-click on a lane: move/hide its channels, or add a field back.
         self._chart.chart.setContextMenuPolicy(Qt.CustomContextMenu)
         self._chart.chart.customContextMenuRequested.connect(self._chart_menu)
+        # Dropping a tile on the graphed-channels table adds that field to
+        # the graph (into the row's lane, or a new lane below the rows).
+        self._chart.table.channel_dropped.connect(self._on_channel_dropped)
+        self._chart.table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._chart.table.customContextMenuRequested.connect(self._table_menu)
         self._split = QSplitter(Qt.Vertical)
         self._split.addWidget(tiles_host)
         self._split.addWidget(self._chart)
@@ -345,8 +382,7 @@ class LiveDataPage(QWidget):
         # start); it is never a wrong value, only a missing one. What actually
         # shows, in BOTH views, is the shared layout's decision.
         self._build_tiles(self._layout.tile_names(self._channel_meta))
-        self._chart.bind(self._reader, self._channel_meta, self._archived,
-                         self._layout.chart_lanes(self._chartable))
+        self._bind_chart()
         veh = meta.get("vin") or meta.get("label") or "session"
         src = meta.get("source") or "live"
         self._status_base = f"{veh}  ·  source={src}"
@@ -424,6 +460,15 @@ class LiveDataPage(QWidget):
         self._reader_path = None
 
     # -- field selection + grouping (ONE model drives BOTH views) ----------- #
+    def _bind_chart(self):
+        """(Re)bind chart + graphed-channels table from the shared layout."""
+        self._chart.bind(self._reader, self._channel_meta, self._archived,
+                         self._layout.chart_lanes(self._chartable))
+        self._chart.table.set_droppable(self._chartable)
+        self._chart.chart.empty_text = (
+            "No chartable channels in this session." if not self._chartable
+            else "No fields on the graph — drag a tile onto the table above.")
+
     def _relayout(self):
         """Persist the layout and re-derive BOTH views from it. The tiles and
         the chart never diverge because neither decides anything itself."""
@@ -433,8 +478,7 @@ class LiveDataPage(QWidget):
         self._clear_tiles()
         self._build_tiles(self._layout.tile_names(self._channel_meta))
         span = self._chart.span_text()   # keep the user's window across rebind
-        self._chart.bind(self._reader, self._channel_meta, self._archived,
-                         self._layout.chart_lanes(self._chartable))
+        self._bind_chart()
         self._chart.set_span_text(span)
         self._tick()
 
@@ -464,6 +508,28 @@ class LiveDataPage(QWidget):
         self._layout.move_to_lane(name, lane_index, self._chartable)
         self._relayout()
 
+    def _on_channel_dropped(self, name: str, lane_index):
+        """A tile was dropped on the graphed-channels table: add the field to
+        the graph — the table already refused anything unchartable."""
+        if name not in self._channel_meta or name not in self._chartable:
+            return
+        self._layout.show(name)   # a graphed field is by definition visible
+        self._move_to_lane(name, lane_index)
+
+    def _remove_from_graph(self, name: str):
+        """Take the field off the graph; its tile stays on the palette."""
+        self._layout.remove_from_chart(name, self._chartable)
+        self._relayout()
+
+    def _add_to_graph(self, name: str):
+        """Menu twin of the tile drop: unhide, and (once the layout is
+        customized) put the field in a new lane so it actually plots."""
+        self._layout.show(name)
+        if (name in self._chartable and self._layout.lanes is not None
+                and not any(name in lane for lane in self._layout.lanes)):
+            self._layout.move_to_lane(name, None, self._chartable)
+        self._relayout()
+
     def _tile_only_reason(self, name: str) -> str:
         """Why a channel cannot chart — shown, never silent."""
         kind = (self._channel_meta.get(name) or {}).get("kind") or "numeric"
@@ -484,8 +550,11 @@ class LiveDataPage(QWidget):
             act = m.addAction(label)
             act.setCheckable(True)
             act.setChecked(not self._layout.is_hidden(name))
+            # On restores the field to BOTH views (tile + graph for chartable
+            # fields); off hides it from both.
             act.toggled.connect(
-                lambda on, n=name: self._set_visible(n, on))
+                lambda on, n=name: self._add_to_graph(n) if on
+                else self._set_visible(n, False))
         m.addSeparator()
         m.addAction("Show all fields", self._show_all_fields)
         m.addAction("Reset layout to defaults", self._reset_layout)
@@ -493,14 +562,20 @@ class LiveDataPage(QWidget):
             self._fields_btn.rect().bottomLeft()))
 
     def _channel_actions(self, m: QMenu, name: str):
-        """Hide + move-to-lane actions for one channel, shared by the tile
-        and chart context menus."""
+        """Hide / graph-membership / move-to-lane actions for one channel,
+        shared by the tile, chart-lane and table context menus."""
         m.addAction(f"Hide {name}",
                     lambda n=name: self._set_visible(n, False))
         if name not in self._chartable:
             note = m.addAction(self._tile_only_reason(name))
             note.setEnabled(False)
             return
+        if self._layout.is_graphed(name, self._chartable):
+            m.addAction("Remove from graph (keep tile)",
+                        lambda n=name: self._remove_from_graph(n))
+        else:
+            m.addAction("Add to graph",
+                        lambda n=name: self._add_to_graph(n))
         sub = m.addMenu("Move to lane")
         lanes = self._layout.chart_lanes(self._chartable)
         for i, lane in enumerate(lanes):
@@ -521,6 +596,14 @@ class LiveDataPage(QWidget):
         self._channel_actions(m, tile.channel)
         m.exec(tile.mapToGlobal(pos))
 
+    def _table_menu(self, pos):
+        name = self._chart.table.channel_at(self._chart.table.indexAt(pos).row())
+        if name is None:
+            return
+        m = QMenu(self)
+        self._channel_actions(m, name)
+        m.exec(self._chart.table.viewport().mapToGlobal(pos))
+
     def _chart_menu(self, pos):
         if self._reader is None:
             return
@@ -531,16 +614,21 @@ class LiveDataPage(QWidget):
             for name in chart.lanes[li]:
                 self._channel_actions(m.addMenu(name), name)
             m.addSeparator()
-        hidden = [n for n in sorted(self._channel_meta)
-                  if self._layout.is_hidden(n)]
-        if hidden:
+        # Add back anything not on the graph: hidden fields, and (once the
+        # layout is customized) visible chartable fields not graphed.
+        chartable = set(self._chartable)
+        candidates = [
+            n for n in sorted(self._channel_meta)
+            if self._layout.is_hidden(n)
+            or (n in chartable
+                and not self._layout.is_graphed(n, self._chartable))]
+        if candidates:
             add = m.addMenu("Add field…")
-            chartable = set(self._chartable)
-            for n in hidden:
+            for n in candidates:
                 label = n if n in chartable \
                     else f"{n}   ({self._tile_only_reason(n)})"
                 add.addAction(label,
-                              lambda _=False, n=n: self._set_visible(n, True))
+                              lambda _=False, n=n: self._add_to_graph(n))
         if m.isEmpty():
             return
         m.exec(chart.mapToGlobal(pos))
@@ -580,6 +668,9 @@ class LiveDataPage(QWidget):
             tile.update_from(latest.get(name), self._channel_meta.get(name),
                              archived=self._archived, session_stale=session_stale)
         self._chart.tick(archived=self._archived, session_stale=session_stale)
+        self._chart.update_table(latest, self._channel_meta,
+                                 archived=self._archived,
+                                 session_stale=session_stale)
 
         stamp = datetime.now().strftime("%H:%M:%S")
         note = ("archived" if self._archived

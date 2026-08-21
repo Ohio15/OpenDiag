@@ -18,13 +18,34 @@ import math
 from bisect import bisect_left, bisect_right
 from typing import Optional, Sequence
 
-from PySide6.QtCore import Qt, QPointF, QRectF
+from PySide6.QtCore import Qt, QMimeData, QPointF, QRectF, Signal
 from PySide6.QtGui import QColor, QFont, QLinearGradient, QPainter, QPen
 from PySide6.QtWidgets import (
-    QComboBox, QHBoxLayout, QLabel, QVBoxLayout, QWidget,
+    QComboBox, QHBoxLayout, QHeaderView, QLabel, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget,
 )
 
 from . import tmstore
+
+# Drag payload for a Live Data field: a tile drags its channel name under
+# this type; the graphed-channels table is the drop target.
+CHANNEL_MIME = "application/x-openobd-channel"
+
+
+def channel_mime(name: str) -> QMimeData:
+    m = QMimeData()
+    m.setData(CHANNEL_MIME, name.encode("utf-8"))
+    m.setText(name)
+    return m
+
+
+def mime_channel(mime) -> Optional[str]:
+    if mime is None or not mime.hasFormat(CHANNEL_MIME):
+        return None
+    try:
+        return bytes(mime.data(CHANNEL_MIME)).decode("utf-8")
+    except UnicodeDecodeError:
+        return None
 
 # Preferred lane groupings, by truck-mcp store channel name. Only channels
 # actually present in the bound session get a slot; store channels outside the
@@ -238,6 +259,7 @@ class StripChart(QWidget):
         self.span: Optional[float] = 60.0     # seconds; None = whole session
         self.t_end: Optional[float] = None
         self.caption = ""
+        self.empty_text = "No chartable channels in this session."
         self.setMinimumHeight(240)
 
     def configure(self, lanes: list[list[str]], units: dict[str, str]):
@@ -301,8 +323,7 @@ class StripChart(QWidget):
         p.fillRect(0, 0, w, h, QColor(5, 6, 10))
         if not self.lanes:
             p.setPen(QColor(123, 128, 136))
-            p.drawText(QRectF(0, 0, w, h), Qt.AlignCenter,
-                       "No chartable channels in this session.")
+            p.drawText(QRectF(0, 0, w, h), Qt.AlignCenter, self.empty_text)
             p.end()
             return
 
@@ -397,6 +418,103 @@ class StripChart(QWidget):
         p.end()
 
 
+class ChannelTable(QTableWidget):
+    """The graphed-channels row table above the strip chart (VCM-Scanner
+    style): one row per charted channel in lane order, color-matched to its
+    trace, with its live value rendered through the same display_state
+    discipline as the tiles. The DROP TARGET for tile drags: dropping on a
+    row joins that row's lane; dropping below the rows starts a new lane.
+    What a drop MEANS is the page's shared layout model's decision — this
+    table only reports (name, lane) via channel_dropped."""
+
+    channel_dropped = Signal(str, object)   # channel name, lane index or None
+
+    def __init__(self):
+        super().__init__(0, 4)
+        self.setHorizontalHeaderLabels(["Field", "Value", "Unit", "Lane"])
+        self.verticalHeader().setVisible(False)
+        self.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.setSelectionBehavior(QTableWidget.SelectRows)
+        self.setSelectionMode(QTableWidget.SingleSelection)
+        self.setFocusPolicy(Qt.NoFocus)
+        self.setAcceptDrops(True)
+        self.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        for c in (1, 2, 3):
+            self.horizontalHeader().setSectionResizeMode(
+                c, QHeaderView.ResizeToContents)
+        self.setStyleSheet(
+            "QTableWidget { background:#0B0D14; border:1px solid #3A3F4A; "
+            "color:#DEE0E4; gridline-color:#262C3A; }"
+            "QHeaderView::section { background:#1A1E2A; color:#9DA3AD; "
+            "border:0px; padding:2px 8px; }")
+        self.setMaximumHeight(180)
+        self._names: list[str] = []
+        self._lane_of: dict[str, int] = {}
+        self._droppable: set[str] = set()
+
+    def set_droppable(self, names):
+        """The channels a drop may add — the chartable set. A text/no-data
+        field is refused visibly (forbidden cursor), never accepted-and-lost."""
+        self._droppable = set(names)
+
+    def channel_at(self, row: int) -> Optional[str]:
+        return self._names[row] if 0 <= row < len(self._names) else None
+
+    def set_rows(self, rows: list[tuple[str, str, int, QColor]]):
+        """(name, unit, lane_index, trace color) per graphed channel."""
+        self._names = [r[0] for r in rows]
+        self._lane_of = {r[0]: r[2] for r in rows}
+        self.setRowCount(len(rows))
+        for i, (name, unit, lane_i, color) in enumerate(rows):
+            cell = QTableWidgetItem("■ " + name)
+            cell.setForeground(color)
+            self.setItem(i, 0, cell)
+            val = QTableWidgetItem("—")
+            val.setForeground(QColor("#DEE0E4"))
+            self.setItem(i, 1, val)
+            unit_it = QTableWidgetItem(unit)
+            unit_it.setForeground(QColor("#9DA3AD"))
+            self.setItem(i, 2, unit_it)
+            lane_it = QTableWidgetItem(str(lane_i + 1))
+            lane_it.setForeground(QColor("#9DA3AD"))
+            lane_it.setTextAlignment(Qt.AlignCenter)
+            self.setItem(i, 3, lane_it)
+
+    def update_values(self, texts: dict[str, str]):
+        for i, name in enumerate(self._names):
+            text = texts.get(name)
+            if text is not None and self.item(i, 1) is not None:
+                self.item(i, 1).setText(text)
+
+    # -- drops --------------------------------------------------------------- #
+    def _acceptable(self, event) -> bool:
+        name = mime_channel(event.mimeData())
+        return name is not None and name in self._droppable
+
+    def dragEnterEvent(self, event):   # noqa: N802
+        if self._acceptable(event):
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):   # noqa: N802
+        if self._acceptable(event):
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):   # noqa: N802
+        if not self._acceptable(event):
+            event.ignore()
+            return
+        name = mime_channel(event.mimeData())
+        pos = self.viewport().mapFrom(self, event.position().toPoint())
+        row = self.indexAt(pos).row()
+        lane = self._lane_of.get(self.channel_at(row)) if row >= 0 else None
+        event.acceptProposedAction()
+        self.channel_dropped.emit(name, lane)
+
+
 class ChartPane(QWidget):
     """Chart vs. Time sub-page of Live Data: window selector + strip chart.
 
@@ -425,6 +543,10 @@ class ChartPane(QWidget):
         self._note.setStyleSheet("color:#9DA3AD; font-size:11px;")
         bar.addWidget(self._note, 1)
         root.addLayout(bar)
+        # Graphed-channels table between the toolbar and the chart: the drop
+        # target for tile drags, and the row-per-trace legend with live values.
+        self.table = ChannelTable()
+        root.addWidget(self.table)
         self.chart = StripChart()
         root.addWidget(self.chart, 1)
 
@@ -440,6 +562,9 @@ class ChartPane(QWidget):
         names = [n for lane in lanes for n in lane]
         units = {n: (channel_meta.get(n) or {}).get("unit") or "" for n in names}
         self.chart.configure(lanes, units)
+        self.table.set_rows([
+            (n, units[n], li, self.chart.traces[n].color)
+            for li, lane in enumerate(lanes) for n in lane])
         self._reader = reader
         self._channels = [n for lane in lanes for n in lane]
         self._cursor = 0
@@ -475,7 +600,26 @@ class ChartPane(QWidget):
         self._min_ts = None
         self.chart.configure([], {})
         self.chart.set_caption("")
+        self.table.set_rows([])
+        self.table.set_droppable(())
         self._note.setText("")
+
+    def update_table(self, latest: dict[str, dict],
+                     channel_meta: dict[str, dict], *,
+                     archived: bool, session_stale: bool):
+        """Refresh the table's Value column through display_state — the SAME
+        honesty rules as the tiles, so a carried/stale/archived value can't
+        read as live in the legend either."""
+        texts: dict[str, str] = {}
+        for name in self._channels:
+            try:
+                ds = tmstore.display_state(
+                    latest.get(name), channel_meta.get(name),
+                    archived=archived, session_stale=session_stale)
+                texts[name] = ds.text
+            except Exception:
+                texts[name] = "BAD"
+        self.table.update_values(texts)
 
     # -- per-tick ------------------------------------------------------------- #
     def tick(self, *, archived: bool, session_stale: bool):

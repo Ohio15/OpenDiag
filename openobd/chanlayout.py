@@ -5,10 +5,11 @@ Both views on Live Data — the compact tile grid and the Chart vs. Time strip
 chart — derive what they show from a single ChannelLayout, so hiding a field
 removes it from BOTH views and adding it back restores it to both; the two
 views cannot disagree about what is selected. The layout also owns the chart's
-lane grouping (HP Tuners VCM-Scanner-style user channel groups): the user can
-move any chartable channel into an existing lane or a new one, and
-stripchart.LANE_PRESETS remains only the *default* grouping plus the fallback
-for chartable channels the user has never assigned.
+lane grouping (HP Tuners VCM-Scanner-style user channel groups): the user
+composes the graph by dragging tiles into the graphed-channels table (or via
+the menus), moving any chartable channel into an existing lane or a new one.
+stripchart.LANE_PRESETS is only the *default* graph, used until the user
+customizes; a customized lane list IS the graph, exactly.
 
 The one asymmetry is stated, not silent: a channel the store cannot chart
 (text kind, or no numeric sample yet) is tile-only — it can be shown or hidden
@@ -19,8 +20,9 @@ are stable across sessions), written by the page into QSettings under
 SETTINGS_KEY. A saved layout must degrade, never crash: garbage JSON loads as
 the defaults; channels named in a saved layout but absent from the bound
 session simply don't resolve (they stay saved for the next drive that has
-them); channels the session has that the layout has never seen are appended
-via the preset fallback, never dropped.
+them). New channels a customized layout has never seen appear as tiles — the
+palette is always complete — and join the graph only when the user drags
+them in.
 
 No Qt in this module — pure stdlib, unit-testable.
 """
@@ -113,27 +115,30 @@ class ChannelLayout:
 
     # -- grouping (drives the chart) ---------------------------------------- #
     def chart_lanes(self, chartable_names: Sequence[str]) -> list[list[str]]:
-        """The chart's lanes for a session's chartable channels: the user's
-        explicit lanes (filtered to channels this session actually has and
-        that aren't hidden), then any unassigned chartable channels grouped by
-        the preset fallback so nothing plottable silently disappears."""
+        """The chart's lanes for a session's chartable channels. Default
+        (lanes is None): every visible chartable channel, grouped by the
+        presets. Customized: the lanes ARE the graph, exactly — the user
+        composes it by dragging tiles into the graphed-channels table (or via
+        the menus), so nothing is auto-appended behind their back; the tile
+        grid remains the always-complete palette of every field."""
         visible = [n for n in chartable_names if n not in self.hidden]
         if self.lanes is None:
             return build_lanes(visible)
         present = set(visible)
         resolved = [[n for n in lane if n in present] for lane in self.lanes]
-        resolved = [lane for lane in resolved if lane]
-        assigned = {n for lane in self.lanes for n in lane}
-        rest = [n for n in visible if n not in assigned]
-        resolved.extend(build_lanes(rest))
-        return resolved
+        return [lane for lane in resolved if lane]
+
+    def is_graphed(self, name: str, chartable_names: Sequence[str]) -> bool:
+        return any(name in lane for lane in self.chart_lanes(chartable_names))
 
     def move_to_lane(self, name: str, lane_index: Optional[int],
                      chartable_names: Sequence[str]):
         """Assign ``name`` to lane ``lane_index`` (None or out-of-range means
-        a NEW lane at the bottom). First customization materializes the
-        current resolved grouping so the move edits what the user is looking
-        at, not an unrelated default. Empty lanes are pruned."""
+        a NEW lane at the bottom) — this is also how a channel is ADDED to
+        the graph, e.g. by dropping its tile on the graphed-channels table.
+        First customization materializes the current resolved grouping so the
+        edit applies to what the user is looking at, not an unrelated
+        default. Empty lanes are pruned."""
         if self.lanes is None:
             self.lanes = self.chart_lanes(chartable_names)
         # Remove from wherever it is (keep empties until after the insert so
@@ -146,3 +151,15 @@ class ChannelLayout:
         else:
             self.lanes[lane_index].append(name)
         self.lanes = [lane for lane in self.lanes if lane]
+
+    def remove_from_chart(self, name: str,
+                          chartable_names: Sequence[str]):
+        """Take ``name`` off the graph WITHOUT hiding its tile — the field
+        stays on the palette, it just no longer plots."""
+        if self.lanes is None:
+            self.lanes = self.chart_lanes(chartable_names)
+        for lane in self.lanes:
+            if name in lane:
+                lane.remove(name)
+        self.lanes = [lane for lane in self.lanes if lane]
+

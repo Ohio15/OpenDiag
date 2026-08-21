@@ -181,6 +181,27 @@ assert ChannelLayout.from_json(saved).chart_lanes(ld._chartable) == lanes_now
 assert "tft" in ld._tiles and "tft" not in ld._chart._channels
 assert "gear" in ld._tiles and "gear" not in ld._chart._channels
 assert "tile only" in ld._tile_only_reason("tft")
+# drag & drop surface: the graphed-channels table mirrors the chart lanes,
+# tile drops land through the handler the table's drop signal drives, and
+# removing a field from the graph keeps its tile on the palette.
+from openobd.stripchart import channel_mime, mime_channel  # noqa: E402
+assert mime_channel(channel_mime("rpm")) == "rpm"
+tbl = ld._chart.table
+flat = [n for lane in ld._chart.chart.lanes for n in lane]
+assert tbl._names == flat, "table rows diverge from chart lanes"
+assert tbl._droppable == set(ld._chartable)
+ld._remove_from_graph("ect")
+assert "ect" not in ld._chart._channels and "ect" not in tbl._names
+assert "ect" in ld._tiles, "remove-from-graph must keep the tile"
+ld._on_channel_dropped("ect", 0)      # drop onto the first row's lane
+assert "ect" in ld._chart.chart.lanes[0]
+assert "ect" in tbl._names and "ect" in ld._chart._channels
+ld._tick()
+row = tbl._names.index("ect")
+assert tbl.item(row, 1).text() not in ("", "—"), "table value never updated"
+print("drag & drop graph table OK: rows mirror lanes, drop adds, "
+      "remove keeps tile")
+
 # reset returns both views to defaults and removes the saved key
 ld._reset_layout()
 assert app_settings().value("livedata/layout") is None
