@@ -6,7 +6,10 @@ dist/
 *.egg-info/
 .venv/
 venv/
-/smoke_out.cal.jsongt_run.log
+/smoke_out.cal.json
+/gt_run.log
 _run_gt.bat
 build.log
 _build.bat
+tools/*.log
+tools/*.tsv
