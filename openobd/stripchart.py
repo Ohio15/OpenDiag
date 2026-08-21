@@ -227,7 +227,7 @@ class StripChart(QWidget):
                     name, units.get(name, ""),
                     QColor(CHANNEL_COLORS[slot % len(CHANNEL_COLORS)]))
         self.t_end = None
-        self.setMinimumHeight(max(240, 84 * len(lanes)))
+        self.setMinimumHeight(max(210, 68 * len(lanes)))
         self.update()
 
     def append_samples(self, per_channel: dict[str, list[dict]]):
@@ -442,6 +442,10 @@ class ChartPane(QWidget):
                         f"last {TRUNCATED_TAIL_S / 60:.0f} min only")
         self._note.setText(note)
         self._min_ts = min_ts
+        # Per-session default window: an archived drive opens on the whole
+        # drive (the interesting part is rarely the idle tail); a live one
+        # follows the last minute. The combo stays user-adjustable after bind.
+        self._span_combo.setCurrentText("All" if archived else "1 min")
         self.tick(archived=archived, session_stale=False)
 
     def unbind(self):

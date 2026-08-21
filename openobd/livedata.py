@@ -12,9 +12,12 @@ Live Data
   rather than freezing on stale values that still claim to be live. Nothing here
   opens the serial port, so it never contends with a running logger for COM3.
 
-  Two sub-views share the bound session: the tile grid (every channel, with
-  provenance states — the raw store view) and Chart vs. Time (stripchart.py),
-  a VCM-Scanner-style strip chart of the fresh numeric channels.
+  One combined view (HP Tuners-style): the compact tile grid (every channel,
+  with provenance states — the raw store view) sits above Chart vs. Time
+  (stripchart.py), a VCM-Scanner-style strip chart of the fresh numeric
+  channels, so live numbers read against the traces while focusing on a
+  driving condition. The Dashboard stays the visual gauge/controls surface;
+  this tab is the raw view of what a drive capture is recording.
 
 Active Tests
   A DISPLAY-ONLY reflection of vehicle-control state, polled on its own timer and
@@ -36,7 +39,7 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
     QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QPushButton, QScrollArea, QSizePolicy, QTabWidget, QTableWidget,
+    QPushButton, QScrollArea, QSizePolicy, QSplitter, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget,
 )
 
@@ -75,18 +78,18 @@ class ValueTile(QFrame):
         self.channel = name
         self._unit = unit
         self.setFrameShape(QFrame.StyledPanel)
-        self.setMinimumWidth(150)
+        self.setMinimumWidth(128)
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         lay = QVBoxLayout(self)
-        lay.setContentsMargins(10, 7, 10, 7)
-        lay.setSpacing(1)
+        lay.setContentsMargins(8, 4, 8, 4)
+        lay.setSpacing(0)
         self._label = QLabel(name)
-        self._label.setStyleSheet("color:#9DA3AD; font-size:11px;")
+        self._label.setStyleSheet("color:#9DA3AD; font-size:10px;")
         self._value = QLabel("— not read")
-        vf = QFont(); vf.setPointSize(17); vf.setBold(True)
+        vf = QFont(); vf.setPointSize(13); vf.setBold(True)
         self._value.setFont(vf)
         self._state = QLabel("")
-        self._state.setStyleSheet("color:#7B8088; font-size:10px;")
+        self._state.setStyleSheet("color:#7B8088; font-size:9px;")
         lay.addWidget(self._label)
         lay.addWidget(self._value)
         lay.addWidget(self._state)
@@ -159,32 +162,39 @@ class LiveDataPage(QWidget):
         bar.addWidget(self._status)
         root.addLayout(bar)
 
-        # Two views over the SAME bound session: the tile grid (every channel,
-        # with provenance states) and a VCM-style Chart vs. Time strip chart.
+        # HP-Tuners-style combined view: the live tiles and the Chart vs. Time
+        # strip chart share one page (no sub-tabs) so the numbers can be read
+        # against the traces while focusing on a driving condition. Tiles are
+        # compact with width-adaptive columns so the grid fits without
+        # scrolling at normal window sizes; the splitter tunes the ratio.
         self._grid_host = QWidget()
         self._grid = QGridLayout(self._grid_host)
         self._grid.setContentsMargins(2, 2, 2, 2)
-        self._grid.setSpacing(8)
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setWidget(self._grid_host)
+        self._grid.setSpacing(6)
+        self._cols = 5
+        self._scroll = QScrollArea()
+        self._scroll.setWidgetResizable(True)
+        self._scroll.setWidget(self._grid_host)
 
         self._empty = QLabel()
         self._empty.setAlignment(Qt.AlignCenter)
         self._empty.setWordWrap(True)
         self._empty.setStyleSheet("color:#7B8088; font-size:13px; padding:24px;")
 
-        tiles_page = QWidget()
-        tiles_lay = QVBoxLayout(tiles_page)
+        tiles_host = QWidget()
+        tiles_lay = QVBoxLayout(tiles_host)
         tiles_lay.setContentsMargins(0, 0, 0, 0)
-        tiles_lay.addWidget(scroll, 1)
+        tiles_lay.addWidget(self._scroll, 1)
         tiles_lay.addWidget(self._empty)
 
         self._chart = ChartPane()
-        self._views = QTabWidget()
-        self._views.addTab(tiles_page, "Tiles")
-        self._views.addTab(self._chart, "Chart vs. Time")
-        root.addWidget(self._views, 1)
+        self._split = QSplitter(Qt.Vertical)
+        self._split.addWidget(tiles_host)
+        self._split.addWidget(self._chart)
+        self._split.setStretchFactor(0, 1)
+        self._split.setStretchFactor(1, 2)
+        self._split.setSizes([250, 430])
+        root.addWidget(self._split, 1)
 
         self._poll = QTimer(self)
         self._poll.timeout.connect(self._tick)
@@ -201,6 +211,7 @@ class LiveDataPage(QWidget):
             self.rescan_sessions()
             self._poll.start(POLL_MS)
             self._rescan.start(SESSION_RESCAN_MS)
+        self._reflow_tiles()   # width is real once the page is shown
 
     def hideEvent(self, event):   # noqa: N802
         super().hideEvent(event)
@@ -314,12 +325,50 @@ class LiveDataPage(QWidget):
         self._tick()
 
     def _build_tiles(self, names):
-        cols = 5
+        self._cols = self._grid_cols()
         for i, name in enumerate(names):
             meta = self._channel_meta.get(name, {})
             tile = ValueTile(name, meta.get("unit") or "")
             self._tiles[name] = tile
-            self._grid.addWidget(tile, i // cols, i % cols)
+            self._grid.addWidget(tile, i // self._cols, i % self._cols)
+        self._pin_rows_top(len(names))
+        # The viewport may not have its real width yet (first build happens
+        # before the page is laid out) — reflow once the event loop settles.
+        QTimer.singleShot(0, self._reflow_tiles)
+
+    def _pin_rows_top(self, n_tiles: int):
+        """Keep tile rows packed at the top: zero the row stretches and put all
+        the stretch on one empty row below the last tile row."""
+        last = (max(0, n_tiles - 1)) // self._cols
+        for r in range(self._grid.rowCount() + 1):
+            self._grid.setRowStretch(r, 0)
+        self._grid.setRowStretch(last + 1, 1)
+
+    def _grid_cols(self) -> int:
+        """Columns that fit the current width — the grid reflows on resize so
+        a normal window shows every tile without scrolling."""
+        w = self._scroll.viewport().width()
+        if w <= 0:
+            return 5
+        return max(3, w // 136)
+
+    def resizeEvent(self, event):   # noqa: N802
+        super().resizeEvent(event)
+        self._reflow_tiles()
+
+    def _reflow_tiles(self):
+        if not self._tiles:
+            return
+        cols = self._grid_cols()
+        if cols == self._cols:
+            return
+        self._cols = cols
+        names = sorted(self._tiles)
+        while self._grid.count():
+            self._grid.takeAt(0)
+        for i, name in enumerate(names):
+            self._grid.addWidget(self._tiles[name], i // cols, i % cols)
+        self._pin_rows_top(len(names))
 
     def _clear_grid(self):
         for tile in self._tiles.values():

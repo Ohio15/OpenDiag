@@ -14,8 +14,9 @@ Tabs
                 sessions follow the store at ~1 Hz with tmstore's freshness
                 states on every gauge; archived drives replay through the
                 transport bar. Store access is read-only, never the serial port.
-  Live Data   : session picker + live tile grid read off truck-mcp's drive-log
-                store (sessions/*.tmsession.db), never the serial port.
+  Live Data   : session picker + a combined raw view off truck-mcp's drive-log
+                store (sessions/*.tmsession.db), never the serial port: compact
+                live tiles above a Chart vs. Time strip chart, read together.
   Active Tests: display-only vehicle-control state from truck-mcp's control
                 journal — empty executable registry, outstanding-activation
                 warnings. Commands nothing.

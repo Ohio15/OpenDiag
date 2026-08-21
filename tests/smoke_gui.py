@@ -54,10 +54,11 @@ assert win.main_tabs.tabText(3) == "Live Data"
 assert win.main_tabs.tabText(4) == "Active Tests"
 print("workspace structure OK (Dashboard, Tuning, Diagnostics, Live Data, Active Tests)")
 
-# Live Data hosts two views over the same bound session: tiles + strip chart
-assert win.livedata._views.count() == 2
-assert win.livedata._views.tabText(0) == "Tiles"
-assert win.livedata._views.tabText(1) == "Chart vs. Time"
+# Live Data is ONE combined view: compact tiles above the strip chart in a
+# splitter — no sub-tabs (HP Tuners benchmark: numbers read against traces).
+assert win.livedata._split.count() == 2
+assert win.livedata._chart is win.livedata._split.widget(1)
+assert not hasattr(win.livedata, "_views"), "sub-tabs should be gone"
 
 # Chart vs. Time: bind a synthetic truck-mcp session and verify traces build,
 # decimated paint works, and the view-state caption is honest.
@@ -89,6 +90,12 @@ assert "tft" not in pane._channels and "gear" not in pane._channels
 rpm_trace = pane.chart.traces["rpm"]
 assert len(rpm_trace.ts) == 301, "chart backfill missed samples"
 assert pane.chart.caption == "live"
+# per-session default window: live follows 1 min; archived opens on All
+assert pane._span_combo.currentText() == "1 min"
+pane.bind(chart_reader, chan_meta, archived=True)
+assert pane._span_combo.currentText() == "All"
+assert pane.chart.span is None
+pane.bind(chart_reader, chan_meta, archived=False)
 pane.tick(archived=False, session_stale=True)
 assert pane.chart.caption == "not advancing", "stale view rendered as live"
 pane.chart.grab()               # windowed paint
