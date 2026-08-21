@@ -12,6 +12,10 @@ Live Data
   rather than freezing on stale values that still claim to be live. Nothing here
   opens the serial port, so it never contends with a running logger for COM3.
 
+  Two sub-views share the bound session: the tile grid (every channel, with
+  provenance states — the raw store view) and Chart vs. Time (stripchart.py),
+  a VCM-Scanner-style strip chart of the fresh numeric channels.
+
 Active Tests
   A DISPLAY-ONLY reflection of vehicle-control state, polled on its own timer and
   stamped with the time of the last read so a stale verdict cannot masquerade as
@@ -32,11 +36,12 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
     QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QPushButton, QScrollArea, QSizePolicy, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QSizePolicy, QTabWidget, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget,
 )
 
 from . import ctljournal, tmstore
+from .stripchart import ChartPane
 from .tmstore import TmSessionReader, TmSessionError
 
 # The states, and the ONLY colors each may take. Each means exactly one thing.
@@ -154,6 +159,8 @@ class LiveDataPage(QWidget):
         bar.addWidget(self._status)
         root.addLayout(bar)
 
+        # Two views over the SAME bound session: the tile grid (every channel,
+        # with provenance states) and a VCM-style Chart vs. Time strip chart.
         self._grid_host = QWidget()
         self._grid = QGridLayout(self._grid_host)
         self._grid.setContentsMargins(2, 2, 2, 2)
@@ -161,13 +168,23 @@ class LiveDataPage(QWidget):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setWidget(self._grid_host)
-        root.addWidget(scroll, 1)
 
         self._empty = QLabel()
         self._empty.setAlignment(Qt.AlignCenter)
         self._empty.setWordWrap(True)
         self._empty.setStyleSheet("color:#7B8088; font-size:13px; padding:24px;")
-        root.addWidget(self._empty)
+
+        tiles_page = QWidget()
+        tiles_lay = QVBoxLayout(tiles_page)
+        tiles_lay.setContentsMargins(0, 0, 0, 0)
+        tiles_lay.addWidget(scroll, 1)
+        tiles_lay.addWidget(self._empty)
+
+        self._chart = ChartPane()
+        self._views = QTabWidget()
+        self._views.addTab(tiles_page, "Tiles")
+        self._views.addTab(self._chart, "Chart vs. Time")
+        root.addWidget(self._views, 1)
 
         self._poll = QTimer(self)
         self._poll.timeout.connect(self._tick)
@@ -289,6 +306,7 @@ class LiveDataPage(QWidget):
         # the channel set from the sweep preset at session start); it is never a
         # wrong value, only a missing one.
         self._build_tiles(sorted(self._channel_meta))
+        self._chart.bind(self._reader, self._channel_meta, self._archived)
         veh = meta.get("vin") or meta.get("label") or "session"
         src = meta.get("source") or "live"
         self._status_base = f"{veh}  ·  source={src}"
@@ -311,6 +329,7 @@ class LiveDataPage(QWidget):
         self._channel_meta.clear()
 
     def _close_reader(self):
+        self._chart.unbind()   # before close — the pane must not query a closed DB
         if self._reader is not None:
             try:
                 self._reader.close()
@@ -337,6 +356,7 @@ class LiveDataPage(QWidget):
                 # showing stale values that still claim to be live.
                 for tile in self._tiles.values():
                     tile.set_failed(f"read failed: {exc}")
+                self._chart.set_failed(str(exc))
                 self._status.setText(f"{self._status_base}  ·  ⚠ read failed "
                                      f"({self._fail_streak}×)")
             return
@@ -352,6 +372,7 @@ class LiveDataPage(QWidget):
         for name, tile in self._tiles.items():
             tile.update_from(latest.get(name), self._channel_meta.get(name),
                              archived=self._archived, session_stale=session_stale)
+        self._chart.tick(archived=self._archived, session_stale=session_stale)
 
         stamp = datetime.now().strftime("%H:%M:%S")
         note = ("archived" if self._archived

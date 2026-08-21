@@ -205,6 +205,39 @@ def test_latest_ts(tmp_path):
         assert r.latest_ts() == "2026-08-21T10:05:00Z"
 
 
+def test_series_after_defaults_are_chart_shaped(tmp_path):
+    # Only fresh (measured-now) numeric samples: the carried ect (fresh=0) and
+    # the errored tft (value_num NULL) must not come back as plottable points.
+    db = tmp_path / "drive.tmsession.db"
+    _make_session(db)
+    with TmSessionReader(db) as r:
+        out = r.series_after(["rpm", "ect", "tft", "gear"])
+        assert [s["value_num"] for s in out["rpm"]] == [900.0]
+        assert out["ect"] == [] and out["tft"] == [] and out["gear"] == []
+        assert out["rpm"][0]["id"] is not None
+
+
+def test_series_after_cursor_advances(tmp_path):
+    db = tmp_path / "drive.tmsession.db"
+    _make_session(db)
+    with TmSessionReader(db) as r:
+        first = r.series_after(["rpm"])
+        cursor = first["rpm"][-1]["id"]
+        assert r.series_after(["rpm"], after_id=cursor) == {"rpm": []}
+
+
+def test_series_after_relaxed_filters_and_min_ts(tmp_path):
+    db = tmp_path / "drive.tmsession.db"
+    _make_session(db)
+    with TmSessionReader(db) as r:
+        out = r.series_after(["rpm", "ect"], fresh_only=False)
+        assert [s["value_num"] for s in out["ect"]] == [190.0]
+        # min_ts bounds the backfill: ect's sample (10:04:57) is older
+        out = r.series_after(["rpm", "ect"], fresh_only=False,
+                             min_ts="2026-08-21T10:05:00Z")
+        assert out["ect"] == [] and len(out["rpm"]) == 1
+
+
 def test_reader_ended_reflects_ended_utc(tmp_path):
     # NEW-3 building block: a live drive reads not-ended; a finished one ended.
     live = tmp_path / "live.tmsession.db"

@@ -54,6 +54,51 @@ assert win.main_tabs.tabText(3) == "Live Data"
 assert win.main_tabs.tabText(4) == "Active Tests"
 print("workspace structure OK (Dashboard, Tuning, Diagnostics, Live Data, Active Tests)")
 
+# Live Data hosts two views over the same bound session: tiles + strip chart
+assert win.livedata._views.count() == 2
+assert win.livedata._views.tabText(0) == "Tiles"
+assert win.livedata._views.tabText(1) == "Chart vs. Time"
+
+# Chart vs. Time: bind a synthetic truck-mcp session and verify traces build,
+# decimated paint works, and the view-state caption is honest.
+from tests.test_tmstore import _make_session  # noqa: E402
+from openobd.tmstore import TmSessionReader  # noqa: E402
+from openobd.stripchart import ChartPane  # noqa: E402
+import sqlite3 as _sq  # noqa: E402
+chart_db = "/tmp/smoke_chart.tmsession.db"
+if os.path.exists(chart_db):
+    os.unlink(chart_db)
+_make_session(chart_db)
+conn = _sq.connect(chart_db)
+for i in range(300):
+    conn.execute(
+        "INSERT INTO sample (ts_utc, channel_id, value_num, fresh, quality) "
+        "VALUES (?,1,?,1,'ok')",
+        (f"2026-08-21T10:{5 + (i + 1) // 60:02d}:{(i + 1) % 60:02d}Z",
+         800 + i * 10))
+conn.commit()
+conn.close()
+chart_reader = TmSessionReader(chart_db)
+pane = ChartPane()
+chan_meta = {c["name"]: c for c in chart_reader.channels()}
+pane.bind(chart_reader, chan_meta, archived=False)
+# rpm is a preset lane; ect qualifies via its numeric latest sample; the
+# errored tft and never-read gear must not chart.
+assert "rpm" in pane._channels and "ect" in pane._channels
+assert "tft" not in pane._channels and "gear" not in pane._channels
+rpm_trace = pane.chart.traces["rpm"]
+assert len(rpm_trace.ts) == 301, "chart backfill missed samples"
+assert pane.chart.caption == "live"
+pane.tick(archived=False, session_stale=True)
+assert pane.chart.caption == "not advancing", "stale view rendered as live"
+pane.chart.grab()               # windowed paint
+pane.chart.set_span(None)       # "All"
+pane.chart.grab()               # full-session decimated paint
+print("chart vs. time OK:", len(pane._channels), "channels,",
+      len(pane.chart.lanes), "lanes,", len(rpm_trace.ts), "rpm points")
+chart_reader.close()
+pane.unbind()
+
 # diagnostics: module map verdict rendering + codes table population using
 # REAL parser output from synthetic ELM strings (no hardware)
 from openobd.vehnet import ScanResult, Status, localize  # noqa: E402

@@ -323,6 +323,7 @@ def _row_to_sample(row: sqlite3.Row) -> dict:
     num = row["value_num"] if "value_num" in keys else None
     value = num if num is not None else text
     return {
+        "id": row["id"] if "id" in keys else None,
         "ts_utc": row["ts_utc"] if "ts_utc" in keys else None,
         "value": value,
         "value_num": num,
@@ -466,6 +467,39 @@ class TmSessionReader:
             if fresh_only:
                 sql += " AND s.fresh = 1"
             sql += " ORDER BY s.ts_utc ASC, s.id ASC"
+            if limit:
+                sql += " LIMIT ?"
+                params.append(int(limit))
+            for row in self._conn.execute(sql, params):
+                out[row["name"]].append(_row_to_sample(row))
+        return out
+
+    def series_after(self, channels: Sequence[str] | str, after_id: int = 0,
+                     min_ts: Optional[str] = None, fresh_only: bool = True,
+                     numeric_only: bool = True, limit: Optional[int] = None
+                     ) -> dict[str, list[dict]]:
+        """Samples per channel with sample id > after_id, ascending by id —
+        the incremental cursor read a scrolling chart needs. Each returned
+        sample carries its "id"; the caller advances the cursor to the max id
+        seen. Defaults keep the read chart-shaped: only fresh (measured-now)
+        numeric samples, so carried repeats and text sidecars never plot as
+        measurements. min_ts (ISO) additionally bounds the initial backfill."""
+        names = [channels] if isinstance(channels, str) else list(channels)
+        out: dict[str, list[dict]] = {n: [] for n in names}
+        for chunk in _chunks(names, _MAX_BIND_VARS - 3):
+            sql = ("SELECT c.name, s.* FROM sample s "
+                   "JOIN channel c ON c.id = s.channel_id "
+                   f"WHERE c.name IN ({','.join('?' * len(chunk))}) "
+                   "AND s.id > ?")
+            params: list = list(chunk) + [int(after_id)]
+            if min_ts is not None:
+                sql += " AND s.ts_utc >= ?"
+                params.append(min_ts)
+            if fresh_only:
+                sql += " AND s.fresh = 1"
+            if numeric_only:
+                sql += " AND s.value_num IS NOT NULL"
+            sql += " ORDER BY s.id ASC"
             if limit:
                 sql += " LIMIT ?"
                 params.append(int(limit))
