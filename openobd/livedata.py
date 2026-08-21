@@ -19,6 +19,13 @@ Live Data
   driving condition. The Dashboard stays the visual gauge/controls surface;
   this tab is the raw view of what a drive capture is recording.
 
+  Field selection and lane grouping live in ONE shared model (chanlayout):
+  hiding a field removes it from the tiles AND the chart, adding it back
+  restores both, and the chart's lanes are user-groupable (Fields… button,
+  right-click a tile, or right-click a chart lane) with the layout persisted
+  across sessions. Channels that cannot chart are labeled tile-only, never
+  silently dropped.
+
 Active Tests
   A DISPLAY-ONLY reflection of vehicle-control state, polled on its own timer and
   stamped with the time of the last read so a stale verdict cannot masquerade as
@@ -35,16 +42,17 @@ from __future__ import annotations
 import sqlite3
 from datetime import datetime
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QSettings, Qt, QTimer
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
-    QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel,
+    QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel, QMenu,
     QPushButton, QScrollArea, QSizePolicy, QSplitter, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget,
 )
 
-from . import ctljournal, tmstore
-from .stripchart import ChartPane
+from . import chanlayout, ctljournal, tmstore
+from .chanlayout import ChannelLayout
+from .stripchart import ChartPane, chartable_names
 from .tmstore import TmSessionReader, TmSessionError
 
 # The states, and the ONLY colors each may take. Each means exactly one thing.
@@ -139,11 +147,19 @@ class LiveDataPage(QWidget):
         self._reader_path = None
         self._tiles: dict[str, ValueTile] = {}
         self._channel_meta: dict[str, dict] = {}
+        self._chartable: list[str] = []
         self._sessions: list[dict] = []
         self._archived = False
         self._fail_streak = 0
         self._active = False
         self._status_base = ""
+
+        # The ONE selection+grouping model both views derive from. Global, not
+        # per-session: truck-mcp store channel names are stable across drives,
+        # so a grouping tuned for troubleshooting carries to the next session.
+        self._settings = QSettings("OpenOBD", "OpenOBD")
+        self._layout = ChannelLayout.from_json(
+            self._settings.value(chanlayout.SETTINGS_KEY))
 
         root = QVBoxLayout(self)
 
@@ -156,6 +172,12 @@ class LiveDataPage(QWidget):
         self._refresh_btn = QPushButton("↻ Rescan")
         self._refresh_btn.clicked.connect(self.rescan_sessions)
         bar.addWidget(self._refresh_btn)
+        self._fields_btn = QPushButton("Fields…")
+        self._fields_btn.setToolTip(
+            "Add or subtract fields — the tiles and the chart always show "
+            "the same selection.")
+        self._fields_btn.clicked.connect(self._show_fields_menu)
+        bar.addWidget(self._fields_btn)
         bar.addStretch(1)
         self._status = QLabel("")
         self._status.setStyleSheet("color:#9DA3AD;")
@@ -188,6 +210,9 @@ class LiveDataPage(QWidget):
         tiles_lay.addWidget(self._empty)
 
         self._chart = ChartPane()
+        # Right-click on a lane: move/hide its channels, or add a field back.
+        self._chart.chart.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._chart.chart.customContextMenuRequested.connect(self._chart_menu)
         self._split = QSplitter(Qt.Vertical)
         self._split.addWidget(tiles_host)
         self._split.addWidget(self._chart)
@@ -309,15 +334,18 @@ class LiveDataPage(QWidget):
             self._set_empty(f"Could not open session:\n{exc}")
             return
         self._channel_meta = {c["name"]: c for c in chans}
+        self._chartable = chartable_names(self._reader, self._channel_meta)
         self._archived = bool(meta.get("ended_utc"))
         self._clear_empty()
-        # The tile set is fixed at bind from the session's channels. If a LIVE
-        # drive discovers a new channel mid-session it won't get a tile until the
-        # session is reselected — an acceptable completeness gap (truck-mcp fixes
-        # the channel set from the sweep preset at session start); it is never a
-        # wrong value, only a missing one.
-        self._build_tiles(sorted(self._channel_meta))
-        self._chart.bind(self._reader, self._channel_meta, self._archived)
+        # The channel set is fixed at bind from the session's channels. If a
+        # LIVE drive discovers a new channel mid-session it won't get a tile
+        # until the session is reselected — an acceptable completeness gap
+        # (truck-mcp fixes the channel set from the sweep preset at session
+        # start); it is never a wrong value, only a missing one. What actually
+        # shows, in BOTH views, is the shared layout's decision.
+        self._build_tiles(self._layout.tile_names(self._channel_meta))
+        self._chart.bind(self._reader, self._channel_meta, self._archived,
+                         self._layout.chart_lanes(self._chartable))
         veh = meta.get("vin") or meta.get("label") or "session"
         src = meta.get("source") or "live"
         self._status_base = f"{veh}  ·  source={src}"
@@ -329,6 +357,9 @@ class LiveDataPage(QWidget):
         for i, name in enumerate(names):
             meta = self._channel_meta.get(name, {})
             tile = ValueTile(name, meta.get("unit") or "")
+            tile.setContextMenuPolicy(Qt.CustomContextMenu)
+            tile.customContextMenuRequested.connect(
+                lambda pos, t=tile: self._tile_menu(t, pos))
             self._tiles[name] = tile
             self._grid.addWidget(tile, i // self._cols, i % self._cols)
         self._pin_rows_top(len(names))
@@ -370,12 +401,16 @@ class LiveDataPage(QWidget):
             self._grid.addWidget(self._tiles[name], i // cols, i % cols)
         self._pin_rows_top(len(names))
 
-    def _clear_grid(self):
+    def _clear_tiles(self):
         for tile in self._tiles.values():
             tile.setParent(None)
             tile.deleteLater()
         self._tiles.clear()
+
+    def _clear_grid(self):
+        self._clear_tiles()
         self._channel_meta.clear()
+        self._chartable = []
 
     def _close_reader(self):
         self._chart.unbind()   # before close — the pane must not query a closed DB
@@ -386,6 +421,128 @@ class LiveDataPage(QWidget):
                 pass
         self._reader = None
         self._reader_path = None
+
+    # -- field selection + grouping (ONE model drives BOTH views) ----------- #
+    def _relayout(self):
+        """Persist the layout and re-derive BOTH views from it. The tiles and
+        the chart never diverge because neither decides anything itself."""
+        self._save_layout()
+        if self._reader is None:
+            return
+        self._clear_tiles()
+        self._build_tiles(self._layout.tile_names(self._channel_meta))
+        span = self._chart.span_text()   # keep the user's window across rebind
+        self._chart.bind(self._reader, self._channel_meta, self._archived,
+                         self._layout.chart_lanes(self._chartable))
+        self._chart.set_span_text(span)
+        self._tick()
+
+    def _save_layout(self):
+        if self._layout.is_default():
+            self._settings.remove(chanlayout.SETTINGS_KEY)
+        else:
+            self._settings.setValue(chanlayout.SETTINGS_KEY,
+                                    self._layout.to_json())
+
+    def _set_visible(self, name: str, visible: bool):
+        if visible:
+            self._layout.show(name)
+        else:
+            self._layout.hide(name)
+        self._relayout()
+
+    def _show_all_fields(self):
+        self._layout.hidden.clear()
+        self._relayout()
+
+    def _reset_layout(self):
+        self._layout.reset()
+        self._relayout()
+
+    def _move_to_lane(self, name: str, lane_index):
+        self._layout.move_to_lane(name, lane_index, self._chartable)
+        self._relayout()
+
+    def _tile_only_reason(self, name: str) -> str:
+        """Why a channel cannot chart — shown, never silent."""
+        kind = (self._channel_meta.get(name) or {}).get("kind") or "numeric"
+        if kind != "numeric":
+            return f"{kind} channel — tile only"
+        return "no numeric data yet — tile only"
+
+    def _show_fields_menu(self):
+        """Add/subtract fields: every session channel, checked = shown in
+        BOTH views. Channels that cannot chart say so on the entry."""
+        if not self._channel_meta:
+            return
+        m = QMenu(self)
+        chartable = set(self._chartable)
+        for name in sorted(self._channel_meta):
+            label = name if name in chartable \
+                else f"{name}   ({self._tile_only_reason(name)})"
+            act = m.addAction(label)
+            act.setCheckable(True)
+            act.setChecked(not self._layout.is_hidden(name))
+            act.toggled.connect(
+                lambda on, n=name: self._set_visible(n, on))
+        m.addSeparator()
+        m.addAction("Show all fields", self._show_all_fields)
+        m.addAction("Reset layout to defaults", self._reset_layout)
+        m.exec(self._fields_btn.mapToGlobal(
+            self._fields_btn.rect().bottomLeft()))
+
+    def _channel_actions(self, m: QMenu, name: str):
+        """Hide + move-to-lane actions for one channel, shared by the tile
+        and chart context menus."""
+        m.addAction(f"Hide {name}",
+                    lambda n=name: self._set_visible(n, False))
+        if name not in self._chartable:
+            note = m.addAction(self._tile_only_reason(name))
+            note.setEnabled(False)
+            return
+        sub = m.addMenu("Move to lane")
+        lanes = self._layout.chart_lanes(self._chartable)
+        for i, lane in enumerate(lanes):
+            others = [n for n in lane if n != name]
+            label = (f"Lane {i + 1}:  " + ", ".join(others[:4])
+                     + ("…" if len(others) > 4 else "")) if others \
+                else f"Lane {i + 1}  (only {name})"
+            act = sub.addAction(label)
+            act.setEnabled(bool(others) or name not in lane)
+            act.triggered.connect(
+                lambda _=False, n=name, idx=i: self._move_to_lane(n, idx))
+        sub.addSeparator()
+        sub.addAction("New lane",
+                      lambda _=False, n=name: self._move_to_lane(n, None))
+
+    def _tile_menu(self, tile: ValueTile, pos):
+        m = QMenu(self)
+        self._channel_actions(m, tile.channel)
+        m.exec(tile.mapToGlobal(pos))
+
+    def _chart_menu(self, pos):
+        if self._reader is None:
+            return
+        chart = self._chart.chart
+        m = QMenu(self)
+        li = chart.lane_at(pos.y())
+        if li is not None and li < len(chart.lanes):
+            for name in chart.lanes[li]:
+                self._channel_actions(m.addMenu(name), name)
+            m.addSeparator()
+        hidden = [n for n in sorted(self._channel_meta)
+                  if self._layout.is_hidden(n)]
+        if hidden:
+            add = m.addMenu("Add field…")
+            chartable = set(self._chartable)
+            for n in hidden:
+                label = n if n in chartable \
+                    else f"{n}   ({self._tile_only_reason(n)})"
+                add.addAction(label,
+                              lambda _=False, n=n: self._set_visible(n, True))
+        if m.isEmpty():
+            return
+        m.exec(chart.mapToGlobal(pos))
 
     # -- poll --------------------------------------------------------------- #
     def _tick(self):

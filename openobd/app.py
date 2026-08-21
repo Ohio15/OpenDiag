@@ -1892,14 +1892,16 @@ class MainWindow(QMainWindow):
         r = it.data(Qt.UserRole)
         if r is None:
             r = it.row()
+        text = it.text()
         try:
-            v = float(it.text())
+            v = float(text)
         except ValueError:
             # Restore the display so the cell never shows a value the model
-            # doesn't hold.
+            # doesn't hold. _set_scalar_row replaces the row's items, deleting
+            # `it` — so only the pre-captured text may be used after it.
             self._set_scalar_row(r, self.cal.scalars[r])
             self.statusBar().showMessage(
-                f"Not a number: {it.text()!r} — edit reverted", 4000)
+                f"Not a number: {text!r} — edit reverted", 4000)
             return
         if v != self.cal.scalars[r].value:
             self._mark_dirty()

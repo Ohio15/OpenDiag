@@ -33,6 +33,34 @@ log_path = "/tmp/smoke_log.csv"
 with open(log_path, "w") as fh:
     fh.write(csv)
 
+# Isolate QSettings so smoke runs never touch the real per-user settings, and
+# pin truck-mcp's data root to a temp tree holding ONE synthetic session so
+# Live Data binds it deterministically (TRUCK_MCP_DATA is authoritative and
+# alone, exactly as truck-mcp itself treats it). Both must happen BEFORE the
+# window is built.
+import sqlite3 as _sq  # noqa: E402
+import tempfile  # noqa: E402
+from PySide6.QtCore import QSettings  # noqa: E402
+from tests.test_tmstore import _make_session  # noqa: E402
+_tmp_root = tempfile.mkdtemp(prefix="openobd_smoke_")
+QSettings.setDefaultFormat(QSettings.IniFormat)
+QSettings.setPath(QSettings.IniFormat, QSettings.UserScope,
+                  os.path.join(_tmp_root, "settings"))
+os.environ["TRUCK_MCP_DATA"] = os.path.join(_tmp_root, "truck-mcp")
+_sessions_dir = os.path.join(_tmp_root, "truck-mcp", "sessions")
+os.makedirs(_sessions_dir)
+chart_db = os.path.join(_sessions_dir, "smoke_chart.tmsession.db")
+_make_session(chart_db)
+conn = _sq.connect(chart_db)
+for i in range(300):
+    conn.execute(
+        "INSERT INTO sample (ts_utc, channel_id, value_num, fresh, quality) "
+        "VALUES (?,1,?,1,'ok')",
+        (f"2026-08-21T10:{5 + (i + 1) // 60:02d}:{(i + 1) % 60:02d}Z",
+         800 + i * 10))
+conn.commit()
+conn.close()
+
 app = QApplication(sys.argv)
 cal, path = load_default_cal()
 win = MainWindow(cal, path)
@@ -60,29 +88,18 @@ assert win.livedata._split.count() == 2
 assert win.livedata._chart is win.livedata._split.widget(1)
 assert not hasattr(win.livedata, "_views"), "sub-tabs should be gone"
 
-# Chart vs. Time: bind a synthetic truck-mcp session and verify traces build,
-# decimated paint works, and the view-state caption is honest.
-from tests.test_tmstore import _make_session  # noqa: E402
+# Chart vs. Time: bind the synthetic truck-mcp session and verify traces
+# build, decimated paint works, and the view-state caption is honest. The
+# lanes come from the shared layout model — the pane no longer decides.
 from openobd.tmstore import TmSessionReader  # noqa: E402
-from openobd.stripchart import ChartPane  # noqa: E402
-import sqlite3 as _sq  # noqa: E402
-chart_db = "/tmp/smoke_chart.tmsession.db"
-if os.path.exists(chart_db):
-    os.unlink(chart_db)
-_make_session(chart_db)
-conn = _sq.connect(chart_db)
-for i in range(300):
-    conn.execute(
-        "INSERT INTO sample (ts_utc, channel_id, value_num, fresh, quality) "
-        "VALUES (?,1,?,1,'ok')",
-        (f"2026-08-21T10:{5 + (i + 1) // 60:02d}:{(i + 1) % 60:02d}Z",
-         800 + i * 10))
-conn.commit()
-conn.close()
+from openobd.stripchart import ChartPane, chartable_names  # noqa: E402
+from openobd.chanlayout import ChannelLayout  # noqa: E402
 chart_reader = TmSessionReader(chart_db)
 pane = ChartPane()
 chan_meta = {c["name"]: c for c in chart_reader.channels()}
-pane.bind(chart_reader, chan_meta, archived=False)
+_layout = ChannelLayout()
+_chartable = chartable_names(chart_reader, chan_meta)
+pane.bind(chart_reader, chan_meta, False, _layout.chart_lanes(_chartable))
 # rpm is a preset lane; ect qualifies via its numeric latest sample; the
 # errored tft and never-read gear must not chart.
 assert "rpm" in pane._channels and "ect" in pane._channels
@@ -92,10 +109,10 @@ assert len(rpm_trace.ts) == 301, "chart backfill missed samples"
 assert pane.chart.caption == "live"
 # per-session default window: live follows 1 min; archived opens on All
 assert pane._span_combo.currentText() == "1 min"
-pane.bind(chart_reader, chan_meta, archived=True)
+pane.bind(chart_reader, chan_meta, True, _layout.chart_lanes(_chartable))
 assert pane._span_combo.currentText() == "All"
 assert pane.chart.span is None
-pane.bind(chart_reader, chan_meta, archived=False)
+pane.bind(chart_reader, chan_meta, False, _layout.chart_lanes(_chartable))
 pane.tick(archived=False, session_stale=True)
 assert pane.chart.caption == "not advancing", "stale view rendered as live"
 pane.chart.grab()               # windowed paint
@@ -105,6 +122,42 @@ print("chart vs. time OK:", len(pane._channels), "channels,",
       len(pane.chart.lanes), "lanes,", len(rpm_trace.ts), "rpm points")
 chart_reader.close()
 pane.unbind()
+
+# ONE selection model drives BOTH views: Live Data bound the synthetic session
+# (TRUCK_MCP_DATA pins the root). Hiding a field removes its tile AND its
+# trace; re-adding restores both; a custom lane grouping round-trips through
+# QSettings; tile-only channels are labeled, never silently dropped.
+ld = win.livedata
+assert ld._reader is not None, "Live Data did not bind the synthetic session"
+assert set(ld._tiles) == {"rpm", "ect", "tft", "gear"}
+assert "rpm" in ld._chart._channels and "ect" in ld._chart._channels
+ld._set_visible("rpm", False)
+assert "rpm" not in ld._tiles, "hidden field still has a tile"
+assert "rpm" not in ld._chart._channels, "hidden field still charts"
+assert "rpm" not in ld._chart.chart.traces
+ld._set_visible("rpm", True)
+assert "rpm" in ld._tiles and "rpm" in ld._chart._channels
+assert "rpm" in ld._chart.chart.traces
+# custom grouping: move ect into its own new lane, persisted globally
+ld._move_to_lane("ect", None)
+lanes_now = ld._layout.chart_lanes(ld._chartable)
+assert ["ect"] in lanes_now
+assert ld._chart.chart.lanes == lanes_now, "chart lanes diverge from model"
+saved = QSettings("OpenOBD", "OpenOBD").value("livedata/layout")
+assert saved, "custom layout not persisted to QSettings"
+assert ChannelLayout.from_json(saved).chart_lanes(ld._chartable) == lanes_now
+# tile-only rule is visible, not silent: tft (module error, no numeric
+# latest) and gear (never read) tile but never chart
+assert "tft" in ld._tiles and "tft" not in ld._chart._channels
+assert "gear" in ld._tiles and "gear" not in ld._chart._channels
+assert "tile only" in ld._tile_only_reason("tft")
+# reset returns both views to defaults and removes the saved key
+ld._reset_layout()
+assert QSettings("OpenOBD", "OpenOBD").value("livedata/layout") is None
+assert ld._layout.is_default()
+assert set(ld._tiles) == {"rpm", "ect", "tft", "gear"}
+print("live data shared layout OK: hide/re-add syncs both views, "
+      "custom lane persisted + reset")
 
 # diagnostics: module map verdict rendering + codes table population using
 # REAL parser output from synthetic ELM strings (no hardware)

@@ -77,6 +77,28 @@ MAX_INITIAL_SAMPLES = 250_000
 TRUNCATED_TAIL_S = 600.0
 
 
+def chartable_names(reader: "tmstore.TmSessionReader",
+                    channel_meta: dict[str, dict]) -> list[str]:
+    """The channels the chart MAY plot: numeric-kind channels that are lane
+    presets or already have a numeric latest sample. Which of these actually
+    chart, and how they group, is the layout model's decision (chanlayout) —
+    this is only the eligibility rule. A latest() read failure yields the
+    preset-only set rather than raising; the page's tick surfaces read
+    failures explicitly."""
+    try:
+        latest = reader.latest(list(channel_meta))
+    except Exception:
+        latest = {}
+    names = []
+    for name, meta in channel_meta.items():
+        if (meta.get("kind") or "numeric") != "numeric":
+            continue
+        sample = latest.get(name) or {}
+        if name in _PRESET_NAMES or sample.get("value_num") is not None:
+            names.append(name)
+    return names
+
+
 def build_lanes(names: Sequence[str]) -> list[list[str]]:
     """Group the session's chartable channels into display lanes: the preset
     groupings first (only channels actually present), then any remaining
@@ -254,6 +276,13 @@ class StripChart(QWidget):
             self.caption = caption
             self.update()
 
+    def lane_at(self, y: float) -> Optional[int]:
+        """Index of the lane under widget-y, for the grouping context menu."""
+        if not self.lanes or self.height() <= 0:
+            return None
+        li = int(y * len(self.lanes) / self.height())
+        return li if 0 <= li < len(self.lanes) else None
+
     def _window(self) -> tuple[float, float]:
         t1 = self.t_end if self.t_end is not None else 0.0
         if self.span is None:
@@ -401,23 +430,14 @@ class ChartPane(QWidget):
 
     # -- binding -------------------------------------------------------------- #
     def bind(self, reader: tmstore.TmSessionReader,
-             channel_meta: dict[str, dict], archived: bool):
-        """Configure lanes for the session's chartable channels and backfill.
-        Chartable = numeric-kind channels that are lane presets or already have
-        a numeric latest sample; like the tile grid, the set is fixed at bind."""
+             channel_meta: dict[str, dict], archived: bool,
+             lanes: list[list[str]]):
+        """Configure the given lanes and backfill. The lanes come from the
+        page's shared ChannelLayout (chanlayout) — the ONE model both the tile
+        grid and this chart derive from — so this pane never decides for
+        itself what is selected; it only renders and reads."""
         self.unbind()
-        try:
-            latest = reader.latest(list(channel_meta))
-        except Exception:
-            latest = {}
-        names = []
-        for name, meta in channel_meta.items():
-            if (meta.get("kind") or "numeric") != "numeric":
-                continue
-            sample = latest.get(name) or {}
-            if name in _PRESET_NAMES or sample.get("value_num") is not None:
-                names.append(name)
-        lanes = build_lanes(names)
+        names = [n for lane in lanes for n in lane]
         units = {n: (channel_meta.get(n) or {}).get("unit") or "" for n in names}
         self.chart.configure(lanes, units)
         self._reader = reader
@@ -483,3 +503,12 @@ class ChartPane(QWidget):
 
     def _on_span(self, idx: int):
         self.chart.set_span(WINDOW_SPANS[idx][1])
+
+    # A layout change rebinds the pane; the page uses these to keep the user's
+    # chosen window across that rebind instead of snapping back to the default.
+    def span_text(self) -> str:
+        return self._span_combo.currentText()
+
+    def set_span_text(self, text: str):
+        if any(label == text for label, _s in WINDOW_SPANS):
+            self._span_combo.setCurrentText(text)
