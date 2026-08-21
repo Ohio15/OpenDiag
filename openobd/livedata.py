@@ -42,7 +42,7 @@ from __future__ import annotations
 import sqlite3
 from datetime import datetime
 
-from PySide6.QtCore import QSettings, Qt, QTimer
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
     QComboBox, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel, QMenu,
@@ -51,6 +51,7 @@ from PySide6.QtWidgets import (
 )
 
 from . import chanlayout, ctljournal, tmstore
+from .appsettings import app_settings
 from .chanlayout import ChannelLayout
 from .stripchart import ChartPane, chartable_names
 from .tmstore import TmSessionReader, TmSessionError
@@ -157,7 +158,7 @@ class LiveDataPage(QWidget):
         # The ONE selection+grouping model both views derive from. Global, not
         # per-session: truck-mcp store channel names are stable across drives,
         # so a grouping tuned for troubleshooting carries to the next session.
-        self._settings = QSettings("OpenOBD", "OpenOBD")
+        self._settings = app_settings()
         self._layout = ChannelLayout.from_json(
             self._settings.value(chanlayout.SETTINGS_KEY))
 

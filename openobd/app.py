@@ -38,7 +38,7 @@ import tempfile
 import threading
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, QSettings, Signal
+from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, Signal
 from PySide6.QtGui import (
     QAction, QColor, QIcon, QPainter, QPalette, QPen, QPolygonF, QFont,
     QLinearGradient, QRadialGradient, QUndoCommand, QUndoStack,
@@ -56,6 +56,7 @@ import numpy as np
 import pyqtgraph as pg
 
 from . import editops
+from .appsettings import app_settings
 from .calspec import Calibration
 from .diagui import DiagnosticsPage
 from .livedata import ActiveTestsPage, LiveDataPage
@@ -1373,7 +1374,7 @@ class MainWindow(QMainWindow):
 
         # Top level: Dashboard opens first; Tuning holds the monitor/scan/tune
         # workflow; Diagnostics holds troubleshooting/active tests/codes.
-        self.settings = QSettings("OpenOBD", "OpenOBD")
+        self.settings = app_settings()
         self.dashboard = Dashboard(
             style=str(self.settings.value("dashboard/style", "classic")))
         self.main_tabs = QTabWidget()

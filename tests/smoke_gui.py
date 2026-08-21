@@ -37,15 +37,45 @@ with open(log_path, "w") as fh:
 # pin truck-mcp's data root to a temp tree holding ONE synthetic session so
 # Live Data binds it deterministically (TRUCK_MCP_DATA is authoritative and
 # alone, exactly as truck-mcp itself treats it). Both must happen BEFORE the
-# window is built.
+# window is built. The redirect only works because ALL app settings go through
+# appsettings.app_settings() (4-arg ctor); the 2-arg QSettings("OpenOBD",
+# "OpenOBD") ignores setDefaultFormat/setPath and hits the real registry —
+# the canary below proves the isolation actually held.
 import sqlite3 as _sq  # noqa: E402
 import tempfile  # noqa: E402
 from PySide6.QtCore import QSettings  # noqa: E402
+from openobd.appsettings import app_settings  # noqa: E402
 from tests.test_tmstore import _make_session  # noqa: E402
 _tmp_root = tempfile.mkdtemp(prefix="openobd_smoke_")
 QSettings.setDefaultFormat(QSettings.IniFormat)
 QSettings.setPath(QSettings.IniFormat, QSettings.UserScope,
                   os.path.join(_tmp_root, "settings"))
+
+
+def _real_registry_snapshot():
+    """The user's REAL OpenOBD settings (Windows registry), read outside Qt.
+    Captured before the run and compared after: smoke must leave them
+    byte-identical, or the isolation is broken."""
+    if sys.platform != "win32":
+        return None
+    import winreg
+    snap = {}
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                            r"Software\OpenOBD\OpenOBD\livedata") as k:
+            snap["livedata/layout"] = winreg.QueryValueEx(k, "layout")[0]
+    except OSError:
+        snap["livedata/layout"] = None
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                            r"Software\OpenOBD\OpenOBD\dashboard") as k:
+            snap["dashboard/style"] = winreg.QueryValueEx(k, "style")[0]
+    except OSError:
+        snap["dashboard/style"] = None
+    return snap
+
+
+_registry_before = _real_registry_snapshot()
 os.environ["TRUCK_MCP_DATA"] = os.path.join(_tmp_root, "truck-mcp")
 _sessions_dir = os.path.join(_tmp_root, "truck-mcp", "sessions")
 os.makedirs(_sessions_dir)
@@ -143,7 +173,7 @@ ld._move_to_lane("ect", None)
 lanes_now = ld._layout.chart_lanes(ld._chartable)
 assert ["ect"] in lanes_now
 assert ld._chart.chart.lanes == lanes_now, "chart lanes diverge from model"
-saved = QSettings("OpenOBD", "OpenOBD").value("livedata/layout")
+saved = app_settings().value("livedata/layout")
 assert saved, "custom layout not persisted to QSettings"
 assert ChannelLayout.from_json(saved).chart_lanes(ld._chartable) == lanes_now
 # tile-only rule is visible, not silent: tft (module error, no numeric
@@ -153,7 +183,7 @@ assert "gear" in ld._tiles and "gear" not in ld._chart._channels
 assert "tile only" in ld._tile_only_reason("tft")
 # reset returns both views to defaults and removes the saved key
 ld._reset_layout()
-assert QSettings("OpenOBD", "OpenOBD").value("livedata/layout") is None
+assert app_settings().value("livedata/layout") is None
 assert ld._layout.is_default()
 assert set(ld._tiles) == {"rpm", "ect", "tft", "gear"}
 print("live data shared layout OK: hide/re-add syncs both views, "
@@ -423,5 +453,11 @@ from openobd.calspec import Calibration
 back = Calibration.load(out)
 assert len(back.tables) == len(cal.tables)
 print("save/load OK, tables:", len(back.tables))
+
+# settings-isolation canary: the run above exercised layout writes, style
+# switches and resets — the user's REAL registry must be untouched.
+assert _real_registry_snapshot() == _registry_before, \
+    "smoke leaked into the real per-user settings — isolation broken"
+print("settings isolation OK: real registry untouched")
 
 print("SMOKE OK")
