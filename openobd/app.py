@@ -20,6 +20,10 @@ Tabs
                 journal — empty executable registry, outstanding-activation
                 warnings. Commands nothing.
 
+Settings → Preferences houses the dashboard-visual selector (HP Tuners
+classic dial/bar cluster, or the modern dual-dial cluster); the choice is
+persisted via QSettings and applies without rebinding the data source.
+
 Run:  python -m openobd.app  [optional path to a .cal.json]
 """
 from __future__ import annotations
@@ -33,7 +37,7 @@ import tempfile
 import threading
 from typing import Optional
 
-from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, Signal
+from PySide6.QtCore import Qt, QTimer, QPointF, QRectF, QEvent, QSettings, Signal
 from PySide6.QtGui import (
     QAction, QColor, QIcon, QPainter, QPalette, QPen, QPolygonF, QFont,
     QLinearGradient, QRadialGradient, QUndoCommand, QUndoStack,
@@ -43,7 +47,8 @@ from PySide6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTableView, QTabWidget, QSplitter, QLabel,
     QComboBox, QCheckBox, QPushButton, QFileDialog, QTextEdit, QTableWidget,
     QTableWidgetItem, QHeaderView, QMessageBox, QGroupBox, QLineEdit,
-    QSlider, QListWidget, QListWidgetItem, QMenu,
+    QSlider, QListWidget, QListWidgetItem, QMenu, QDialog, QDialogButtonBox,
+    QFormLayout,
 )
 
 import numpy as np
@@ -89,6 +94,46 @@ BAR_SPECS = [
     ("tft",          "Trans",   "°F",  80, 300, 240,  None),
     ("gear",         "Gear",    "",    0,    6, None, None),
     ("ethanol",      "EtOH",    "%",   0,  100, None, None),
+]
+
+# Dashboard visuals selectable in Settings → Preferences (key → menu label).
+# The key is what QSettings persists, so entries must never be renamed.
+DASHBOARD_STYLES = {
+    "classic": "HP Tuners classic — dial pair + bar cluster",
+    "modern":  "Modern cluster — dual dial with tiles",
+}
+
+# "Modern cluster" layout: readout tiles left, big RPM/Speed dials flanking a
+# center stack, temperature bar tiles right, and a ring-tile strip below.
+MODERN_TILE_SPECS = [       # key, label, unit, min, max
+    ("maf", "MAF", "g/s", 0, 100),
+    ("map", "MAP", "kPa", 0, 105),
+    ("tps", "TPS", "%",   0, 100),
+]
+MODERN_DIAL_SPECS = [       # key, label, sublabel, min, max, divisor, red-from
+    ("rpm", "RPM",   "x1000 RPM", 0, 7000, 1000, 6200),
+    ("vss", "Speed", "MPH",       0, 160,  1,    None),
+]
+MODERN_CENTER_SPECS = [     # key, label, unit
+    ("gear",    "GEAR",    ""),
+    ("ambient", "OUTSIDE", "°F"),
+    ("voltage", "VOLTS",   "V"),
+]
+MODERN_BAR_SPECS = [        # key, label, unit, min, max, red-above
+    ("ect", "ECT",   "°F", 100, 260, 235),
+    ("iat", "IAT",   "°F", 20,  180, 150),
+    ("tft", "TRANS", "°F", 80,  300, 240),
+]
+MODERN_RING_SPECS = [       # key, label, unit, min, max, red-above, red-below
+    ("knock_retard", "KR",      "°",   0,   10, 0.5,  None),
+    ("spark",        "ADVANCE", "°",  -10,  45, None, None),
+    ("stft",         "STFT",    "%",  -25,  25, 10,   -10),
+    ("ltft",         "LTFT",    "%",  -25,  25, 10,   -10),
+    ("fuel_level",   "FUEL",    "%",   0,  100, None, 10),
+    ("fuel_press",   "FUEL P",  "psi", 0,   75, None, 40),
+    ("load",         "LOAD",    "%",   0,  100, None, None),
+    ("app",          "PEDAL",   "%",   0,  100, None, None),
+    ("ethanol",      "ETOH",    "%",   0,  100, None, None),
 ]
 
 
@@ -436,16 +481,356 @@ class BarGauge(GaugeBase):
         p.end()
 
 
+# --------------------------------------------------------------------------- #
+# "Modern cluster" gauges (Settings → Preferences → Dashboard visual): a dark
+# dual-dial cluster with digital readout tiles. Same GaugeBase plumbing, so
+# availability dimming and tmstore freshness badges behave identically.
+# --------------------------------------------------------------------------- #
+_M_TILE = QColor(16, 20, 27)
+_M_TILE_DIM = QColor(12, 14, 18)
+_M_EDGE = QColor(46, 54, 68)
+_M_EDGE_DIM = QColor(30, 34, 42)
+_M_TEXT = QColor(235, 239, 245)
+_M_DIM = QColor(118, 127, 140)
+_M_BLUE = QColor(58, 140, 235)
+_M_RED = QColor(222, 58, 48)
+
+
+def _m_fmt(v: Optional[float]) -> str:
+    return "—" if v is None else f"{v:g}"
+
+
+def _m_fit(font: QFont, text: str, avail_w: float) -> QFont:
+    """Shrink `font` (never grow it) until `text` fits in avail_w pixels."""
+    from PySide6.QtGui import QFontMetricsF
+    wpx = QFontMetricsF(font).horizontalAdvance(text)
+    if wpx > avail_w > 0:
+        font.setPointSizeF(max(6.0, font.pointSizeF() * avail_w / wpx))
+    return font
+
+
+class ModernTile(GaugeBase):
+    """Rounded readout tile: small caps label, large digital value + unit."""
+
+    def __init__(self, key, label, unit, vmin=0.0, vmax=1.0, centered=False):
+        super().__init__(key, label, unit, vmin, vmax)
+        self.centered = centered
+        self.setMinimumSize(96, 56)
+
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        dim = not self.available
+        p.setPen(QPen(_M_EDGE_DIM if dim else _M_EDGE, 1.2))
+        p.setBrush(_M_TILE_DIM if dim else _M_TILE)
+        p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 9, 9)
+
+        align = Qt.AlignHCenter if self.centered else Qt.AlignLeft
+        p.setPen(_M_DIM)
+        f = QFont(); f.setPointSizeF(7.5); f.setBold(True)
+        f.setLetterSpacing(QFont.AbsoluteSpacing, 1.0)
+        p.setFont(f)
+        p.drawText(QRectF(10, 5, w - 20, 13), align | Qt.AlignVCenter, self.label)
+
+        badge = self._state_badge()
+        p.setPen(QColor(120, 126, 136) if dim
+                 else (badge[1] if badge else _M_TEXT))
+        f2 = QFont()
+        f2.setPointSizeF(max(11.0, min(h * 0.28, 26.0)))
+        f2.setBold(True)
+        txt = _m_fmt(self.value) + (f" {self.unit}" if self.unit else "")
+        p.setFont(_m_fit(f2, txt, w - 20))
+        p.drawText(QRectF(10, 16, w - 20, h - (32 if badge else 20)),
+                   align | Qt.AlignVCenter, txt)
+        if badge is not None:
+            p.setPen(badge[1])
+            f3 = QFont(); f3.setPointSizeF(6.5); p.setFont(f3)
+            p.drawText(QRectF(10, h - 16, w - 20, 12),
+                       align | Qt.AlignVCenter, badge[0])
+        p.end()
+
+
+class ModernBarTile(GaugeBase):
+    """Tile with a digital readout and a horizontal blue bar + red zone."""
+
+    def __init__(self, key, label, unit, vmin, vmax, red_above=None):
+        super().__init__(key, label, unit, vmin, vmax)
+        self.red_above = red_above
+        self.setMinimumSize(120, 58)
+
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        dim = not self.available
+        badge = self._state_badge()
+        p.setPen(QPen(_M_EDGE_DIM if dim else _M_EDGE, 1.2))
+        p.setBrush(_M_TILE_DIM if dim else _M_TILE)
+        p.drawRoundedRect(QRectF(1, 1, w - 2, h - 2), 9, 9)
+
+        # top row: label left, big value + unit right
+        p.setPen(_M_DIM)
+        f = QFont(); f.setPointSizeF(7.5); f.setBold(True)
+        f.setLetterSpacing(QFont.AbsoluteSpacing, 1.0)
+        p.setFont(f)
+        p.drawText(QRectF(10, 4, w - 20, 20), Qt.AlignLeft | Qt.AlignVCenter,
+                   self.label)
+        p.setPen(QColor(120, 126, 136) if dim
+                 else (badge[1] if badge else _M_TEXT))
+        f2 = QFont()
+        f2.setPointSizeF(max(10.0, min(h * 0.22, 15.0)))
+        f2.setBold(True)
+        txt = _m_fmt(self.value) + (f" {self.unit}" if self.unit else "")
+        p.setFont(_m_fit(f2, txt, max(40.0, w - 90.0)))
+        p.drawText(QRectF(10, 2, w - 20, 24), Qt.AlignRight | Qt.AlignVCenter,
+                   txt)
+
+        # middle band: badge caption (left) + scale end labels
+        f3 = QFont(); f3.setPointSizeF(6.0); p.setFont(f3)
+        if badge is not None and not dim:
+            p.setPen(badge[1])
+            p.drawText(QRectF(10, h - 26, w - 20, 11),
+                       Qt.AlignLeft | Qt.AlignVCenter, badge[0])
+        else:
+            p.setPen(_M_DIM)
+            p.drawText(QRectF(10, h - 26, 60, 11),
+                       Qt.AlignLeft | Qt.AlignVCenter, f"{self.vmin:g}")
+        p.setPen(_M_DIM)
+        p.drawText(QRectF(w - 70, h - 26, 60, 11),
+                   Qt.AlignRight | Qt.AlignVCenter, f"{self.vmax:g}")
+
+        # bar: dark track, red zone, blue fill (badge accent when not live)
+        by, bx0, bx1 = h - 14.0, 10.0, w - 10.0
+        p.setPen(Qt.NoPen)
+        p.setBrush(QColor(28, 33, 42))
+        p.drawRoundedRect(QRectF(bx0, by, bx1 - bx0, 6), 3, 3)
+        if self.red_above is not None and not dim:
+            x = bx0 + (bx1 - bx0) * self._frac(self.red_above)
+            p.setBrush(QColor(120, 30, 26))
+            p.drawRoundedRect(QRectF(x, by, bx1 - x, 6), 3, 3)
+        if self.value is not None and not dim:
+            in_red = self.red_above is not None and self.value >= self.red_above
+            p.setBrush(badge[1] if badge else (_M_RED if in_red else _M_BLUE))
+            x = bx0 + (bx1 - bx0) * self._frac(self.value)
+            p.drawRoundedRect(QRectF(bx0, by, max(4.0, x - bx0), 6), 3, 3)
+        p.end()
+
+
+class ModernRing(GaugeBase):
+    """Circular mini-gauge: 270° value arc, digital value inside, label below."""
+
+    START = 225.0
+    SPAN = 270.0
+
+    def __init__(self, key, label, unit, vmin, vmax,
+                 red_above=None, red_below=None):
+        super().__init__(key, label, unit, vmin, vmax)
+        self.red_above = red_above
+        self.red_below = red_below
+        self.setMinimumSize(74, 96)
+
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        dim = not self.available
+        badge = self._state_badge()
+        d = max(30.0, min(w - 12.0, h - 30.0))
+        cx, cy = w / 2.0, 6.0 + d / 2.0
+        rect = QRectF(cx - d / 2, cy - d / 2, d, d)
+        pen_w = max(3.0, d * 0.07)
+        p.setPen(QPen(QColor(22, 25, 31) if dim else QColor(34, 40, 50),
+                      pen_w, Qt.SolidLine, Qt.FlatCap))
+        p.setBrush(Qt.NoBrush)
+        p.drawArc(rect, int(self.START * 16), int(-self.SPAN * 16))
+        if self.value is not None and not dim:
+            in_red = ((self.red_above is not None and self.value >= self.red_above)
+                      or (self.red_below is not None and self.value <= self.red_below))
+            arc_c = badge[1] if badge else (_M_RED if in_red else _M_BLUE)
+            p.setPen(QPen(arc_c, pen_w, Qt.SolidLine, Qt.FlatCap))
+            p.drawArc(rect, int(self.START * 16),
+                      int(-self.SPAN * 16 * self._frac(self.value)))
+
+        p.setPen(QColor(120, 126, 136) if dim
+                 else (badge[1] if badge else _M_TEXT))
+        f = QFont(); f.setPointSizeF(max(8.0, d * 0.20)); f.setBold(True)
+        p.setFont(f)
+        p.drawText(rect, Qt.AlignCenter, _m_fmt(self.value))
+
+        # caption: freshness badge when present, otherwise "LABEL unit"
+        if badge is not None and not dim:
+            p.setPen(badge[1])
+            cap = badge[0]
+        else:
+            p.setPen(_M_DIM)
+            cap = f"{self.label} {self.unit}".strip()
+        f2 = QFont(); f2.setPointSizeF(7.0); f2.setBold(True)
+        f2.setLetterSpacing(QFont.AbsoluteSpacing, 0.5)
+        p.setFont(f2)
+        p.drawText(QRectF(0, cy + d / 2 + 3, w, 14),
+                   Qt.AlignHCenter | Qt.AlignTop, cap)
+        p.end()
+
+
+class ModernDial(GaugeBase):
+    """Large modern dial: dark face, blue value arc, thin floating needle, and
+    a big digital readout in the center (RPM / Speed)."""
+
+    SWEEP_START = 225.0   # degrees, math orientation (0=east, CCW+)
+    SWEEP = 270.0         # clockwise sweep from SWEEP_START
+
+    def __init__(self, key, label, sublabel, vmin, vmax,
+                 divisor=1.0, red_from=None):
+        # the unit slot carries the sublabel drawn under the digits
+        super().__init__(key, label, sublabel, vmin, vmax)
+        self.divisor = float(divisor)
+        self.red_from = red_from
+        self.setMinimumSize(220, 220)
+
+    def _angle(self, v: float) -> float:
+        return self.SWEEP_START - self.SWEEP * self._frac(v)
+
+    def _pt(self, cx, cy, r, ang_deg):
+        a = math.radians(ang_deg)
+        return QPointF(cx + r * math.cos(a), cy - r * math.sin(a))
+
+    def _fmt_digits(self) -> str:
+        if self.value is None:
+            return "—"
+        if self.divisor > 1:
+            return f"{self.value / self.divisor:.1f}"
+        return f"{self.value:.0f}"
+
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        side = min(w, h)
+        cx, cy = w / 2.0, h / 2.0
+        r = side / 2.0 - 3
+        dim = not self.available
+        badge = self._state_badge()
+
+        # face + thin bezel
+        p.setPen(QPen(_M_EDGE_DIM if dim else _M_EDGE, max(1.5, side * 0.008)))
+        grad = QRadialGradient(cx, cy, r)
+        if dim:
+            grad.setColorAt(0.0, QColor(16, 18, 23))
+            grad.setColorAt(1.0, QColor(9, 10, 13))
+        else:
+            grad.setColorAt(0.0, QColor(21, 26, 35))
+            grad.setColorAt(0.75, QColor(13, 16, 22))
+            grad.setColorAt(1.0, QColor(7, 9, 13))
+        p.setBrush(grad)
+        p.drawEllipse(QPointF(cx, cy), r, r)
+
+        # sweep track + value arc
+        arc_r = r * 0.90
+        arc_rect = QRectF(cx - arc_r, cy - arc_r, 2 * arc_r, 2 * arc_r)
+        arc_w = max(3.0, side * 0.028)
+        p.setBrush(Qt.NoBrush)
+        p.setPen(QPen(QColor(22, 25, 31) if dim else QColor(30, 37, 48),
+                      arc_w, Qt.SolidLine, Qt.FlatCap))
+        p.drawArc(arc_rect, int(self.SWEEP_START * 16), int(-self.SWEEP * 16))
+        if self.value is not None and not dim:
+            arc_c = badge[1] if badge else _M_BLUE
+            p.setPen(QPen(arc_c, arc_w, Qt.SolidLine, Qt.FlatCap))
+            p.drawArc(arc_rect, int(self.SWEEP_START * 16),
+                      int(-self.SWEEP * 16 * self._frac(self.value)))
+
+        # red zone just inside the numeral ring
+        if self.red_from is not None and not dim:
+            zr = r * 0.97
+            z_rect = QRectF(cx - zr, cy - zr, 2 * zr, 2 * zr)
+            a0 = self._angle(max(self.red_from, self.vmin))
+            a1 = self._angle(self.vmax)
+            p.setPen(QPen(_M_RED, max(2.5, side * 0.018),
+                          Qt.SolidLine, Qt.FlatCap))
+            p.drawArc(z_rect, int(a0 * 16), int((a1 - a0) * 16))
+
+        # ticks + numerals
+        step = _nice_step(self.vmax - self.vmin)
+        minor = step / 4.0
+        tick_c = QColor(90, 96, 106) if dim else QColor(205, 212, 222)
+        num_font = QFont()
+        num_font.setPointSizeF(max(6.0, side * 0.048))
+        num_font.setBold(True)
+        p.setFont(num_font)
+        v = self.vmin
+        while v <= self.vmax + 1e-9:
+            ang = self._angle(v)
+            is_major = abs((v - self.vmin) % step) < 1e-6 \
+                or abs(step - (v - self.vmin) % step) < 1e-6
+            ln = r * (0.09 if is_major else 0.045)
+            p.setPen(QPen(tick_c,
+                          max(1.0, side * (0.010 if is_major else 0.006))))
+            p.drawLine(self._pt(cx, cy, r * 0.96, ang),
+                       self._pt(cx, cy, r * 0.96 - ln, ang))
+            if is_major:
+                in_red = self.red_from is not None and v >= self.red_from
+                p.setPen(_M_RED if (in_red and not dim) else tick_c)
+                lp = self._pt(cx, cy, r * 0.74, ang)
+                p.drawText(QRectF(lp.x() - side * 0.09, lp.y() - side * 0.05,
+                                  side * 0.18, side * 0.1),
+                           Qt.AlignCenter, f"{v / self.divisor:g}")
+            v += minor
+
+        # big digital readout + sublabel
+        p.setPen(QColor(120, 126, 136) if dim
+                 else (badge[1] if badge else _M_TEXT))
+        fd = QFont(); fd.setPointSizeF(max(12.0, side * 0.155)); fd.setBold(True)
+        p.setFont(fd)
+        p.drawText(QRectF(cx - r, cy - side * 0.16, 2 * r, side * 0.24),
+                   Qt.AlignCenter, self._fmt_digits())
+        p.setPen(_M_DIM)
+        fs = QFont(); fs.setPointSizeF(max(6.5, side * 0.042)); fs.setBold(True)
+        p.setFont(fs)
+        p.drawText(QRectF(cx - r, cy + side * 0.09, 2 * r, side * 0.09),
+                   Qt.AlignCenter, self.unit)
+
+        # min/max capture + freshness badge
+        if self.max_seen is not None:
+            p.setPen(QColor(130, 136, 146))
+            f4 = QFont(); f4.setPointSizeF(max(5.5, side * 0.036)); p.setFont(f4)
+            p.drawText(QRectF(cx - r, cy + r * 0.52, 2 * r, side * 0.09),
+                       Qt.AlignCenter,
+                       f"▼{self.min_seen:g} ▲{self.max_seen:g}")
+        if badge is not None:
+            p.setPen(badge[1])
+            fb = QFont(); fb.setPointSizeF(max(5.5, side * 0.040)); fb.setBold(True)
+            p.setFont(fb)
+            p.drawText(QRectF(cx - r, cy - r * 0.62, 2 * r, side * 0.10),
+                       Qt.AlignCenter, badge[0])
+
+        # thin floating needle (outer segment only, keeps the digits clear);
+        # parked at vmin when no data yet
+        needle_v = self.vmin if self.value is None else self.value
+        ang = self._angle(needle_v)
+        if dim or self.value is None:
+            needle_c = QColor(80, 85, 94)
+        elif badge is not None:
+            needle_c = badge[1]
+        else:
+            needle_c = _M_RED
+        p.setPen(QPen(needle_c, max(2.0, side * 0.012),
+                      Qt.SolidLine, Qt.RoundCap))
+        p.drawLine(self._pt(cx, cy, r * 0.55, ang),
+                   self._pt(cx, cy, r * 0.88, ang))
+        p.end()
+
+
 class Dashboard(QWidget):
     # GT connect runs on a worker thread (serial open + first poll can take
     # seconds); these marshal the result back onto the GUI thread.
     gt_ready = Signal(object)
     gt_error = Signal(str)
 
-    def __init__(self):
+    def __init__(self, style: str = "classic"):
         super().__init__()
+        self.style = style if style in DASHBOARD_STYLES else "classic"
         self.source: Optional[DataSource] = None
-        self.gauges: dict[str, Gauge] = {}
+        self.gauges: dict[str, GaugeBase] = {}
         self.recording = False
         self._rec_file = None          # open csv file the recorder streams to
         self._rec_writer = None
@@ -502,14 +887,43 @@ class Dashboard(QWidget):
         root.addWidget(self.replay_ctl)
 
         self.cluster_host = QWidget()
+        self._cluster_lay = QVBoxLayout(self.cluster_host)
+        self._cluster_lay.setContentsMargins(0, 0, 0, 0)
+        self._cluster: Optional[QWidget] = None
         root.addWidget(self.cluster_host, 1)
 
-        # The full cluster is visible from the start (HP Tuners style):
+        # The full cluster is visible from the start:
         # every gauge shows "—" / a parked needle until data arrives.
-        self._build_gauges()
+        self._rebuild_cluster()
 
-    def _build_gauges(self):
-        cluster = QVBoxLayout(self.cluster_host)
+    # -- dashboard visuals (Settings → Preferences) --------------------------- #
+    def set_style(self, style: str):
+        """Switch the dashboard visual. The bound source stays bound: the new
+        cluster picks values back up from latest() on the next tick, and
+        freshness states are re-applied there too."""
+        if style not in DASHBOARD_STYLES or style == self.style:
+            return
+        self.style = style
+        self._rebuild_cluster()
+
+    def _rebuild_cluster(self):
+        if self._cluster is not None:
+            self._cluster_lay.removeWidget(self._cluster)
+            self._cluster.deleteLater()
+        self.gauges.clear()
+        build = (self._build_modern_cluster if self.style == "modern"
+                 else self._build_classic_cluster)
+        self._cluster = build()
+        self._cluster_lay.addWidget(self._cluster)
+        if self.source is not None:
+            avail = set(self.source.channels())
+            for key, g in self.gauges.items():
+                g.set_available(key in avail)
+
+    def _build_classic_cluster(self) -> QWidget:
+        host = QWidget()
+        cluster = QVBoxLayout(host)
+        cluster.setContentsMargins(0, 0, 0, 0)
         cluster.setSpacing(4)
 
         dials = {}
@@ -537,6 +951,64 @@ class Dashboard(QWidget):
             self.gauges[key] = g
             bar_row.addWidget(g, 1)
         cluster.addLayout(bar_row, 2)
+        return host
+
+    def _build_modern_cluster(self) -> QWidget:
+        host = QWidget()
+        pal = host.palette()
+        pal.setColor(QPalette.Window, QColor(9, 11, 15))
+        host.setAutoFillBackground(True)
+        host.setPalette(pal)
+        cluster = QVBoxLayout(host)
+        cluster.setContentsMargins(8, 8, 8, 8)
+        cluster.setSpacing(6)
+
+        top = QHBoxLayout()
+        top.setSpacing(8)
+
+        left = QVBoxLayout()
+        left.setSpacing(6)
+        for key, label, unit, lo, hi in MODERN_TILE_SPECS:
+            g = ModernTile(key, label, unit, lo, hi)
+            self.gauges[key] = g
+            left.addWidget(g, 1)
+        top.addLayout(left, 2)
+
+        dials = []
+        for key, label, sub, lo, hi, div, red in MODERN_DIAL_SPECS:
+            g = ModernDial(key, label, sub, lo, hi, divisor=div, red_from=red)
+            self.gauges[key] = g
+            dials.append(g)
+        top.addWidget(dials[0], 4)
+
+        center = QVBoxLayout()
+        center.setSpacing(6)
+        for key, label, unit in MODERN_CENTER_SPECS:
+            g = ModernTile(key, label, unit, centered=True)
+            self.gauges[key] = g
+            center.addWidget(g, 1)
+        top.addLayout(center, 2)
+
+        top.addWidget(dials[1], 4)
+
+        right = QVBoxLayout()
+        right.setSpacing(6)
+        for key, label, unit, lo, hi, ra in MODERN_BAR_SPECS:
+            g = ModernBarTile(key, label, unit, lo, hi, red_above=ra)
+            self.gauges[key] = g
+            right.addWidget(g, 1)
+        top.addLayout(right, 3)
+        cluster.addLayout(top, 3)
+
+        ring_row = QHBoxLayout()
+        ring_row.setSpacing(6)
+        for key, label, unit, lo, hi, ra, rb in MODERN_RING_SPECS:
+            g = ModernRing(key, label, unit, lo, hi,
+                           red_above=ra, red_below=rb)
+            self.gauges[key] = g
+            ring_row.addWidget(g, 1)
+        cluster.addLayout(ring_row, 1)
+        return host
 
     def _teardown_source(self):
         """Stop and drop the current source. Always called before a new one is
@@ -900,7 +1372,9 @@ class MainWindow(QMainWindow):
 
         # Top level: Dashboard opens first; Tuning holds the monitor/scan/tune
         # workflow; Diagnostics holds troubleshooting/active tests/codes.
-        self.dashboard = Dashboard()
+        self.settings = QSettings("OpenOBD", "OpenOBD")
+        self.dashboard = Dashboard(
+            style=str(self.settings.value("dashboard/style", "classic")))
         self.main_tabs = QTabWidget()
         self.main_tabs.addTab(self.dashboard, "Dashboard")
 
@@ -1013,8 +1487,37 @@ class MainWindow(QMainWindow):
         rt = QAction("Revert whole table → stock", self)
         rt.triggered.connect(self._revert_table); e.addAction(rt)
 
+        s = self.menuBar().addMenu("&Settings")
+        pref = QAction("Preferences…", self)
+        pref.setShortcut("Ctrl+,")
+        pref.triggered.connect(self._open_settings)
+        s.addAction(pref)
+
         h = self.menuBar().addMenu("&Help")
         ab = QAction("About", self); ab.triggered.connect(self._about); h.addAction(ab)
+
+    def _open_settings(self):
+        """Settings dialog. Currently houses the dashboard-visual selector;
+        the choice applies immediately and persists via QSettings."""
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Settings")
+        form = QFormLayout(dlg)
+        combo = QComboBox()
+        for key, label in DASHBOARD_STYLES.items():
+            combo.addItem(label, key)
+        combo.setCurrentIndex(max(0, combo.findData(self.dashboard.style)))
+        form.addRow("Dashboard visual:", combo)
+        btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        btns.accepted.connect(dlg.accept)
+        btns.rejected.connect(dlg.reject)
+        form.addRow(btns)
+        if dlg.exec() != QDialog.Accepted:
+            return
+        style = combo.currentData()
+        self.dashboard.set_style(style)
+        self.settings.setValue("dashboard/style", style)
+        self.statusBar().showMessage(
+            f"Dashboard visual: {DASHBOARD_STYLES[style]}", 4000)
 
     def _about(self):
         md = self.cal.metadata

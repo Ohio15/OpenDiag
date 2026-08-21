@@ -122,6 +122,36 @@ for _ in range(5):
     win.dashboard._tick()
 vals = {k: g.value for k, g in win.dashboard.gauges.items()}
 print("dashboard gauge sample:", {k: v for k, v in vals.items() if v is not None})
+
+# dashboard visuals (Settings): switch to the modern cluster mid-replay —
+# the source must stay bound, availability must be re-applied, and the new
+# gauges must repopulate from latest() on the next tick.
+from openobd.app import DASHBOARD_STYLES  # noqa: E402
+assert set(DASHBOARD_STYLES) == {"classic", "modern"}
+d = win.dashboard
+src_before = d.source
+d.set_style("modern")
+assert d.source is src_before, "style switch dropped the bound source"
+assert len(d.gauges) >= 18, "modern cluster gauges missing"
+assert {"rpm", "vss", "ambient", "fuel_level"} <= set(d.gauges)
+avail = set(d.source.channels())
+assert all(g.available == (k in avail) for k, g in d.gauges.items()), \
+    "availability not re-applied after style switch"
+for _ in range(3):
+    app.processEvents()
+    d._tick()
+assert any(g.value is not None for g in d.gauges.values()), \
+    "modern gauges never repopulated after style switch"
+d._cluster.grab()   # modern widgets paint without error
+d.set_style("nonsense")          # unknown style must be a no-op
+assert d.style == "modern"
+d.set_style("classic")           # and back, for the sections below
+assert {"rpm", "voltage", "tft"} <= set(d.gauges)
+for _ in range(2):
+    app.processEvents()
+    d._tick()
+d._cluster.grab()
+print("dashboard style switch OK: modern <-> classic, source kept bound")
 win.dashboard.stop()
 
 # recording path: drain-based, streamed to a temp CSV (bypass the save dialog)
