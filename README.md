@@ -55,10 +55,11 @@ pyinstaller openobd.spec
 
 ## The workspaces
 
-Three top-level workspaces separate the workflows. **Dashboard** opens first;
+Five top-level workspaces separate the workflows. **Dashboard** opens first;
 **Tuning** holds monitoring/scanning/tuning (Editor, Scalars, Log Analysis
-sub-tabs plus the table tree); **Diagnostics** holds troubleshooting, active
-testing, and code clearing:
+sub-tabs plus the table tree); **Diagnostics** holds troubleshooting and code
+clearing; **Live Data** and **Active Tests** read truck-mcp's drive-log store
+off disk (see *Reading truck-mcp drive logs* below):
 
 * **Module Map** — the vehicle network drawn live: PC → OBDX GT → DLC, then
   the HS-GMLAN (500k) and SW-GMLAN (33.3k) bus rails with every installed
@@ -77,6 +78,36 @@ testing, and code clearing:
 Diagnostics shares the dashboard's live GT connection (gauge polling pauses
 around each diagnostic exchange) or opens its own link if nothing is
 connected.
+
+## Reading truck-mcp drive logs
+
+**Live Data** and **Active Tests** read what [truck-mcp](../truck-mcp) records —
+they never open the serial port, so they cannot contend with a running logger
+for the adapter. truck-mcp writes each drive as one SQLite file
+(`sessions/*.tmsession.db`) in WAL mode: *the database is the channel*, so a
+drive this box never started, a drive a logger is still writing, and a drive
+that finished last week all read identically. OpenOBD finds the store via
+`$TRUCK_MCP_DATA`, else `D:/Projects/truck-mcp`, else `~/truck-mcp`.
+
+* **Live Data** — pick a session; a tile grid shows the latest value per
+  channel, polled once a second straight off the file. Every tile renders
+  through the same five-state rule truck-mcp's own web UI enforces: **fresh**
+  (measured now), **carried** (measured earlier and carried forward, with its
+  age), **module error**, **no data** (answered with nothing), and **not read**
+  (nobody asked) are five different facts and get five different tiles. A
+  carried value never renders as a live one — the tool must not lie about the
+  truck. The connection is opened `PRAGMA query_only`, so it can recover a WAL
+  left by a crashed logger yet is physically unable to write.
+* **Active Tests** — display-only vehicle-control state. truck-mcp's registry of
+  executable controls is empty by policy (a supported CPID executes on first
+  contact with whatever bytes were guessed, so none may be scanned for), and
+  this page states that as a decision, not a blank. It reads truck-mcp's control
+  journal and surfaces the one thing that matters most: whether a control
+  session ended **without releasing an actuator** (an outstanding activation),
+  shown as a loud warning. **OpenOBD holds no lease, owns no console, and sends
+  no frame** — arm/fire live in truck-mcp's CLI behind an out-of-band console
+  nonce, and wiring any active-test control here is gated on a hardware CPID
+  probe session plus a per-exposure adversarial review.
 
 ## The tuning tabs
 
@@ -121,8 +152,11 @@ openobd/
   editops.py     selection math / interpolation / TSV clipboard as pure
                  change-map planners (the GUI wraps them in undo commands)         [stdlib only]
   transport.py   DataSource seam: LogReplaySource now, GtDataSource stub for gt.py [stdlib only]
+  tmstore.py     read truck-mcp *.tmsession.db drive logs; five-state display rule [stdlib only]
+  ctljournal.py  read truck-mcp's control journal (outstanding activations)        [stdlib only]
   seed_2010_silverado.py   builds the #24 seed calibration from the change sheet
   model.py       Qt table model + heatmap delegate                                 [PySide6]
+  livedata.py    Live Data + Active Tests workspaces over tmstore/ctljournal       [PySide6]
   app.py         main window / tabs / file ops                                     [PySide6]
 data/            the seed .cal.json
 tests/           headless unit tests + offscreen GUI smoke

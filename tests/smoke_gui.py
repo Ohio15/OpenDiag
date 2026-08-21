@@ -43,13 +43,16 @@ assert len(win.dashboard.gauges) >= 16, "dashboard gauges missing at startup"
 assert all(g.value is None for g in win.dashboard.gauges.values())
 print("pre-bind dashboard cluster OK:", len(win.dashboard.gauges), "gauges")
 
-# workspace structure: Dashboard opens first; Tuning and Diagnostics follow
-assert win.main_tabs.count() == 3
+# workspace structure: Dashboard opens first; Tuning/Diagnostics follow, then
+# the two read-only truck-mcp-backed workspaces (appended, never inserted).
+assert win.main_tabs.count() == 5
 assert win.main_tabs.currentIndex() == 0, "Dashboard is not the opening page"
 assert win.main_tabs.tabText(0) == "Dashboard"
 assert win.main_tabs.tabText(1) == "Tuning" and win.tune_tabs.count() == 3
 assert win.main_tabs.tabText(2) == "Diagnostics"
-print("workspace structure OK (Dashboard-first, Tuning, Diagnostics)")
+assert win.main_tabs.tabText(3) == "Live Data"
+assert win.main_tabs.tabText(4) == "Active Tests"
+print("workspace structure OK (Dashboard, Tuning, Diagnostics, Live Data, Active Tests)")
 
 # diagnostics: module map verdict rendering + codes table population using
 # REAL parser output from synthetic ELM strings (no hardware)

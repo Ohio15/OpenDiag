@@ -11,6 +11,11 @@ Tabs
                 push a table overlay from any two channels.
   Dashboard   : gauges fed by a DataSource — LogReplaySource today, GtDataSource
                 when the OBDX Pro GT transport (gt.py) is wired.
+  Live Data   : session picker + live tile grid read off truck-mcp's drive-log
+                store (sessions/*.tmsession.db), never the serial port.
+  Active Tests: display-only vehicle-control state from truck-mcp's control
+                journal — empty executable registry, outstanding-activation
+                warnings. Commands nothing.
 
 Run:  python -m openobd.app  [optional path to a .cal.json]
 """
@@ -44,6 +49,7 @@ import pyqtgraph as pg
 from . import editops
 from .calspec import Calibration
 from .diagui import DiagnosticsPage
+from .livedata import ActiveTestsPage, LiveDataPage
 from .logbin import (
     Log, Overlay, parse_csv, analyze_log, bin_log_to_table, detect_shift_points,
     CANONICAL, time_axis,
@@ -746,6 +752,14 @@ class MainWindow(QMainWindow):
         self.diag = DiagnosticsPage(self.dashboard)
         self.main_tabs.addTab(self.diag, "Diagnostics")
 
+        # Live Data + Active Tests read truck-mcp's drive-log store and control
+        # journal off disk (never the serial port). Appended AFTER Diagnostics
+        # so the existing index-0/1/2 navigation stays valid.
+        self.livedata = LiveDataPage()
+        self.main_tabs.addTab(self.livedata, "Live Data")
+        self.active_tests = ActiveTestsPage()
+        self.main_tabs.addTab(self.active_tests, "Active Tests")
+
         self.main_tabs.setCurrentIndex(0)
         self.setCentralWidget(self.main_tabs)
 
@@ -767,6 +781,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         if not self.dirty:
+            self._shutdown_pages()
             return super().closeEvent(event)
         ans = QMessageBox.question(
             self, "Unsaved changes",
@@ -779,7 +794,16 @@ class MainWindow(QMainWindow):
             self.save_cal()
             if self.dirty:  # save failed or Save As was cancelled
                 return event.ignore()
+        self._shutdown_pages()
         super().closeEvent(event)
+
+    def _shutdown_pages(self):
+        # A child inside a QTabWidget never gets its own closeEvent, so stop the
+        # Live Data / Active Tests timers and release their DB readers explicitly.
+        for page in (getattr(self, "livedata", None),
+                     getattr(self, "active_tests", None)):
+            if page is not None:
+                page.shutdown()
 
     def _build_menu(self):
         m = self.menuBar().addMenu("&File")
