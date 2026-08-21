@@ -302,8 +302,8 @@ def _deny_writes(action, *_args):
     return sqlite3.SQLITE_DENY
 
 
-def _connect(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(path), timeout=5.0, isolation_level=None)
+def _connect(path: Path, timeout: float = 5.0) -> sqlite3.Connection:
+    conn = sqlite3.connect(str(path), timeout=timeout, isolation_level=None)
     conn.row_factory = sqlite3.Row
     # query_only FIRST, before any statement that could touch the file header.
     # We deliberately do NOT issue `PRAGMA journal_mode=WAL`: SQLite reads WAL
@@ -345,11 +345,14 @@ def _load_json(raw, _label: str) -> dict:
 class TmSessionReader:
     """Read-only view of one *.tmsession.db, safe while the writer runs."""
 
-    def __init__(self, path: str | Path):
+    def __init__(self, path: str | Path, timeout: float = 5.0):
+        """`timeout` is the SQLite busy wait. Callers polling on a GUI thread
+        should pass a short one — a paint-timer slot must not sit out a 5 s
+        WAL-checkpoint lock."""
         self.path = Path(path)
         if not self.path.exists():
             raise TmSessionError(f"no session file at {self.path}")
-        self._conn = _connect(self.path)
+        self._conn = _connect(self.path, timeout=timeout)
 
     def __enter__(self) -> "TmSessionReader":
         return self
@@ -389,6 +392,28 @@ class TmSessionReader:
         """Cheap — one COUNT over the small channel table, never a sample scan."""
         row = self._conn.execute("SELECT COUNT(*) FROM channel").fetchone()
         return int(row[0]) if row else 0
+
+    def sample_count(self, channels: Optional[Sequence[str]] = None,
+                     fresh_only: bool = False) -> int:
+        """Sample rows, optionally with the same channel/fresh predicate
+        series() applies — lets a caller refuse an unbounded load BEFORE
+        reading, counting only the rows the load would actually touch."""
+        if channels is None:
+            sql = "SELECT COUNT(*) FROM sample s"
+            if fresh_only:
+                sql += " WHERE s.fresh = 1"
+            row = self._conn.execute(sql).fetchone()
+            return int(row[0]) if row else 0
+        total = 0
+        for chunk in _chunks(list(channels), _MAX_BIND_VARS):
+            sql = ("SELECT COUNT(*) FROM sample s "
+                   "JOIN channel c ON c.id = s.channel_id "
+                   f"WHERE c.name IN ({','.join('?' * len(chunk))})")
+            if fresh_only:
+                sql += " AND s.fresh = 1"
+            row = self._conn.execute(sql, list(chunk)).fetchone()
+            total += int(row[0]) if row else 0
+        return total
 
     def channels(self) -> list[dict]:
         rows = self._conn.execute("SELECT * FROM channel ORDER BY name").fetchall()

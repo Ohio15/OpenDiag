@@ -9,8 +9,11 @@ Tabs
   Scalars     : editable list of single-value parameters with stock diff.
   Log         : load a VCM Scanner CSV / plain CSV, see the regime report, and
                 push a table overlay from any two channels.
-  Dashboard   : gauges fed by a DataSource — LogReplaySource today, GtDataSource
-                when the OBDX Pro GT transport (gt.py) is wired.
+  Dashboard   : gauges fed by a DataSource — CSV log replay, the OBDX Pro GT
+                live link, or a truck-mcp drive-log session (tmsource): live
+                sessions follow the store at ~1 Hz with tmstore's freshness
+                states on every gauge; archived drives replay through the
+                transport bar. Store access is read-only, never the serial port.
   Live Data   : session picker + live tile grid read off truck-mcp's drive-log
                 store (sessions/*.tmsession.db), never the serial port.
   Active Tests: display-only vehicle-control state from truck-mcp's control
@@ -40,7 +43,7 @@ from PySide6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTableView, QTabWidget, QSplitter, QLabel,
     QComboBox, QCheckBox, QPushButton, QFileDialog, QTextEdit, QTableWidget,
     QTableWidgetItem, QHeaderView, QMessageBox, QGroupBox, QLineEdit,
-    QSlider, QListWidget, QListWidgetItem,
+    QSlider, QListWidget, QListWidgetItem, QMenu,
 )
 
 import numpy as np
@@ -60,6 +63,7 @@ pg.setConfigOption("foreground", (200, 203, 208))
 pg.setConfigOptions(antialias=True)
 from .model import CalTableModel, HeatmapDelegate
 from .transport import DataSource, LogReplaySource, GtDataSource, Sample
+from . import tmsource, tmstore
 
 # HP-Tuners-style cluster layout.
 # Dials: key, label, unit, min, max, large?, display divisor, yellow-from, red-from
@@ -77,6 +81,7 @@ BAR_SPECS = [
     ("spark",        "Advance", "°",  -10,  45, None, None),
     ("tps",          "TPS",     "%",   0,  100, None, None),
     ("app",          "Pedal",   "%",   0,  100, None, None),
+    ("load",         "Load",    "%",   0,  100, None, None),
     ("stft",         "STFT",    "%",  -25,  25, 10,   -10),
     ("ltft",         "LTFT",    "%",  -25,  25, 10,   -10),
     ("fuel_press",   "Fuel",    "psi", 0,   75, None, 40),
@@ -145,12 +150,42 @@ class GaugeBase(QWidget):
         self.min_seen: Optional[float] = None
         self.max_seen: Optional[float] = None
         self.available = True   # False = bound source doesn't offer this channel
+        # tmstore freshness state (None for sources without the vocabulary).
+        # A carried/stale/archived value must not render like a live needle.
+        self.state: Optional[str] = None
         self.setToolTip(f"{label} — click to reset min/max capture")
 
     def reset(self):
         self.value = None
         self.min_seen = self.max_seen = None
+        self.state = None
         self.update()
+
+    # Caption + accent per non-live state; live/no-vocabulary states draw plain.
+    STATE_BADGES = {
+        "carried":  ("carried",       QColor(235, 170, 60)),
+        "stale":    ("not advancing", QColor(235, 170, 60)),
+        "archive":  ("archived",      QColor(90, 126, 195)),
+        "error":    ("module error",  QColor(205, 60, 50)),
+        "failed":   ("read failed",   QColor(205, 60, 50)),
+        "badvalue": ("bad value",     QColor(192, 86, 143)),
+        "unavail":  ("no data",       QColor(90, 126, 195)),
+        "notread":  ("not read",      QColor(95, 100, 110)),
+    }
+
+    def set_state(self, state: Optional[str]):
+        if state != self.state:
+            self.state = state
+            self.update()
+
+    def _state_badge(self):
+        """(caption, accent color) for the current state, or None to draw plain.
+        Unknown states fail CLOSED: only fresh/None may render live-styled —
+        a state this widget doesn't recognize must not pass for a live value."""
+        if not self.available or self.state in (None, "fresh"):
+            return None
+        return self.STATE_BADGES.get(
+            self.state, (str(self.state)[:14] or "unknown", QColor(205, 60, 50)))
 
     def set_available(self, on: bool):
         self.available = on
@@ -280,6 +315,17 @@ class DialGauge(GaugeBase):
                        Qt.AlignCenter,
                        f"▼{self.min_seen:g} ▲{self.max_seen:g}")
 
+        # freshness badge (tmstore vocabulary) — a carried/stale/archived value
+        # must announce itself, not render like a live measurement
+        badge = self._state_badge()
+        if badge is not None:
+            caption, accent = badge
+            p.setPen(accent)
+            fb = QFont(); fb.setPointSizeF(max(5.5, side * 0.045)); fb.setBold(True)
+            p.setFont(fb)
+            p.drawText(QRectF(cx - r, cy - r * 0.78, 2 * r, side * 0.11),
+                       Qt.AlignCenter, caption)
+
         # needle (parked at vmin when no data yet)
         needle_v = self.vmin if self.value is None else self.value
         ang = self._angle(needle_v)
@@ -289,8 +335,13 @@ class DialGauge(GaugeBase):
         tail = self._pt(cx, cy, r * 0.16, ang + 180)
         needle = QPolygonF([tip, left, tail, right])
         p.setPen(Qt.NoPen)
-        p.setBrush(QColor(105, 110, 120) if dim or self.value is None
-                   else QColor(240, 90, 60))
+        if dim or self.value is None:
+            needle_c = QColor(105, 110, 120)
+        elif badge is not None:
+            needle_c = badge[1]
+        else:
+            needle_c = QColor(240, 90, 60)
+        p.setBrush(needle_c)
         p.drawPolygon(needle)
         # hub
         hub = QRadialGradient(cx, cy, r * 0.14)
@@ -318,10 +369,15 @@ class BarGauge(GaugeBase):
         w, h = self.width(), self.height()
         dim = not self.available
 
-        # name (top) and value (bottom)
+        badge = self._state_badge()
+
+        # name (top) and value (bottom); the value takes the freshness accent so
+        # a carried/stale reading can't pass for live even at bar-gauge size
         p.setPen(QColor(120, 126, 136) if dim else QColor(225, 228, 232))
         f = QFont(); f.setPointSizeF(8.5); f.setBold(True); p.setFont(f)
         p.drawText(QRectF(0, 2, w, 14), Qt.AlignCenter, self.label)
+        if badge is not None and not dim:
+            p.setPen(badge[1])
         txt = "—" if self.value is None else f"{self.value:g}"
         p.drawText(QRectF(0, h - 16, w, 14), Qt.AlignCenter, txt)
 
@@ -333,14 +389,20 @@ class BarGauge(GaugeBase):
         p.setBrush(QColor(12, 14, 20))
         p.drawRect(QRectF(bx, top, bar_w, bot - top))
 
-        # fill
+        # fill (amber/accented when the value is not a live measurement)
         if self.value is not None and not dim:
             frac = self._frac(self.value)
             fill_top = bot - (bot - top) * frac
             grad = QLinearGradient(0, bot, 0, top)
-            grad.setColorAt(0.0, QColor(20, 45, 110))
-            grad.setColorAt(0.7, QColor(60, 120, 220))
-            grad.setColorAt(1.0, QColor(130, 185, 255))
+            if badge is not None:
+                a = badge[1]
+                grad.setColorAt(0.0, a.darker(220))
+                grad.setColorAt(0.7, a)
+                grad.setColorAt(1.0, a.lighter(130))
+            else:
+                grad.setColorAt(0.0, QColor(20, 45, 110))
+                grad.setColorAt(0.7, QColor(60, 120, 220))
+                grad.setColorAt(1.0, QColor(130, 185, 255))
             p.setPen(Qt.NoPen)
             p.setBrush(grad)
             p.drawRect(QRectF(bx + 1.5, fill_top, bar_w - 3, bot - fill_top))
@@ -404,10 +466,13 @@ class Dashboard(QWidget):
         self.btn_stop.setEnabled(False)
         self.btn_connect = QPushButton("🔌 Connect GT Pro")
         self.btn_connect.clicked.connect(self.connect_gt)
+        self.btn_tm = QPushButton("🗄 Truck Session")
+        self.btn_tm.clicked.connect(self._pick_tm_session)
         self.btn_record = QPushButton("⏺ Record")
         self.btn_record.clicked.connect(self.toggle_record)
         bar.addWidget(self.status, 1)
         bar.addWidget(self.btn_connect)
+        bar.addWidget(self.btn_tm)
         bar.addWidget(self.btn_record)
         bar.addWidget(self.btn_start)
         bar.addWidget(self.btn_stop)
@@ -484,6 +549,7 @@ class Dashboard(QWidget):
                 self.source.stop()
             except Exception:
                 pass
+        self._demote_live_badges()
         self.source = None
         self.btn_start.setEnabled(True)
         self.btn_stop.setEnabled(False)
@@ -542,7 +608,14 @@ class Dashboard(QWidget):
         if not self.source:
             self.status.setText("Load a log first (Log tab → Load Log).")
             return
-        self.source.start()
+        try:
+            # A restart can fail for real reasons (a stopped tm source reopens
+            # its session file, which may have been rotated away) — a button
+            # slot must report that, not raise through Qt.
+            self.source.start()
+        except Exception as exc:
+            self.status.setText(f"Start failed: {exc}")
+            return
         self.timer.start(100)
         self.btn_start.setEnabled(False)
         self.btn_stop.setEnabled(True)
@@ -557,9 +630,21 @@ class Dashboard(QWidget):
                 self.source.stop()
             except Exception:
                 pass
+        self._demote_live_badges()
         self.btn_start.setEnabled(True)
         self.btn_stop.setEnabled(False)
         self.status.setText("Stopped.")
+
+    def _demote_live_badges(self):
+        """A stopped source is no longer advancing: any gauge still showing a
+        live-styled value must say so, not keep rendering as a live needle.
+        Applies to EVERY source — a frozen GT needle after a disconnect is the
+        same lie as a frozen store value."""
+        if self.source is not None:
+            for g in self.gauges.values():
+                if (g.available and g.value is not None
+                        and g.state in (None, "fresh")):
+                    g.set_state("stale")
 
     def connect_gt(self):
         """Connect the OBDX Pro GT on a worker thread (serial IO blocks)."""
@@ -597,9 +682,82 @@ class Dashboard(QWidget):
         self.btn_connect.setEnabled(True)
         self.status.setText(f"GT connect failed: {msg}")
 
+    # -- truck-mcp drive-log sessions as a gauge source ---------------------- #
+    def _pick_tm_session(self):
+        """Menu of truck-mcp sessions, listed fresh on every click. Read-only
+        store access — binding a session never touches the serial port."""
+        try:
+            sessions = tmstore.list_sessions()
+        except OSError as exc:
+            self.status.setText(f"Could not scan truck-mcp sessions: {exc}")
+            return
+        menu = QMenu(self)
+        if not sessions:
+            act = menu.addAction("No drive-log sessions found")
+            act.setEnabled(False)
+        for s in sessions[:25]:
+            tag = "● LIVE  " if s.get("live") else ""
+            label = s.get("label") or s.get("name")
+            started = (s.get("started_utc") or "")[:19].replace("T", " ")
+            act = menu.addAction(
+                f"{tag}{label}  ·  {started}  ·  {s.get('channel_count', 0)} ch")
+            if s.get("error"):
+                act.setEnabled(False)
+                act.setText(act.text() + "  [unreadable]")
+            else:
+                act.triggered.connect(
+                    lambda _=False, entry=s: self._bind_tm_session(entry))
+        menu.exec(self.btn_tm.mapToGlobal(self.btn_tm.rect().bottomLeft()))
+        menu.deleteLater()   # parented to self — would otherwise leak per click
+
+    def _bind_tm_session(self, entry: dict):
+        path = entry["path"]
+        name = entry.get("label") or entry.get("name")
+        # Stop the paint timer before any teardown/modal work — _tick must not
+        # keep polling a source that is mid-teardown behind a dialog. Remember
+        # whether it was running: a FAILED bind leaves the old source bound and
+        # must resume it, not strand a live view (or an active recording) with
+        # a dead timer.
+        was_active = self.timer.isActive()
+        self.timer.stop()
+        try:
+            if entry.get("live"):
+                src = tmsource.TmLiveSource(path)
+                excluded = src.excluded
+                self.bind_source(src)
+                src.start()
+                self.timer.start(100)
+                self.btn_start.setEnabled(False)
+                self.btn_stop.setEnabled(True)
+                note = "live follow — store poll ~1 Hz"
+            else:
+                log, resolved = tmsource.build_replay_log(path)
+                excluded = resolved.excluded
+                self.bind_source(tmsource.TmReplaySource(log, speed=1.0))
+                note = "archived — press ▶ Start to replay"
+        except Exception as exc:
+            if was_active and self.source is not None:
+                self.timer.start(100)   # old source untouched — keep it live
+            self.status.setText(f"Could not bind session: {exc}")
+            return
+        n = sum(1 for k in self.gauges if k in set(self.source.channels()))
+        skip = ("  ·  excluded: " + ", ".join(
+            f"{nm} ({why})" for nm, why in excluded)) if excluded else ""
+        self.status.setText(
+            f"🗄 {name} — {n} of {len(self.gauges)} gauges ({note}){skip}")
+
     def toggle_record(self):
         if not self.source:
             self.status.setText("Connect the GT (or load a log) before recording.")
+            return
+        if not self.recording and hasattr(self.source, "channel_states"):
+            # A truck-mcp session IS already a record, with per-sample
+            # freshness/quality this CSV cannot carry — re-recording it would
+            # persist carried/archived values as if they were measurements,
+            # decimated to the poll rate on the observer's clock.
+            self.status.setText(
+                "Recording is disabled for truck-mcp sessions — the drive-log "
+                "store is already the record (use truck-mcp session_export).")
             return
         if not self.recording:
             avail = set(self.source.channels())
@@ -669,7 +827,19 @@ class Dashboard(QWidget):
         if not self.source:
             return
         s: Optional[Sample] = self.source.latest()
+        # tmstore freshness vocabulary, when the source has one. Applied even
+        # when latest() is None: a failed store read must flip the gauges to
+        # "read failed", not freeze them on the last values as if still live.
+        states = (self.source.channel_states()
+                  if hasattr(self.source, "channel_states") else None)
+        if states is not None:
+            for key, g in self.gauges.items():
+                g.set_state(states.get(key))
         if not s:
+            if states is not None:
+                for key, g in self.gauges.items():
+                    if states.get(key) == "failed":
+                        g.set_value(None)
             return
         for key, g in self.gauges.items():
             g.set_value(s.values.get(key))
