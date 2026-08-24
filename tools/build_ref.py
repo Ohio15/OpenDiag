@@ -15,7 +15,16 @@ from hpt_parse import load_dir, load_scalar_jsonl
 
 SEGMAP = {"Engine": "Engine", "OS": "OS", "EngDiag": "Engine Diagnostics",
           "Trans": "Transmission", "TransDiag": "Trans Diagnostics",
-          "FuelSys": "Fuel System", "System": "System", "Speedo": "Speedometer"}
+          "FuelSys": "Fuel System", "System": "System", "Speedo": "Speedometer",
+          # UIA-harvester categories are "<segment>/<tab>[/<subtab>]" with the
+          # toolbar's segment labels
+          "Engine Diag": "Engine Diagnostics", "Trans Diag": "Trans Diagnostics",
+          "Fuel Sys": "Fuel System"}
+
+
+def map_category(raw, module):
+    seg = (raw or "").split("/")[0]
+    return SEGMAP.get(seg, SEGMAP.get(raw, module or "Misc"))
 
 
 def load_segmap(read_dir):
@@ -71,11 +80,12 @@ def main():
         nt += 1
     for sid, o in load_scalar_jsonl(
             os.path.join(read_dir, "scalars.jsonl")).items():
-        cat = SEGMAP.get(o.get("category", ""), o.get("module", "") or "Misc")
+        cat = map_category(o.get("category", ""), o.get("module", ""))
+        pid = sid if isinstance(sid, int) else None
         cal.scalars.append(Scalar(
             name=o.get("name", "") or f"id {sid}",
             value=float(o.get("value", 0)), unit=o.get("unit", "") or "",
-            param_id=int(sid), category=cat, note=o.get("desc", "") or ""))
+            param_id=pid, category=cat, note=o.get("desc", "") or ""))
         ns += 1
     errs = cal.validate()
     print(f"validation errors: {len(errs)}")

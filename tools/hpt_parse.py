@@ -76,6 +76,11 @@ def load_scalar_jsonl(path):
         except Exception:
             continue
         sid = o.get("id")
-        if sid is not None and sid not in out:
+        if sid is None:
+            # click-free UIA harvester records carry no HPT ParameterID;
+            # key them by name + section so they survive loading and can be
+            # joined by name downstream.
+            sid = f"name:{o.get('name','')}|{o.get('desc','')}"
+        if sid not in out:
             out[sid] = o
     return out

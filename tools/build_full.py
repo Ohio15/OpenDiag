@@ -54,14 +54,23 @@ SCSEG={"Engine":"Engine","OS":"OS","EngDiag":"Engine Diagnostics","Trans":"Trans
   "TransDiag":"Trans Diagnostics","FuelSys":"Fuel System","System":"System","Speedo":"Speedometer"}
 tune_sc=load_scalar_jsonl(os.path.join(TUNE,"scalars.jsonl"))
 stock_sc=load_scalar_jsonl(os.path.join(STOCK,"scalars.jsonl"))
+# name index for stock captures without HPT ids (UIA harvester): join by name
+# when the name is unambiguous in the stock capture
+stock_by_name={}
+for o in stock_sc.values():
+    stock_by_name.setdefault(o.get("name",""), []).append(o)
 nsc=nsstk=0
 for sid,o in tune_sc.items():
     cat=SCSEG.get(o.get("category",""), o.get("module","") or "Misc")
     stk=stock_sc.get(sid)
+    if stk is None:
+        cands=stock_by_name.get(o.get("name",""), [])
+        if len(cands)==1: stk=cands[0]
     stkv=float(stk["value"]) if stk and stk.get("value") is not None else None
     if stkv is not None: nsstk+=1
+    pid=sid if isinstance(sid,int) else None
     cal.scalars.append(Scalar(name=o.get("name","") or f"id {sid}", value=float(o.get("value",0)),
-        unit=o.get("unit","") or "", stock_value=stkv, param_id=int(sid), category=cat,
+        unit=o.get("unit","") or "", stock_value=stkv, param_id=pid, category=cat,
         note=o.get("desc","") or ""))
     nsc+=1
 print(f"  inline scalars added: {nsc} (stock baseline on {nsstk})")
