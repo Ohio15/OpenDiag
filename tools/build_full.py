@@ -10,67 +10,9 @@ SEGMAP = {"Airflow":"Engine",
   "OS":"OS","EngDiag":"Engine Diagnostics","Trans":"Transmission",
   "TransDiag":"Trans Diagnostics","FuelSys":"Fuel System","System":"System","Speedo":"Speedometer"}
 
-def isnum(t):
-    t=t.strip()
-    if t=="" : return False
-    try: float(t); return True
-    except: return False
-def num(t): return float(t.strip())
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from hpt_parse import isnum, num, parse_tsv, load_manifest, load_dir, load_scalar_jsonl
 
-def parse_tsv(text):
-    lines=[ln.rstrip("\r") for ln in text.replace("\r\n","\n").split("\n")]
-    while lines and lines[-1].strip()=="" : lines.pop()
-    if len(lines)<2: return None
-    y_unit=""
-    if "\t" not in lines[-1] and not isnum(lines[-1]) and lines[-1].strip():
-        y_unit=lines[-1].strip(); lines=lines[:-1]
-    if len(lines)<2: return None
-    htok=lines[0].split("\t")
-    cell_unit=htok[0].strip() if htok and not isnum(htok[0]) else ""
-    x_unit=htok[-1].strip() if len(htok)>1 and not isnum(htok[-1]) else ""
-    x=[num(t) for t in htok if isnum(t)]
-    xcols=[]
-    if not x:
-        # named-column header: htok[0]=row-axis label, htok[1:]=column labels
-        xcols=[t.strip() for t in htok[1:]] if len(htok)>1 else []
-        if not xcols: return None
-        x=[float(i) for i in range(len(xcols))]; cell_unit=""; x_unit=""
-    nx=len(x)
-    ynum=[]; ytext=[]; grid=[]
-    for ln in lines[1:]:
-        cells=ln.split("\t")
-        if not any(c.strip() for c in cells): continue
-        first=cells[0].strip()
-        body=[num(c) for c in cells[1:] if isnum(c)]
-        if len(body)>=nx:
-            row=body[:nx]
-            if isnum(first): ynum.append(num(first)); ytext.append(None)
-            else: ynum.append(None); ytext.append(first)
-            grid.append(row)
-        else:
-            alln=([num(first)] if isnum(first) else [])+body
-            if len(alln)==nx: grid.append(alln); ynum.append(None); ytext.append(None)
-            elif alln: grid.append(alln+[alln[-1]]*(nx-len(alln))); ynum.append(None); ytext.append(None)
-    if not grid: return None
-    return dict(cu=cell_unit,xu=x_unit,yu=y_unit,x=x,xcols=xcols,ynum=ynum,ytext=ytext,grid=grid)
-
-def load_manifest(d):
-    meta={}; mp=os.path.join(d,"manifest.tsv")
-    if os.path.exists(mp):
-        for ln in open(mp,encoding="utf-8"):
-            p=ln.rstrip("\n").split("\t")
-            if len(p)>=3: meta[p[0]]={"module":p[1],"name":p[2]}
-    return meta
-def load_dir(d):
-    meta=load_manifest(d); out={}; fails=[]
-    for f in glob.glob(os.path.join(d,"raw","*.tsv")):
-        tid=os.path.splitext(os.path.basename(f))[0]
-        try: r=parse_tsv(open(f,encoding="utf-8").read())
-        except Exception: r=None
-        if not r: fails.append(tid); continue
-        m=meta.get(tid,{}); r["name"]=(m.get("name") or f"id {tid}"); r["module"]=(m.get("module") or "")
-        out[tid]=r
-    return out,fails
 def load_segmap():
     seg={}; lp=os.path.join(TUNE,"progress.log")
     if not os.path.exists(lp): return seg
@@ -110,22 +52,19 @@ for tid,t in sorted(tune.items(),key=lambda kv:int(kv[0])):
 # ---- inline scalars from UIA hover sweep ----
 SCSEG={"Engine":"Engine","OS":"OS","EngDiag":"Engine Diagnostics","Trans":"Transmission",
   "TransDiag":"Trans Diagnostics","FuelSys":"Fuel System","System":"System","Speedo":"Speedometer"}
-scf=os.path.join(TUNE,"scalars.jsonl"); nsc=0; seen_sid=set()
-if os.path.exists(scf):
-    for ln in open(scf,encoding="utf-8"):
-        ln=ln.strip()
-        if not ln: continue
-        try: o=json.loads(ln)
-        except: continue
-        sid=o.get("id")
-        if sid in seen_sid: continue
-        seen_sid.add(sid)
-        cat=SCSEG.get(o.get("category",""), o.get("module","") or "Misc")
-        cal.scalars.append(Scalar(name=o.get("name","") or f"id {sid}", value=float(o.get("value",0)),
-            unit=o.get("unit","") or "", stock_value=None, param_id=int(sid), category=cat,
-            note=o.get("desc","") or ""))
-        nsc+=1
-print(f"  inline scalars added: {nsc}")
+tune_sc=load_scalar_jsonl(os.path.join(TUNE,"scalars.jsonl"))
+stock_sc=load_scalar_jsonl(os.path.join(STOCK,"scalars.jsonl"))
+nsc=nsstk=0
+for sid,o in tune_sc.items():
+    cat=SCSEG.get(o.get("category",""), o.get("module","") or "Misc")
+    stk=stock_sc.get(sid)
+    stkv=float(stk["value"]) if stk and stk.get("value") is not None else None
+    if stkv is not None: nsstk+=1
+    cal.scalars.append(Scalar(name=o.get("name","") or f"id {sid}", value=float(o.get("value",0)),
+        unit=o.get("unit","") or "", stock_value=stkv, param_id=int(sid), category=cat,
+        note=o.get("desc","") or ""))
+    nsc+=1
+print(f"  inline scalars added: {nsc} (stock baseline on {nsstk})")
 # ---- end inline scalars ----
 errs=cal.validate(); print(f"validation errors: {len(errs)}")
 for e in errs[:20]: print("  ",e)
