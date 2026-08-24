@@ -176,6 +176,31 @@ truck-mcp's CLI tools and fully unit-tested without Qt. Only `model.py` /
   read/flash path — a Phase 3 calibration read populates the *real* breakpoint
   tables (VE, spark, torque) into the same model, and the overlays light up.
 
+## Coalescing references into a best cal
+
+`openobd.coalesce` merges N reference calibrations into one best cal with
+per-parameter provenance — which source won, which rule picked it, and what
+every other reference said (per-cell delta summaries for tables). Parameters
+join across references by HPT ParameterID (display names differ between
+harvests), by name otherwise. Tables merge whole-table — cells are never
+mixed across sources inside one physical table. Pins are explicit verified-
+hardware overrides that outrank every reference.
+
+```bash
+python -m openobd.coalesce \
+  --ref stock=stock-of:data/2010_silverado_full.cal.json \
+  --ref sheet24=data/2010_silverado_24.cal.json \
+  --ref tune24=data/2010_silverado_full.cal.json \
+  --policy data/policy_tow_first.json \
+  --out data/2010_silverado_best.cal.json \
+  --compare-out data/best_compare_report.json
+```
+
+`data/policy_tow_first.json` is the tow-first policy (stock authority,
+hardware pins, #24's verified WOT rescale); the community tow consensus it
+encodes lives with sources in `data/refs/tow_consensus_2010_silverado.md`.
+The merged file is a normal `.cal.json` — open it in the app like any other.
+
 ## Provenance
 
 Seed values transcribed from `24-claudes-edit-change-sheet.md`, verified in VCM

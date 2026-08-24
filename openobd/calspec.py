@@ -83,6 +83,7 @@ class Scalar:
     param_id: Optional[int] = None          # HPT ParameterID breadcrumb
     category: str = ""
     note: str = ""
+    provenance: Optional[dict] = None       # coalesce: {source, rule, candidates}
 
     @property
     def changed(self) -> bool:
@@ -108,6 +109,7 @@ class Table:
     param_id: Optional[int] = None
     category: str = ""
     note: str = ""
+    provenance: Optional[dict] = None       # coalesce: {source, rule, candidates}
 
     # -- shape helpers ----------------------------------------------------- #
     @property
@@ -243,6 +245,7 @@ def _table_to_dict(t: Table) -> dict[str, Any]:
             [list(r) for r in t.stock_values]
             if t.stock_values is not None else None
         ),
+        "provenance": t.provenance,
     }
 
 
@@ -260,4 +263,5 @@ def _table_from_dict(d: dict[str, Any]) -> Table:
             [list(r) for r in d["stock_values"]]
             if d.get("stock_values") is not None else None
         ),
+        provenance=d.get("provenance"),
     )

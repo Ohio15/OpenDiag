@@ -1,0 +1,7585 @@
+[
+  {
+    "kind": "scalar",
+    "key": "name:Final Drive Ratio",
+    "name": "Final Drive Ratio",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 4.11
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "name:Final Drive Ratio - VSS Error",
+    "name": "Final Drive Ratio - VSS Error",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 4.11
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5004",
+    "name": "Final Drive Ratio - Trans",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 4.11
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "name:Driven Tire Circumference",
+    "name": "Driven Tire Circumference",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 2742
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:9056",
+    "name": "Non-Driven Tire Circumference",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 2742
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:246",
+    "name": "DoD (AFM) Enable",
+    "sources": [
+      "sheet24"
+    ],
+    "values": {
+      "sheet24": 0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2936",
+    "name": "Supercharger Boost Reduce IAT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 284.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2937",
+    "name": "Supercharger Full Boost Enable IAT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 284.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2938",
+    "name": "Supercharger IAT Max Boost %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2973",
+    "name": "Supercharger Boost Reduce ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2974",
+    "name": "Supercharger Full Boost Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 68.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2975",
+    "name": "Supercharger ECT Max Boost %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2971",
+    "name": "Supercharger Cam Min Angle",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2972",
+    "name": "Supercharger Cam Min TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2970",
+    "name": "Supercharger Cam Max Boost %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 25.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2940",
+    "name": "Supercharger COT Max Boost %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2980",
+    "name": "Supercharger MAP Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 180.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2981",
+    "name": "Supercharger MAP Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 140.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2941",
+    "name": "Supercharger Boost Disable VSS Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 318.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2942",
+    "name": "Supercharger Boost Disable TPS Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2943",
+    "name": "Supercharger Boost Ramp",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2945",
+    "name": "Supercharger Boost Int Gain",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.125
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2978",
+    "name": "Supercharger Max Torque Gear VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 318.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2979",
+    "name": "Supercharger Max Torque Gear Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 20.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2000",
+    "name": "Number Of Cylinders",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2001",
+    "name": "Cylinder Volume",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.66592
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2040",
+    "name": "Tach Output Resolutions - High",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2041",
+    "name": "Tach Output Resolutions - Low",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2199",
+    "name": "Idle Underspeed Throttle Closed Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:13540",
+    "name": "Min RPM Reference",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 525.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2196",
+    "name": "Idle Adaptive Max VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2197",
+    "name": "Idle Adaptive Max VSS - Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2189",
+    "name": "Idle Proportional Enable RPM Delta",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2184",
+    "name": "Idle Integral Enable RPM Delta",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 15.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2173",
+    "name": "Idle Effective Area Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8191.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2174",
+    "name": "Idle Effective Area Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2175",
+    "name": "Idle Effective Area Max - Fail",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 60.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2176",
+    "name": "Idle Effective Area Min - Fail",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2177",
+    "name": "Idle Percent Area Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.56
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2178",
+    "name": "Idle Percent Area Max - Brake",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.65
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2145",
+    "name": "Fan Med On Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.4
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2146",
+    "name": "Fan Hi On Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 4.8
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2147",
+    "name": "Fan Low Off Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2148",
+    "name": "Fan Med Off Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2149",
+    "name": "Fan Hi Off Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:22210",
+    "name": "MAF Steady State Stepdown",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:22211",
+    "name": "MAF S/S Stepdown Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:34971",
+    "name": "MAP Estimated Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 105.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:34972",
+    "name": "MAP Estimated Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4010",
+    "name": "MAP Sensor Linear",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 128.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4011",
+    "name": "MAP Sensor Offset",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -0.3
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4112",
+    "name": "Barometric Pressure Sensor Slope",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 94.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4113",
+    "name": "Barometric Pressure Sensor Offset",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3160",
+    "name": "Reversion VE Baro High",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 98.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3161",
+    "name": "Reversion VE Baro Low",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 84.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3033",
+    "name": "Dynamic Airflow High RPM Re-Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3900.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3066",
+    "name": "RPM Zone Change",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3067",
+    "name": "RPM Zone Change with AFM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3079",
+    "name": "MAP Zone Change",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3080",
+    "name": "MAP Zone Change with AFM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:10985",
+    "name": "Dynamic Airflow Prediction Scaler 1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:10986",
+    "name": "Dynamic Airflow Prediction Scaler 2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:11009",
+    "name": "MAP Filter Coefficient 1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.003799
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:11010",
+    "name": "MAP Filter Coefficient 2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.003799
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3250",
+    "name": "Low Baro Threshold",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 75.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3251",
+    "name": "Med Baro Threshold",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 84.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3252",
+    "name": "High Baro Threshold",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 94.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3274",
+    "name": "Cold Start Enable Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 4.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3272",
+    "name": "Cold Start Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3273",
+    "name": "Cold Start Disable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 7000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3260",
+    "name": "Intake Cam Position Idle",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3264",
+    "name": "Intake Cam Low Oil Temp Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3265",
+    "name": "Intake Cam Low Oil Temp Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 28.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3267",
+    "name": "Intake Cam High Oil Temp Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 320.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3266",
+    "name": "Intake Cam High Oil Temp Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 338.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3263",
+    "name": "Exhaust Cam Position Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3261",
+    "name": "Exhaust Cam Position Idle",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3268",
+    "name": "Exhaust Cam Low Oil Temp Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 14.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3269",
+    "name": "Exhaust Cam Low Oil Temp Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3271",
+    "name": "Exhaust Cam High Oil Temp Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 275.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3270",
+    "name": "Exhaust Cam High Oil Temp Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 284.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4014",
+    "name": "Supercharger Inlet Air Pressure Sensor Offset",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.34
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2330",
+    "name": "Flood Clear Enable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 85.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2331",
+    "name": "Flood Clear Disable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 80.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8109",
+    "name": "Octane Scalar Delta",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.003
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:13541",
+    "name": "Minimum Rail Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 275.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:13542",
+    "name": "Maximum Rail Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 640.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3055",
+    "name": "Short Pulse Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 4.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7977",
+    "name": "Short Pulse Cranking",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 4.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45524",
+    "name": "Injector Off-Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.3516
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45011",
+    "name": "O2 Sensor Upper Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 550.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45013",
+    "name": "O2 Sensor Lower Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 350.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:28940",
+    "name": "Closed Loop Temperature Threshold",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 36.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:12009",
+    "name": "Minimum Coolant Temp Allowed for Purge",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 70.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:44003",
+    "name": "Enhanced RPM In Closed Loop",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:44004",
+    "name": "Simplified RPM in Closed Loop",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2502",
+    "name": "LTFT Min ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 102.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2503",
+    "name": "LTFT Max ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 284.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2536",
+    "name": "LTM Max Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.3
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2537",
+    "name": "LTM Min Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.7
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2511",
+    "name": "LTFT Idle Cells Enable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2512",
+    "name": "LTFT Idle Cells Disable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.6
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2513",
+    "name": "LTFT Idle Cells Enable VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2514",
+    "name": "LTFT Idle Cells Disable VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3.7
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2518",
+    "name": "O2 Sensor Rich/Lean Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 450.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2519",
+    "name": "O2 Sensor Rich/Lean Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 450.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2532",
+    "name": "O2 Sensor Not Ready Timer",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:24991",
+    "name": "O2 Sensor Ready Timer",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2521",
+    "name": "TCS EQ Ratio Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2522",
+    "name": "ETC Reduced Power EQ Ratio",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2520",
+    "name": "Closed Loop Blend Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:12944",
+    "name": "Closed Loop Blend Time 2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:12945",
+    "name": "Closed Loop Blend Time 3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2403",
+    "name": "Power Enrichment Minimum MAP Hysteresis",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2411",
+    "name": "Power Enrichment Minimum RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2412",
+    "name": "Power Enrichment Minimum RPM Hysteresis",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2424",
+    "name": "Power Enrichment Mode Throttle",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2425",
+    "name": "Power Enrich Throttle Bypass Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2426",
+    "name": "Power Enrich Speed Bypass Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 19.9
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2427",
+    "name": "Power Enrich Upper Bypass Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 250.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2428",
+    "name": "Power Enrich Lower Bypass Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -429.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2464",
+    "name": "Power Enrichment Mode Timer",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2400",
+    "name": "Power Enrichment Ramp In Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2401",
+    "name": "Power Enrichment Ramp Out Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.05
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2200",
+    "name": "COT Max Enrichment",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.33
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2418",
+    "name": "Piston Protect Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8192.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2068",
+    "name": "RPM Limit Extreme Cutoff",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6600.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2069",
+    "name": "RPM Limit Extreme Resume",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6590.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2062",
+    "name": "Fuel Cutoff RPM Hysteresis",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 225.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2063",
+    "name": "RPM Limit Accel Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.3
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2064",
+    "name": "RPM Limit Lamp RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2292",
+    "name": "Maximum ECT to Disable DFCO",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 44.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2290",
+    "name": "Minimum RPM to Allow DFCO",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2291",
+    "name": "Maximum RPM to Disable DFCO",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 900.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:18698",
+    "name": "Minimum RPM Rate to Disable DFCO",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1800.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2298",
+    "name": "CFCO Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 500.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2299",
+    "name": "CFCO Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 122.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2435",
+    "name": "DoD Enable ERT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 30.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2450",
+    "name": "DoD Enable VSS P/N",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2480",
+    "name": "DoD Minimum VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 11.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2481",
+    "name": "DoD Minimum VSS Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2436",
+    "name": "DoD Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 97.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2437",
+    "name": "DoD Enable ECT Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 39.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2438",
+    "name": "DoD Disable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2439",
+    "name": "DoD Disable RPM Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 3200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2441",
+    "name": "DoD TPS Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2442",
+    "name": "DoD TPS Max Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2440",
+    "name": "DoD TPS Delta Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2279",
+    "name": "Transient Fuel MAP Filter",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.25
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2287",
+    "name": "Transient Fuel Enable Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2288",
+    "name": "Transient Fuel Delta MAP",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2289",
+    "name": "Transient Fuel Delta TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2282",
+    "name": "Fuel Delta Min Increase",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0625
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2278",
+    "name": "Transient Fuel Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2048.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3133",
+    "name": "Maximum Ethanol Percentage",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 80.000313
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3146",
+    "name": "Composition Change Threshold",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3147",
+    "name": "Composition Change Delay Volume",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:3148",
+    "name": "Composition Change Transition Volume",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2666",
+    "name": "Spark Smoothing Max Torque Delta",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 59.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2667",
+    "name": "Spark Smoothing Max Torque Bias",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 36.88
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2668",
+    "name": "Spark Smoothing Max Torque Loss",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 51.63
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2786",
+    "name": "Bidir Retard Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2740",
+    "name": "Knock Retard Disable Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2736",
+    "name": "Knock Retard Max Step",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2734",
+    "name": "Knock Retard Maximum RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2735",
+    "name": "Knock Retard Minimum RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 7900.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2739",
+    "name": "Knock Retard Fault Mult",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2738",
+    "name": "Knock Retard Valid Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2700",
+    "name": "Knock Learn Min MAP",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 35.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2706",
+    "name": "Knock Learn Min IAT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -40.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2703",
+    "name": "Knock Learn Min RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2704",
+    "name": "Knock Learn Min Coolant Temp",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 131.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2708",
+    "name": "Knock Learn Up Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2709",
+    "name": "Knock Learn Fault",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.998
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2742",
+    "name": "Burst Knock Hold Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 16.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2743",
+    "name": "Burst Knock Decay Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2744",
+    "name": "Burst Knock Learn Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 12.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2747",
+    "name": "Burst Knock Learn Down",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2748",
+    "name": "Burst Knock Learn Up",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2745",
+    "name": "Burst Knock Learn Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2746",
+    "name": "Burst Knock Learn Fault",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2785",
+    "name": "Static Retard Enable Cylair",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.13
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2958",
+    "name": "Knock Sensor Transient Mode Airmass",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.02
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2959",
+    "name": "Knock Sensor Transient Mode RPM Decrease",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2960",
+    "name": "Knock Sensor Transient Mode RPM Increase",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 120.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2961",
+    "name": "Knock Sensor Transient Mode TPS Decrease",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2962",
+    "name": "Knock Sensor Transient Mode TPS Increase",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2810",
+    "name": "Trans Input Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 6000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2811",
+    "name": "Trans Output Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5900.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2812",
+    "name": "Front Axle Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 96672.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2813",
+    "name": "Front Propshaft Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 96672.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2814",
+    "name": "Rear Axle Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 96672.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2815",
+    "name": "Rear Propshaft Torque Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 96672.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2851",
+    "name": "Fast Torque Exit Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 7.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2852",
+    "name": "Fast Torque Exit ETC Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 7.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2861",
+    "name": "TCS Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -40.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2869",
+    "name": "Delivered Torque Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 350.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2870",
+    "name": "Delivered Torque Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -70.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2871",
+    "name": "Delivered Torque Duty Cycle Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 90.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2872",
+    "name": "Delivered Torque Duty Cycle Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 30.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2874",
+    "name": "TCS Duty Cycle Hi",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 90.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2873",
+    "name": "TCS Duty Cycle Low",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 30.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2875",
+    "name": "TCS Fail Duty Cycle Hi",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 95.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2876",
+    "name": "TCS Fail Duty Cycle Low",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2803",
+    "name": "Traction Control RPM Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 600.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2804",
+    "name": "Traction Control RPM Disable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 550.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2805",
+    "name": "Traction Control Runtime Enable",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:12582",
+    "name": "Torque Loss Runtime",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4150",
+    "name": "Oil Pressure Low Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 34.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4151",
+    "name": "Oil Pressure Low Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4152",
+    "name": "Oil Press Warning Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 15.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4160",
+    "name": "Oil Temperature High",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 493.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4161",
+    "name": "Oil Temperature High Hyst",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4002",
+    "name": "MAF Freq Test ERT Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4003",
+    "name": "MAF Freq Test IGNV Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4004",
+    "name": "MAF Freq Test RPM Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 300.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4005",
+    "name": "MAF Freq Test Enable Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4006",
+    "name": "MAF Freq Test High Count Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4007",
+    "name": "MAF Freq Test Low Count Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4040",
+    "name": "P0101, P0106, P0121 Perf Test - Min ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 255.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:4041",
+    "name": "P0101, P0106, P0121 Perf Test - Max ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 257.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2994",
+    "name": "MAP Error Check 1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 15.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2995",
+    "name": "MAP Error Check 2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 15.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45682",
+    "name": "Upstream Catalyst Rich Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 600.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45683",
+    "name": "Downstream Lean Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 300.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:45684",
+    "name": "Downstream Rich Thresh",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 600.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5601",
+    "name": "Shift Torque Factor 2-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5602",
+    "name": "Shift Torque Factor 3-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5603",
+    "name": "Shift Torque Factor 4-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5604",
+    "name": "Shift Torque Factor 5-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5605",
+    "name": "Shift Torque Factor 1-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5606",
+    "name": "Shift Torque Factor 1-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5607",
+    "name": "Shift Torque Factor 2-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5608",
+    "name": "Shift Torque Factor 2-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5609",
+    "name": "Shift Torque Factor 3-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5610",
+    "name": "Shift Torque Factor 4-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5611",
+    "name": "Shift Torque Factor 1-2 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5612",
+    "name": "Shift Torque Factor 2-3 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5613",
+    "name": "Shift Torque Factor 3-4 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5614",
+    "name": "Shift Torque Factor 4-5 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5615",
+    "name": "Shift Torque Factor 5-6 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5616",
+    "name": "Shift Torque Factor 1-3 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5617",
+    "name": "Shift Torque Factor 1-4 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5618",
+    "name": "Shift Torque Factor 2-4 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5619",
+    "name": "Shift Torque Factor 2-6 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5620",
+    "name": "Shift Torque Factor 3-5 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5621",
+    "name": "Shift Torque Factor 4-6 Adder",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:6041",
+    "name": "Cmd Gear Max Vehicle Speed",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5310",
+    "name": "C.A.G.S. Min Coolant Temp",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5320",
+    "name": "C.A.G.S. Enable Speed",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5321",
+    "name": "C.A.G.S. Disable Speed",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5330",
+    "name": "C.A.G.S. Enable Baro",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5331",
+    "name": "C.A.G.S. Disable Baro",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5101",
+    "name": "Maximum Line Pressure B",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1900.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5102",
+    "name": "Maximum Clutch Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1500.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5251",
+    "name": "Shift Adapt Preset Volume 2-3 Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 24.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5252",
+    "name": "Shift Adapt Preset Volume 3-4 Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 31.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5253",
+    "name": "Shift Adapt Preset Volume 4-5 Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 24.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5254",
+    "name": "Shift Adapt Preset Volume 5-6 Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5255",
+    "name": "Shift Adapt Preset Volume 1-2 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 55.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5256",
+    "name": "Shift Adapt Preset Volume 2-3 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 24.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5257",
+    "name": "Shift Adapt Preset Volume 3-4 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 31.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5258",
+    "name": "Shift Adapt Preset Volume 4-5 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 24.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5259",
+    "name": "Shift Adapt Preset Volume 5-6 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5260",
+    "name": "Shift Adapt Preset Volume 1-2 Min Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5261",
+    "name": "Shift Adapt Preset Volume 2-3 Min Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5262",
+    "name": "Shift Adapt Preset Volume 3-4 Min Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5263",
+    "name": "Shift Adapt Preset Volume 4-5 Min Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5264",
+    "name": "Shift Adapt Preset Volume 5-6 Min Oncoming",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5265",
+    "name": "Shift Adapt Preset Volume 1-2 Min Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5266",
+    "name": "Shift Adapt Preset Volume 2-3 Min Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5267",
+    "name": "Shift Adapt Preset Volume 3-4 Min Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5268",
+    "name": "Shift Adapt Preset Volume 4-5 Min Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5269",
+    "name": "Shift Adapt Preset Volume 5-6 Min Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1023.969
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5221",
+    "name": "Shift Max Adapt Volume 2-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 40.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5222",
+    "name": "Shift Max Adapt Volume 3-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5223",
+    "name": "Shift Max Adapt Volume 4-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5224",
+    "name": "Shift Max Adapt Volume 5-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5225",
+    "name": "Shift Max Adapt Volume 1-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5226",
+    "name": "Shift Max Adapt Volume 1-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5227",
+    "name": "Shift Max Adapt Volume 2-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5228",
+    "name": "Shift Max Adapt Volume 2-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5229",
+    "name": "Shift Max Adapt Volume 3-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5230",
+    "name": "Shift Max Adapt Volume 4-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 200.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5232",
+    "name": "Shift Min Adapt Volume 2-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5233",
+    "name": "Shift Min Adapt Volume 3-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5234",
+    "name": "Shift Min Adapt Volume 4-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5235",
+    "name": "Shift Min Adapt Volume 5-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5236",
+    "name": "Shift Min Adapt Volume 1-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5237",
+    "name": "Shift Min Adapt Volume 1-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5238",
+    "name": "Shift Min Adapt Volume 2-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5239",
+    "name": "Shift Min Adapt Volume 2-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5240",
+    "name": "Shift Min Adapt Volume 3-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5241",
+    "name": "Shift Min Adapt Volume 4-6",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5570",
+    "name": "Base Shift Time Minimum PD 2-1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5569",
+    "name": "Base Shift Time Minimum PD 3-2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5568",
+    "name": "Base Shift Time Minimum PD 4-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5567",
+    "name": "Base Shift Time Minimum PD 5-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5566",
+    "name": "Base Shift Time Minimum PD 6-5",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5576",
+    "name": "Base Shift Time Minimum PD 3-1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5575",
+    "name": "Base Shift Time Minimum PD 4-1",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5574",
+    "name": "Base Shift Time Minimum PD 4-2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5573",
+    "name": "Base Shift Time Minimum PD 5-3",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5572",
+    "name": "Base Shift Time Minimum PD 6-2",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5571",
+    "name": "Base Shift Time Minimum PD 6-4",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.1494
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5670",
+    "name": "TCC Pressure Regulator Gain",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 1.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5671",
+    "name": "TCC Pressure Regulator Offset",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 184.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5630",
+    "name": "TCC Desired Slip Min AC On",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5631",
+    "name": "TCC Desired Slip DoD Off Transition",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 35.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5632",
+    "name": "TCC Desired Slip DoD On Transition",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 55.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5651",
+    "name": "TCC Adapt Trans Temp Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 302.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5652",
+    "name": "TCC Adapt TPS Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5653",
+    "name": "TCC Adapt TPS Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 99.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5654",
+    "name": "TCC Adapt Torque Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5655",
+    "name": "TCC Adapt Torque Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 300.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5656",
+    "name": "TCC Adapt VSS Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 11.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5657",
+    "name": "TCC Adapt VSS Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 318.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5660",
+    "name": "TCC Adapt Pressure Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": -150.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5661",
+    "name": "TCC Adapt Pressure Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 150.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5410",
+    "name": "Trans Stall Torque Reduction Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5411",
+    "name": "Trans Stall Torque Reduction Disable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8000.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:5420",
+    "name": "TCC Limit Torque Reduction Max Torque",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 461.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:6031",
+    "name": "Trans Overtemp Set Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 60.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:6033",
+    "name": "Trans Overtemp Clear Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:6989",
+    "name": "Pressure Sensor Offset",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 12.5
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:6990",
+    "name": "Pressure Sensor Gain",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 8.75
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7031",
+    "name": "Low Flow Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 300.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7032",
+    "name": "Cold Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7034",
+    "name": "Default Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7035",
+    "name": "Fault Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7040",
+    "name": "Hot Soak VSS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7041",
+    "name": "Hot Soak Factor",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.75
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7022",
+    "name": "Low Flow Pressure Transition Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7023",
+    "name": "Cold Pressure Transition Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7026",
+    "name": "Hot Fuel Pressure Transition Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7025",
+    "name": "Default Pressure Transition Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7020",
+    "name": "Cranking Pressure Transition Rate",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7010",
+    "name": "Fuel Pump Duty Cycle Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7011",
+    "name": "Fuel Pump Duty Cycle Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 90.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7002",
+    "name": "Primary Fuel Tank Capacity",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 270.51
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7003",
+    "name": "Fuel Tank Primary Capacity Gauge",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 26.15
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7004",
+    "name": "Fuel Tank Sender Max %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 60.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7005",
+    "name": "Fuel Tank Sender Min %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8155",
+    "name": "Alternator Serial Request Init",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 60.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8150",
+    "name": "Alternator Override DC Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 90.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8160",
+    "name": "Alternator DC Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 36.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8161",
+    "name": "Alternator Default Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 120.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8162",
+    "name": "Alternator Startup DC",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 80.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8163",
+    "name": "Alternator Startup DC Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8140",
+    "name": "Alternator Max Stall Off Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8141",
+    "name": "Fuel System Voltage Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8142",
+    "name": "Airflow System Minimum Voltage",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 12.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8144",
+    "name": "Diagnostic System Voltage Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8143",
+    "name": "Diagnostic Minimum Voltage Low",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 11.2
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8145",
+    "name": "Diagnostic System Low Voltage Delay",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 5.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8148",
+    "name": "Diagnostic Boost Voltage",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 12.8
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8149",
+    "name": "Diagnostic Boost Voltage Max Time",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 600.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8001",
+    "name": "Number of Fans Fitted",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 2.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8051",
+    "name": "Fan PWM Freq",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 128.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8055",
+    "name": "ECT Override Limit",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 241.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8053",
+    "name": "ECT Fan % Adjust Vehicle Speed Hi",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 40.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8054",
+    "name": "ECT Fan % Adjust Vehicle Speed Max",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 99.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8080",
+    "name": "Ignition Off Fan Enable ECT A",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8085",
+    "name": "Ignition Off Fan Disable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8089",
+    "name": "Ignition Off Fan Hi Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8090",
+    "name": "Ignition Off Fan Hi Disable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8087",
+    "name": "Ignition Off Fan %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8088",
+    "name": "Ignition Off Fan Hi %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2946",
+    "name": "Intercooler Pump ERT Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 10.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2947",
+    "name": "Intercooler Pump IAT Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 32.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2948",
+    "name": "Intercooler Pump MAT Min",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 50.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8020",
+    "name": "A/C Re-Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 0.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8023",
+    "name": "A/C Disable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:8022",
+    "name": "A/C Re-Enable TPS",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 100.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12050",
+    "name": "Fuel Cutoff RPM (In Gear)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 9
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12063",
+    "name": "Fuel Cutoff RPM vs. ERT vs. ECT",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 289
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12069",
+    "name": "RPM Limit Method Delay vs. Gear",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 9
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12080",
+    "name": "Target Idle Speed vs. Coolant Temp vs. (Drive & Park, A/C On & Off)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 34
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12160",
+    "name": "MAF Airflow vs. Output Frequency",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 101
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12200",
+    "name": "COT Thresholds",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 3
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12239",
+    "name": "DoD Disable vs. PRNDL",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 18
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12250",
+    "name": "DFCO Enable TPS vs. RPM",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12252",
+    "name": "DFCO Enable CylAir vs. RPM",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12263",
+    "name": "DFCO Exit Spark Blend Time",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12264",
+    "name": "DFCO Entry Spark Blend Time",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12276",
+    "name": "DFCO Enable Speed vs. Gear",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 6
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12284",
+    "name": "Impact Factor Gain vs. Airflow",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12300",
+    "name": "Stoich AFR",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12338",
+    "name": "Cluster Fuel Density Translation",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 5
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12361",
+    "name": "Cranking VE Baro Mult",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 9
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12400",
+    "name": "Power Enrich EQ Ratio",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12403",
+    "name": "Power Enrich EQ Ratio (Alcohol)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12420",
+    "name": "Hot Power Enrich Enable TPS Threshold vs. RPM",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12435",
+    "name": "Open Loop EQ Ratio Gas (Gear/DP)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12437",
+    "name": "Open Loop EQ Ratio Alcohol (Gear/DP)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12439",
+    "name": "Open Loop EQ Ratio Min vs. ECT",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12440",
+    "name": "Open Loop Airflow Gain vs. MAP vs. RPM",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12441",
+    "name": "Open Loop IVT Gain vs. IVT vs. MAP",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 1089
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12446",
+    "name": "Open Loop AIR Enrich",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12461",
+    "name": "Closed Loop Enable Coolant Temp vs. Startup Coolant Temp",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12463",
+    "name": "Closed Loop O2 Ready ECT vs. Startup Coolant Temp",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12466",
+    "name": "Closed Loop Mode vs. Airflow",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 66
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12467",
+    "name": "Closed Loop O2 Ready ECT vs. Startup Delay",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12503",
+    "name": "Long Term Fuel Trim Min MAP vs. Baro",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 9
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12530",
+    "name": "O2 Sensor B1 R/L vs. Airflow Mode",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 9
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12532",
+    "name": "O2 Sensor R/L Offset",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12598",
+    "name": "Main Spark vs. Airmass vs. RPM Open Throttle, High Octane, DOD",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12600",
+    "name": "Main Spark vs. Airmass vs. RPM Open Throttle, High Octane",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 1089
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12621",
+    "name": "IAT Spark Advance Correction - Add",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 1089
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12622",
+    "name": "EGR Spark Advance Correction - Add",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12624",
+    "name": "ECT Spark Advance Correction - Add",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12650",
+    "name": "Base Dwell Time",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12652",
+    "name": "Maximum Dwell Time Mult vs. RPM",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 17
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12676",
+    "name": "Lightoff Spark",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12677",
+    "name": "Lightoff Spark (Coastdown)",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12678",
+    "name": "Flex Fuel Spark",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 1089
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12680",
+    "name": "Lightoff Spark Idle In Gear",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 231
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12684",
+    "name": "VCP Spark",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 561
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12820",
+    "name": "Max Engine Torque vs. RPM vs. Gear",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12960",
+    "name": "Knock Sensor Threshold Mult Cyl1",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12961",
+    "name": "Knock Sensor Threshold Mult Cyl2",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12962",
+    "name": "Knock Sensor Threshold Mult Cyl3",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12963",
+    "name": "Knock Sensor Threshold Mult Cyl4",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12964",
+    "name": "Knock Sensor Threshold Mult Cyl5",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12966",
+    "name": "Knock Sensor Threshold Mult Cyl7",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13620",
+    "name": "Stomp Compensation Base Gain",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 85
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13621",
+    "name": "Stomp Compensation Decay Max",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 5
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13623",
+    "name": "Stomp Compensation Decay Factor",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 85
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13624",
+    "name": "Impact Factor Gas",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13625",
+    "name": "Impact Factor Alcohol",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13626",
+    "name": "Impact Factor Blend",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 5
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14100",
+    "name": "IAT Sensor Curve",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:16000",
+    "name": "Cmd Gear Upshift Min Vehicle Speed",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 5
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:25013",
+    "name": "Mid Flow Duty Cycle",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:25014",
+    "name": "High Flow Duty Cycle",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 33
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32447",
+    "name": "Engine Torque Coeff EQ Ratio",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 289
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32451",
+    "name": "Engine Torque Coeff Exhaust Cam Angle Map",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 4
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32452",
+    "name": "Engine Torque Coeff Spark A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32455",
+    "name": "Engine Torque Coeff Spark D",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32456",
+    "name": "Engine Torque Coeff SparkSq A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32459",
+    "name": "Engine Torque Coeff SparkSq D",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32460",
+    "name": "Engine Torque Coeff Airmass A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32463",
+    "name": "Engine Torque Coeff Airmass D",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32464",
+    "name": "Engine Torque Coeff RPM A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32467",
+    "name": "Engine Torque Coeff RPM D",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32468",
+    "name": "Engine Torque Coeff Spark.Airmass A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32469",
+    "name": "Engine Torque Coeff Spark.Airmass B",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32470",
+    "name": "Engine Torque Coeff Spark.Airmass C",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32471",
+    "name": "Engine Torque Coeff Spark.Airmass D",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32472",
+    "name": "Engine Torque Coeff SparkSq.Airmass A",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32473",
+    "name": "Engine Torque Coeff SparkSq.Airmass B",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 60
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32950",
+    "name": "Spark Smoothing Gain Low Torque",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32951",
+    "name": "Spark Smoothing Gain High Torque",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 153
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32970",
+    "name": "ETC Tip-in Torque Limit 1st Gear",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "deltas": {
+      "stock vs tune24": {
+        "n_diff": 0,
+        "max_abs_delta": 0.0,
+        "n_cells": 51
+      }
+    },
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15010",
+    "name": "WOT Shift Speed \u2014 Normal",
+    "sources": [
+      "sheet24",
+      "tune24"
+    ],
+    "deltas": {
+      "sheet24 vs tune24": "shape mismatch"
+    },
+    "agree": false
+  },
+  {
+    "kind": "table",
+    "key": "pid:15323",
+    "name": "WOT Shift Speed \u2014 Pattern A",
+    "sources": [
+      "sheet24",
+      "tune24"
+    ],
+    "deltas": {
+      "sheet24 vs tune24": "shape mismatch"
+    },
+    "agree": false
+  },
+  {
+    "kind": "table",
+    "key": "pid:15326",
+    "name": "WOT Shift Speed \u2014 Pattern B",
+    "sources": [
+      "sheet24",
+      "tune24"
+    ],
+    "deltas": {
+      "sheet24 vs tune24": "shape mismatch"
+    },
+    "agree": false
+  },
+  {
+    "kind": "table",
+    "key": "pid:15012",
+    "name": "WOT Shift Speed \u2014 Hot Trans",
+    "sources": [
+      "sheet24",
+      "tune24"
+    ],
+    "deltas": {
+      "sheet24 vs tune24": "shape mismatch"
+    },
+    "agree": false
+  },
+  {
+    "kind": "table",
+    "key": "pid:15015",
+    "name": "WOT Shift Speed \u2014 TUTD",
+    "sources": [
+      "sheet24",
+      "tune24"
+    ],
+    "deltas": {
+      "sheet24 vs tune24": "shape mismatch"
+    },
+    "agree": false
+  },
+  {
+    "kind": "table",
+    "key": "pid:15017",
+    "name": "WOT Shift Speed \u2014 Hot Engine",
+    "sources": [
+      "sheet24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:5672",
+    "name": "TCC Desired Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:11051",
+    "name": "Delta Map",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12067",
+    "name": "RPM Limit Accel Thresh vs. Accel",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12070",
+    "name": "RPM Limit Torque vs. RPM Delta vs. Gear",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12072",
+    "name": "RPM Limit Oil Temperature",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12154",
+    "name": "Idle Overspeed Startup Airflow Time",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12155",
+    "name": "Idle Underspeed Startup Airflow Time",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12171",
+    "name": "Dynamic Airflow Zone - RPM Boundaries",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12172",
+    "name": "Dynamic Airflow Zone - MAP Boundaries",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12194",
+    "name": "Idle Startup Airflow vs. ERT vs. ECT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12198",
+    "name": "Idle Airflow Mult vs. ECT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12209",
+    "name": "MAF Steady State Startup",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12240",
+    "name": "DoD Disable vs. Gear",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12360",
+    "name": "Cranking VE vs. MAP vs. RPM",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12447",
+    "name": "Open Loop AIR Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12449",
+    "name": "Open Loop Blend Factor",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12510",
+    "name": "LTFT Purge Reduction Factor",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12636",
+    "name": "PE/COT Spark Advance Correction Mult vs. Fuel Composition",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12637",
+    "name": "PE/COT Spark Advance Correction Mult vs. MAP",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12662",
+    "name": "Max Torque Timing EGR Adder",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12666",
+    "name": "Lightoff Spark Mult vs. Startup ECT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12672",
+    "name": "Lightoff Spark Mult vs. ECT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12742",
+    "name": "Knock Retard Amount",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12764",
+    "name": "Burst Knock Retard Mult vs. RPM",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12765",
+    "name": "Burst Knock Retard vs. Cylair Delta",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12767",
+    "name": "Burst Knock Retard Mult vs. IAT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12805",
+    "name": "Max Torque vs. RPM (1st Gear)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12808",
+    "name": "Max Torque vs. RPM (4th Gear)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12811",
+    "name": "Max Torque vs. RPM (Reverse)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12879",
+    "name": "AC Compressor Torque vs. AC Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:12888",
+    "name": "AC Torque Reduction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13001",
+    "name": "Cylinder Charge Temperature Bias vs. Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13002",
+    "name": "Cylinder Charge Temperature Filter Coeff vs. Airflow",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13017",
+    "name": "Supercharger Desired Torque vs. RPM",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13021",
+    "name": "Supercharger Boost Base DC",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13400",
+    "name": "VE Normal - Constant Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13401",
+    "name": "VE Normal - ExhaustCam Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13404",
+    "name": "VE Normal - IntakeCam Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13405",
+    "name": "VE Normal - IntakeCam\u00b2 Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13407",
+    "name": "VE Normal - MAP Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13408",
+    "name": "VE Normal - MAP.IntakeCam Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13409",
+    "name": "VE Normal - MAP.RPM Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13411",
+    "name": "VE Normal - RPM.ExhaustCam Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13412",
+    "name": "VE Normal - RPM Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13413",
+    "name": "VE Normal - RPM.IntakeCam Coeff",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13420",
+    "name": "VE Reversion Lo Altd",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13421",
+    "name": "VE Reversion Hi Altd",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13422",
+    "name": "VE Reversion Baro Correction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13430",
+    "name": "Dynamic Airflow Corrected Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13431",
+    "name": "Dynamic Airflow Base Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13432",
+    "name": "Dynamic Airflow Current Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13434",
+    "name": "Dynamic Airflow MAP Current Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13436",
+    "name": "Dynamic Airflow MAP Old2 Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13437",
+    "name": "Dynamic Airflow TPS Current Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13438",
+    "name": "Dynamic Airflow TPS Old Gain",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13440",
+    "name": "VE Reversion Vacuum",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13441",
+    "name": "VE Reversion Lo Altd (DOD)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13442",
+    "name": "VE Reversion Hi Altd (DOD)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13443",
+    "name": "VE Reversion Lo Altd (Cams Parked)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13444",
+    "name": "VE Reversion Hi Altd (Cams Parked)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13445",
+    "name": "VE Reversion Lo Altd (DOD,Cams Parked)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13446",
+    "name": "VE Reversion Hi Altd (DOD,Cams Parked)",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13543",
+    "name": "Equivalence Ratio Offset",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:13622",
+    "name": "Stomp Compensation Decay Min",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14005",
+    "name": "Misfire Cylinder Mode Event Time - Normal - [READ ONLY]",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14017",
+    "name": "Misfire SCD Mode Event Time - Off Idle - [READ ONLY]",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14018",
+    "name": "Misfire SCD Mode Event Time - Idle 2nd Order - [READ ONLY]",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14044",
+    "name": "Maximum Airflow Delta vs. TPS",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14102",
+    "name": "IAT 2 Sensor Curve",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:14110",
+    "name": "Oil Pressure Minimum",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15000",
+    "name": "Shift Speed vs. TPS vs. Shift - Normal",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15002",
+    "name": "Shift Speed vs. TPS vs. Shift - Hot Transmission",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15004",
+    "name": "Shift Speed vs. %TPS vs. Shift - TUTD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15005",
+    "name": "Shift Speed vs. %TPS vs. Shift - TUTD Hot",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15006",
+    "name": "Shift Speed vs. %TPS vs. Shift - TUTD Cruise",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15009",
+    "name": "Map Filter",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15014",
+    "name": "WOT Shift Speed vs. Shift - 4WD Low",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15020",
+    "name": "WOT Shift RPM vs. Shift - Normal",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15022",
+    "name": "WOT Shift RPM vs. Shift - Hot",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15024",
+    "name": "WOT Shift RPM vs. Shift - 4WD Low",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15025",
+    "name": "WOT Shift RPM vs. Shift - TUTD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15040",
+    "name": "Intake Cam",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15041",
+    "name": "Exhaust Cam",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15050",
+    "name": "Shift Speed vs. %TPS - Normal 5th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15058",
+    "name": "Shift Speed vs. %TPS - TUTD 5th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15059",
+    "name": "Shift Speed vs. %TPS - TUTD 6th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15060",
+    "name": "Shift Speed vs. %TPS - TUTD Hot 5th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15061",
+    "name": "Shift Speed vs. %TPS - TUTD Hot 6th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15090",
+    "name": "WOT Shift RPM - Pattern A",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15093",
+    "name": "WOT Shift RPM - Pattern B",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15200",
+    "name": "TCC Apply/Release Speed vs. TPS vs. Gear - Normal",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15205",
+    "name": "TCC WOT Apply/Release Speed vs. Gear - Normal",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15206",
+    "name": "TCC WOT Apply/Release Speed vs. Gear - Hot Transmission",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15240",
+    "name": "TCC Apply Speed vs. %TPS vs. Gear - TUTD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15242",
+    "name": "TCC Apply Speed vs. %TPS vs. Gear - Hot",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15243",
+    "name": "TCC Release Speed vs. %TPS vs. Gear - Hot",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15244",
+    "name": "TCC Apply Speed vs. %TPS vs. Gear - Hot TUTD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15245",
+    "name": "TCC Release Speed vs. %TPS vs. Gear - Hot TUTD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15249",
+    "name": "TCC Apply/Release Speed vs. %TPS vs. Gear - Hot D2",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15251",
+    "name": "TCC Apply/Release Speed vs. %TPS - Normal 5th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15255",
+    "name": "TCC Apply Speed vs. %TPS - Hot 5th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15256",
+    "name": "TCC Apply Speed vs. %TPS - Hot 6th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15262",
+    "name": "TCC Apply/Release Speed vs. %TPS - TUTD 6th",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15267",
+    "name": "TCC WOT Apply/Release Speed vs. Gear - Hot Engine",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15285",
+    "name": "TCC Apply/Release Speed vs. TPS vs. Gear - Pattern A",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15289",
+    "name": "TCC Apply/Release Speed vs. TPS vs. Gear - Pattern B",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15293",
+    "name": "TCC WOT Apply/Release Speed - Pattern A",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15296",
+    "name": "TCC WOT Apply/Release Speed - Pattern B",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15303",
+    "name": "Shift Speed vs. %TPS vs. Shift - Hot D2",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15305",
+    "name": "Shift Speed vs. %TPS vs. Shift - D1 Safety",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15315",
+    "name": "Shift Speed vs. TPS vs. Shift - Pattern A",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15319",
+    "name": "Shift Speed vs. TPS vs. Shift - Pattern B",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15430",
+    "name": "Trans Max Shift Torque",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15443",
+    "name": "Shift Torque Factor Cold",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15580",
+    "name": "Max Line Pressure vs. RPM vs. Gear",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15669",
+    "name": "Shift Inertia Factor Profile 2-4",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15672",
+    "name": "Shift Inertia Factor Profile Default",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15682",
+    "name": "Shift Inertia Factor Profile CT Downshift",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15814",
+    "name": "Shift Desired Output Torque Scale Factor 3-4",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15815",
+    "name": "Shift Desired Output Torque Scale Factor 4-5",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15817",
+    "name": "Shift Desired Output Torque Scale Factor 1-3",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15818",
+    "name": "Shift Desired Output Torque Scale Factor 1-4",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15819",
+    "name": "Shift Desired Output Torque Scale Factor 2-4",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15820",
+    "name": "Shift Desired Output Torque Scale Factor 2-6",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15821",
+    "name": "Shift Desired Output Torque Scale Factor 3-5",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15822",
+    "name": "Shift Desired Output Torque Scale Factor 4-6",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15823",
+    "name": "Shift Desired Output Torque Scale Factor 1-2 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15824",
+    "name": "Shift Desired Output Torque Scale Factor 2-3 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15825",
+    "name": "Shift Desired Output Torque Scale Factor 3-4 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15826",
+    "name": "Shift Desired Output Torque Scale Factor 4-5 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15827",
+    "name": "Shift Desired Output Torque Scale Factor 5-6 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15828",
+    "name": "Shift Desired Output Torque Scale Factor 1-3 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15829",
+    "name": "Shift Desired Output Torque Scale Factor 1-4 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15830",
+    "name": "Shift Desired Output Torque Scale Factor 2-4 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15831",
+    "name": "Shift Desired Output Torque Scale Factor 2-6 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15832",
+    "name": "Shift Desired Output Torque Scale Factor 3-5 Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15845",
+    "name": "Shift Desired Output Torque Scale Factor Mult 1-3",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:15936",
+    "name": "Shift Adapt Preset Pressure 2-3 Oncoming Special",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:16001",
+    "name": "Cmd Gear Downshift Max Vehicle Speed",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17010",
+    "name": "Fuel Pump Duty Cycle",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17020",
+    "name": "Low Flow Upper",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17021",
+    "name": "Low Flow Lower",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17022",
+    "name": "High Flow Upper",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17024",
+    "name": "Cranking Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:17025",
+    "name": "Hot Fuel Pressure",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:27777",
+    "name": "Throttle Area vs Position",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32972",
+    "name": "ETC Tip-in Torque Limit 3rd Gear",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32974",
+    "name": "ETC Tip-in Torque Limit 5th Gear",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32976",
+    "name": "ETC Tip-in Torque Limit Neutral",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:32978",
+    "name": "ETC Tip-in Torque Limit Park",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33020",
+    "name": "Throttle Area Increase Rate",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33100",
+    "name": "Intake Cam Position - Low Baro",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33104",
+    "name": "Exhaust Cam Position - Low Baro",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33108",
+    "name": "Exhaust Cam Position - High Baro DoD",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33109",
+    "name": "Intake Cam Angle - Cold Start",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33110",
+    "name": "Exhaust Cam Position - Cold Start",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33111",
+    "name": "Exhaust Cam Position Ramp Negative",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33113",
+    "name": "Intake Cam Position Ramp Negative",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33115",
+    "name": "Intake Cam Angle Minimum during Spark Reduction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33116",
+    "name": "Exhaust Cam Angle Minimum during Spark Reduction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33120",
+    "name": "Intake Cam ECT Correction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33121",
+    "name": "Exhaust Cam ECT Correction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33123",
+    "name": "Exhaust Cam Cold Start Baro Correction",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:33150",
+    "name": "Intake Cam Enable ERT",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:35000",
+    "name": "TCC Desired Slip AC Off - 1st",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  },
+  {
+    "kind": "table",
+    "key": "pid:35002",
+    "name": "TCC Desired Slip AC Off - 3rd",
+    "sources": [
+      "tune24"
+    ],
+    "deltas": {},
+    "agree": true
+  }
+]

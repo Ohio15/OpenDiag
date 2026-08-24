@@ -1,0 +1,23 @@
+{
+  "_comment": "Tow-first merge policy (Ron, 2026-08-24). GM stock read is the authority; verified hardware facts are pinned; #24's WOT shift rescale (verified for 4.11/35s) is kept. Community tow consensus (see data/refs/tow_consensus_2010_silverado.md) maps onto this platform as: keep GM's own Pattern A (Tow/Haul) TCC/shift tables stock, keep torque management/abuse mode ENABLED, keep the low-octane spark table conservative — i.e. stock-source wins those areas by design. No 'tow' reference cal exists because the community gives strategies and ranges, not cell values; fabricating tables is forbidden. Line-pressure max tables are inert clamps on a stock 6L80 (hjtrbo, HPT forum) — never rule-route them.",
+  "priority": ["stock", "sheet24", "tune24"],
+  "stock_source": "stock",
+  "rules": [
+    {"match": "WOT Shift Speed", "on": "name", "source": "sheet24",
+     "note": "#24's WOT shift speeds are the verified 4.11+35s rescale; raw stock MPH cells assume 3.08/2475mm"}
+  ],
+  "pins": [
+    {"name": "Final Drive Ratio", "value": 4.11,
+     "reason": "physical axle 4.11 (tune-verified; Ron to confirm on the axle tag)"},
+    {"name": "Final Drive Ratio - VSS Error", "value": 4.11,
+     "reason": "must match physical axle"},
+    {"name": "Final Drive Ratio - Trans", "value": 4.11,
+     "reason": "must match physical axle"},
+    {"name": "Driven Tire Circumference", "value": 2742.0,
+     "reason": "35x12.50R18 Kenda Klever MT KR29 loaded circumference (verified correct 2026-08-24; NOT the drivability cause)"},
+    {"name": "Non-Driven Tire Circumference", "value": 2742.0,
+     "reason": "same tires all four corners"},
+    {"name": "DoD (AFM) Enable", "value": 0.0,
+     "reason": "AFM/DoD deleted"}
+  ]
+}
