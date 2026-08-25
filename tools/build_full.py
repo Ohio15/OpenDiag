@@ -57,12 +57,24 @@ stock_sc=load_scalar_jsonl(os.path.join(STOCK,"scalars.jsonl"))
 # name index for stock captures without HPT ids (UIA harvester): join by name
 # when the name is unambiguous in the stock capture
 stock_by_name={}
+stock_by_triple={}
 for o in stock_sc.values():
     stock_by_name.setdefault(o.get("name",""), []).append(o)
-nsc=nsstk=0
+    stock_by_triple[(o.get("category",""),o.get("desc",""),o.get("name",""))]=o
+# alias map: tune24 full panel-title name -> stock UIA (category, desc, label)
+# triple, built by tools/build_alias_map.py (browser labels are abbreviated
+# on-screen captions, so exact-name joins alone hit only ~20/369)
+_ap=os.path.join(ROOT,"data","tune24_scalar_aliases.json")
+aliases=json.load(open(_ap,encoding="utf-8")) if os.path.exists(_ap) else {}
+nsc=nsstk=nali=0
 for sid,o in tune_sc.items():
     cat=SCSEG.get(o.get("category",""), o.get("module","") or "Misc")
     stk=stock_sc.get(sid)
+    if stk is None:
+        al=aliases.get(o.get("name",""))
+        if al:
+            stk=stock_by_triple.get((al["category"],al["desc"],al["name"]))
+            if stk is not None: nali+=1
     if stk is None:
         cands=stock_by_name.get(o.get("name",""), [])
         if len(cands)==1: stk=cands[0]
@@ -73,7 +85,7 @@ for sid,o in tune_sc.items():
         unit=o.get("unit","") or "", stock_value=stkv, param_id=pid, category=cat,
         note=o.get("desc","") or ""))
     nsc+=1
-print(f"  inline scalars added: {nsc} (stock baseline on {nsstk})")
+print(f"  inline scalars added: {nsc} (stock baseline on {nsstk}, {nali} via alias map)")
 # ---- end inline scalars ----
 errs=cal.validate(); print(f"validation errors: {len(errs)}")
 for e in errs[:20]: print("  ",e)

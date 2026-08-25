@@ -1,0 +1,518 @@
+{
+ "A/C Disable TPS": {
+  "category": "System/A/C",
+  "desc": "Disable Conditions",
+  "name": "Disable TPS",
+  "score": 6.25
+ },
+ "A/C Re-Enable RPM": {
+  "category": "System/A/C",
+  "desc": "Disable Conditions",
+  "name": "Re-Enable RPM",
+  "score": 3.75
+ },
+ "A/C Re-Enable TPS": {
+  "category": "System/A/C",
+  "desc": "Disable Conditions",
+  "name": "Re-Enable TPS",
+  "score": 3.75
+ },
+ "Airflow System Minimum Voltage": {
+  "category": "System/General",
+  "desc": "Fuel System Voltage Min",
+  "name": "Airflow System Voltage Min",
+  "score": 6.12
+ },
+ "Bidir Retard Max": {
+  "category": "Engine/Spark/Advance",
+  "desc": "Bi-Directional",
+  "name": "Max Retard",
+  "score": 5.25
+ },
+ "CFCO Enable ECT": {
+  "category": "Engine/Fuel/Cutoff, DFCO",
+  "desc": "Clutch Fuel Cutoff (CFCO)",
+  "name": "Enable ECT",
+  "score": 3.88
+ },
+ "CFCO Enable RPM": {
+  "category": "Engine/Fuel/Cutoff, DFCO",
+  "desc": "Clutch Fuel Cutoff (CFCO)",
+  "name": "Enable RPM",
+  "score": 3.88
+ },
+ "Cold Start Disable RPM": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Cold Start",
+  "name": "Disable RPM",
+  "score": 6.5
+ },
+ "Cold Start Enable Delay": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Cold Start",
+  "name": "Enable Delay",
+  "score": 6.5
+ },
+ "Cold Start Enable RPM": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Cold Start",
+  "name": "Enable RPM",
+  "score": 6.5
+ },
+ "Composition Change Threshold": {
+  "category": "Engine/Fuel/Flex Fuel",
+  "desc": "Inference",
+  "name": "Comp Change Thresh",
+  "score": 3.25
+ },
+ "Cranking Pressure Transition Rate": {
+  "category": "Fuel Sys/Fuel Pressure",
+  "desc": "Fuel Pressure Transition Rate",
+  "name": "Cranking",
+  "score": 6.38
+ },
+ "Diagnostic System Voltage Delay": {
+  "category": "System/General",
+  "desc": "Fuel System Voltage Min",
+  "name": "Diag System Voltage Delay",
+  "score": 5.75
+ },
+ "Downstream Lean Thresh": {
+  "category": "Engine Diag/Exhaust",
+  "desc": "Downstream",
+  "name": "Lean Thresh",
+  "score": 6.5
+ },
+ "Downstream Rich Thresh": {
+  "category": "Engine Diag/Exhaust",
+  "desc": "Downstream",
+  "name": "Rich Thresh",
+  "score": 6.5
+ },
+ "Dynamic Airflow High RPM Re-Enable": {
+  "category": "Engine/Airflow/Dynamic",
+  "desc": "VE Correction Factor",
+  "name": "High RPM Re-enable",
+  "score": 3.75
+ },
+ "Fan Hi Off Airflow": {
+  "category": "Engine/Idle/Airflow",
+  "desc": "Cooling Fan Airflow",
+  "name": "Hi Off",
+  "score": 6.5
+ },
+ "Fan Hi On Airflow": {
+  "category": "Engine/Idle/Airflow",
+  "desc": "Cooling Fan Airflow",
+  "name": "Hi On",
+  "score": 6.5
+ },
+ "Fan Low Off Airflow": {
+  "category": "Engine/Idle/Airflow",
+  "desc": "Cooling Fan Airflow",
+  "name": "Low Off",
+  "score": 6.5
+ },
+ "Fan Med Off Airflow": {
+  "category": "Engine/Idle/Airflow",
+  "desc": "Cooling Fan Airflow",
+  "name": "Med Off",
+  "score": 6.5
+ },
+ "Fan Med On Airflow": {
+  "category": "Engine/Idle/Airflow",
+  "desc": "Cooling Fan Airflow",
+  "name": "Med On",
+  "score": 6.5
+ },
+ "Flood Clear Enable TPS": {
+  "category": "Engine/Fuel/General",
+  "desc": "Flood Clear",
+  "name": "Enable TPS",
+  "score": 6.5
+ },
+ "Fuel Tank Sender Max %": {
+  "category": "Fuel Sys/Fuel Tank/Gauge",
+  "desc": "Open",
+  "name": "Sender Max %",
+  "score": 3.25
+ },
+ "Fuel Tank Sender Min %": {
+  "category": "Fuel Sys/Fuel Tank/Gauge",
+  "desc": "Open",
+  "name": "Sender Min %",
+  "score": 3.25
+ },
+ "High Baro Threshold": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Desired Angle",
+  "name": "Hi Baro Thresh",
+  "score": 3.25
+ },
+ "Hot Fuel Pressure Transition Rate": {
+  "category": "Fuel Sys/Fuel Pressure",
+  "desc": "Fuel Pressure Transition Rate",
+  "name": "Hot Fuel",
+  "score": 7.0
+ },
+ "Intercooler Pump ERT Min": {
+  "category": "System/Coolant Pumps/Intercooler",
+  "desc": "Enable Conditions",
+  "name": "ERT Min",
+  "score": 3.75
+ },
+ "Intercooler Pump IAT Min": {
+  "category": "System/Coolant Pumps/Intercooler",
+  "desc": "Enable Conditions",
+  "name": "IAT Min",
+  "score": 3.75
+ },
+ "Intercooler Pump MAT Min": {
+  "category": "System/Coolant Pumps/Intercooler",
+  "desc": "Enable Conditions",
+  "name": "MAT Min",
+  "score": 3.75
+ },
+ "Knock Learn Min IAT": {
+  "category": "Engine/Spark/Retard",
+  "desc": "Knock Adaptive Learning",
+  "name": "Min IAT",
+  "score": 6.0
+ },
+ "Knock Learn Min MAP": {
+  "category": "Engine/Spark/Retard",
+  "desc": "Knock Adaptive Learning",
+  "name": "Min MAP",
+  "score": 6.0
+ },
+ "Knock Learn Min RPM": {
+  "category": "Engine/Spark/Retard",
+  "desc": "Knock Adaptive Learning",
+  "name": "Min RPM",
+  "score": 6.0
+ },
+ "Knock Retard Disable Time": {
+  "category": "Engine/Spark/Retard",
+  "desc": "Knock Adaptive Learning",
+  "name": "Disable Time",
+  "score": 4.5
+ },
+ "Knock Retard Max Step": {
+  "category": "Engine/Spark/Retard",
+  "desc": "Knock Adaptive Learning",
+  "name": "Max Step",
+  "score": 4.5
+ },
+ "Knock Sensor Transient Mode RPM Decrease": {
+  "category": "Engine/Spark/Knock Sensors",
+  "desc": "Transient Mode",
+  "name": "RPM Decrease",
+  "score": 7.0
+ },
+ "Knock Sensor Transient Mode RPM Increase": {
+  "category": "Engine/Spark/Knock Sensors",
+  "desc": "Transient Mode",
+  "name": "RPM Increase",
+  "score": 7.0
+ },
+ "Knock Sensor Transient Mode TPS Decrease": {
+  "category": "Engine/Spark/Knock Sensors",
+  "desc": "Transient Mode",
+  "name": "TPS Decrease",
+  "score": 7.0
+ },
+ "Knock Sensor Transient Mode TPS Increase": {
+  "category": "Engine/Spark/Knock Sensors",
+  "desc": "Transient Mode",
+  "name": "TPS Increase",
+  "score": 7.0
+ },
+ "LTFT Idle Cells Disable TPS": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "LTFT Idle Cells Thresholds",
+  "name": "Disable TPS",
+  "score": 6.12
+ },
+ "LTFT Idle Cells Disable VSS": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "LTFT Idle Cells Thresholds",
+  "name": "Disable VSS",
+  "score": 6.12
+ },
+ "LTFT Idle Cells Enable TPS": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "LTFT Idle Cells Thresholds",
+  "name": "Enable TPS",
+  "score": 6.12
+ },
+ "LTFT Idle Cells Enable VSS": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "LTFT Idle Cells Thresholds",
+  "name": "Enable VSS",
+  "score": 6.12
+ },
+ "Low Baro Threshold": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Desired Angle",
+  "name": "Low Baro Thresh",
+  "score": 3.25
+ },
+ "Maximum Clutch Pressure": {
+  "category": "Trans/Shift Pressures/General",
+  "desc": "General",
+  "name": "Max Clutch",
+  "score": 3.25
+ },
+ "Maximum Rail Pressure": {
+  "category": "Engine/Fuel/General",
+  "desc": "Rail Pressure",
+  "name": "Rail Pressure Max",
+  "score": 6.5
+ },
+ "Med Baro Threshold": {
+  "category": "Engine/Airflow/Variable Camshaft",
+  "desc": "Desired Angle",
+  "name": "Med Baro Thresh",
+  "score": 3.25
+ },
+ "Min RPM Reference": {
+  "category": "Engine/Idle/RPM",
+  "desc": "Underspeed RPM Err Mult",
+  "name": "Min RPM Ref",
+  "score": 4.88
+ },
+ "Minimum Rail Pressure": {
+  "category": "Engine/Fuel/General",
+  "desc": "Rail Pressure",
+  "name": "Rail Pressure Min",
+  "score": 6.5
+ },
+ "O2 Sensor Lower Limit": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "Airflow",
+  "name": "O2 Lower Limit",
+  "score": 3.5
+ },
+ "O2 Sensor Not Ready Timer": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "Airflow",
+  "name": "O2 Not-Ready Timer",
+  "score": 3.5
+ },
+ "O2 Sensor Ready Timer": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "Airflow",
+  "name": "O2 Ready Timer",
+  "score": 3.5
+ },
+ "O2 Sensor Upper Limit": {
+  "category": "Engine/Fuel/Oxygen Sensors",
+  "desc": "Airflow",
+  "name": "O2 Upper Limit",
+  "score": 3.5
+ },
+ "Oil Press Warning Delay": {
+  "category": "Engine Diag/General",
+  "desc": "Oil Press Min",
+  "name": "Oil Press Warn Delay",
+  "score": 6.0
+ },
+ "Oil Temperature High": {
+  "category": "Engine Diag/General",
+  "desc": "Open",
+  "name": "Oil Temp High",
+  "score": 3.25
+ },
+ "Oil Temperature High Hyst": {
+  "category": "Engine Diag/General",
+  "desc": "Open",
+  "name": "Oil Temp High Hyst",
+  "score": 3.25
+ },
+ "Power Enrich Speed Bypass Delay": {
+  "category": "Engine/Fuel/Power Enrich",
+  "desc": "Delay",
+  "name": "Speed Bypass",
+  "score": 7.0
+ },
+ "Power Enrich Throttle Bypass Delay": {
+  "category": "Engine/Fuel/Power Enrich",
+  "desc": "Delay",
+  "name": "Throttle Bypass",
+  "score": 7.0
+ },
+ "Power Enrichment Minimum MAP Hysteresis": {
+  "category": "Engine/Fuel/Power Enrich",
+  "desc": "Delay",
+  "name": "Min MAP Hyst",
+  "score": 3.75
+ },
+ "Power Enrichment Minimum RPM": {
+  "category": "Engine/Fuel/Power Enrich",
+  "desc": "Delay",
+  "name": "Min RPM",
+  "score": 3.75
+ },
+ "Power Enrichment Minimum RPM Hysteresis": {
+  "category": "Engine/Fuel/Power Enrich",
+  "desc": "Delay",
+  "name": "Min RPM Hyst",
+  "score": 3.75
+ },
+ "Primary Fuel Tank Capacity": {
+  "category": "Fuel Sys/Fuel Tank/Gauge",
+  "desc": "Fuel Tank/Gauge",
+  "name": "Primary Capacity",
+  "score": 6.0
+ },
+ "Shift Adapt Preset Volume 2-3 Oncoming": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "2-3",
+  "score": 6.5
+ },
+ "Shift Adapt Preset Volume 3-4 Oncoming": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "3-4",
+  "score": 6.5
+ },
+ "Shift Adapt Preset Volume 4-5 Oncoming": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "4-5",
+  "score": 6.5
+ },
+ "Shift Adapt Preset Volume 5-6 Oncoming": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "5-6",
+  "score": 6.5
+ },
+ "Shift Max Adapt Volume 2-3": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "Max 2-3",
+  "score": 4.5
+ },
+ "Shift Max Adapt Volume 3-4": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "Max 3-4",
+  "score": 4.5
+ },
+ "Shift Max Adapt Volume 4-5": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "Max 4-5",
+  "score": 4.5
+ },
+ "Shift Max Adapt Volume 5-6": {
+  "category": "Trans/Shift Pressures/Adaptive",
+  "desc": "Oncoming Volume Preset",
+  "name": "Max 5-6",
+  "score": 4.5
+ },
+ "Supercharger Boost Disable TPS Max": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Disable",
+  "name": "TPS Max",
+  "score": 7.0
+ },
+ "Supercharger Boost Disable VSS Min": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Disable",
+  "name": "VSS Min",
+  "score": 7.0
+ },
+ "Supercharger Boost Int Gain": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Disable",
+  "name": "Integ Gain",
+  "score": 5.75
+ },
+ "Supercharger Boost Ramp": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Limits",
+  "name": "Boost Ramp",
+  "score": 5.75
+ },
+ "Supercharger Cam Min Angle": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Cruise Torque/MAP Mult",
+  "name": "Cam Angle Min",
+  "score": 3.25
+ },
+ "Supercharger Cam Min TPS": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Cruise Torque/MAP Mult",
+  "name": "Cam TPS Min",
+  "score": 3.75
+ },
+ "Supercharger Inlet Air Pressure Sensor Offset": {
+  "category": "Engine/Airflow/Supercharger",
+  "desc": "Inlet Air Pressure",
+  "name": "Sensor Offset",
+  "score": 7.0
+ },
+ "Supercharger MAP Disable": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Disable",
+  "name": "MAP Disable",
+  "score": 6.25
+ },
+ "Supercharger MAP Enable": {
+  "category": "Engine/Torque Management/Supercharger",
+  "desc": "Boost Disable",
+  "name": "MAP Enable",
+  "score": 3.75
+ },
+ "TCC Adapt Pressure Max": {
+  "category": "Trans/Torque Converter/General",
+  "desc": "TCC Pressure",
+  "name": "Adapt Max",
+  "score": 6.5
+ },
+ "TCC Adapt Pressure Min": {
+  "category": "Trans/Torque Converter/General",
+  "desc": "TCC Pressure",
+  "name": "Adapt Min",
+  "score": 6.5
+ },
+ "TCC Pressure Regulator Gain": {
+  "category": "Trans/Torque Converter/General",
+  "desc": "TCC Pressure",
+  "name": "Regulator Gain",
+  "score": 6.0
+ },
+ "TCC Pressure Regulator Offset": {
+  "category": "Trans/Torque Converter/General",
+  "desc": "TCC Pressure",
+  "name": "Regulator Offset",
+  "score": 6.5
+ },
+ "Transient Fuel Delta MAP": {
+  "category": "Engine/Fuel/Transient",
+  "desc": "Impact Factor",
+  "name": "Delta MAP",
+  "score": 3.75
+ },
+ "Transient Fuel Delta TPS": {
+  "category": "Engine/Fuel/Transient",
+  "desc": "Transient Fuel Mass Evaporation",
+  "name": "Delta TPS",
+  "score": 6.25
+ },
+ "Transient Fuel Enable Delay": {
+  "category": "Engine/Fuel/Transient",
+  "desc": "Impact Factor",
+  "name": "Enable Delay",
+  "score": 3.25
+ },
+ "Transient Fuel MAP Filter": {
+  "category": "Engine/Fuel/Transient",
+  "desc": "Impact Factor",
+  "name": "MAP Filter",
+  "score": 3.25
+ }
+}

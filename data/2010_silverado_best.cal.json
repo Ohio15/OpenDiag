@@ -6,7 +6,7 @@
         "source": "VCM Editor Copy-with-Axis full sweep",
         "base_tune": "#24 - Claudes Edit 8.7.26",
         "n_tables": 221,
-        "n_scalars": 20
+        "n_scalars": 106
       },
       "sheet24": {
         "source": "",
@@ -72,6 +72,142 @@
   },
   "scalars": [
     {
+      "name": "Supercharger Cam Min Angle",
+      "value": 3.0,
+      "unit": "\u00b0",
+      "stock_value": 3.0,
+      "param_id": 2971,
+      "category": "Engine",
+      "note": "Minimum camshaft angle for Cam Phaser boost limit. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 3.0,
+          "tune24": 3.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger Cam Min TPS",
+      "value": 50.0,
+      "unit": "%",
+      "stock_value": 50.0,
+      "param_id": 2972,
+      "category": "Engine",
+      "note": "Minimum throttle for Cam Phaser boost limit. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 50.0,
+          "tune24": 50.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger MAP Disable",
+      "value": 180.0,
+      "unit": "kPa",
+      "stock_value": 180.0,
+      "param_id": 2980,
+      "category": "Engine",
+      "note": "Above this MAP boost control will be disbaled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 180.0,
+          "tune24": 180.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger MAP Enable",
+      "value": 140.0,
+      "unit": "kPa",
+      "stock_value": 140.0,
+      "param_id": 2981,
+      "category": "Engine",
+      "note": "MAP must be below this to enable boost control. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 140.0,
+          "tune24": 140.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger Boost Disable VSS Min",
+      "value": 318.0,
+      "unit": "mph",
+      "stock_value": 318.0,
+      "param_id": 2941,
+      "category": "Engine",
+      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 318.0,
+          "tune24": 318.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger Boost Disable TPS Max",
+      "value": 1.0,
+      "unit": "%",
+      "stock_value": 1.0,
+      "param_id": 2942,
+      "category": "Engine",
+      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 1.0,
+          "tune24": 1.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger Boost Ramp",
+      "value": 0.5,
+      "unit": "",
+      "stock_value": 0.5,
+      "param_id": 2943,
+      "category": "Engine",
+      "note": "Boost will ramp in at this rate when re-enabled, lower numbers mean slower ramp in. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.5,
+          "tune24": 0.5
+        }
+      }
+    },
+    {
+      "name": "Supercharger Boost Int Gain",
+      "value": 0.125,
+      "unit": "",
+      "stock_value": 0.125,
+      "param_id": 2945,
+      "category": "Engine",
+      "note": "Integral gain for boost control. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.125,
+          "tune24": 0.125
+        }
+      }
+    },
+    {
       "name": "Cylinder Volume",
       "value": 0.66592,
       "unit": "L",
@@ -85,6 +221,108 @@
         "candidates": {
           "stock": 0.66592,
           "tune24": 0.66592
+        }
+      }
+    },
+    {
+      "name": "Min RPM Reference",
+      "value": 525.0,
+      "unit": "rpm",
+      "stock_value": 525.0,
+      "param_id": 13540,
+      "category": "Engine",
+      "note": "Minimum allowed current RPM reference in idle mode. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 525.0,
+          "tune24": 525.0
+        }
+      }
+    },
+    {
+      "name": "Fan Med On Airflow",
+      "value": 2.4,
+      "unit": "lb/h",
+      "stock_value": 2.4,
+      "param_id": 2145,
+      "category": "Engine",
+      "note": "Airflow adder for when medium speed fan transitions to active. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 2.4,
+          "tune24": 2.4
+        }
+      }
+    },
+    {
+      "name": "Fan Hi On Airflow",
+      "value": 4.8,
+      "unit": "lb/h",
+      "stock_value": 4.8,
+      "param_id": 2146,
+      "category": "Engine",
+      "note": "Airflow adder for when high speed fan transitions to active. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 4.8,
+          "tune24": 4.8
+        }
+      }
+    },
+    {
+      "name": "Fan Low Off Airflow",
+      "value": 0.0,
+      "unit": "lb/h",
+      "stock_value": 0.0,
+      "param_id": 2147,
+      "category": "Engine",
+      "note": "Airflow subtractor for when low speed fan transitions to off. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Fan Med Off Airflow",
+      "value": 0.0,
+      "unit": "lb/h",
+      "stock_value": 0.0,
+      "param_id": 2148,
+      "category": "Engine",
+      "note": "Airflow subtractor for when medium speed fan transitions to off. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Fan Hi Off Airflow",
+      "value": 2.0,
+      "unit": "lb/h",
+      "stock_value": 2.0,
+      "param_id": 2149,
+      "category": "Engine",
+      "note": "Airflow subtractor for when high speed fan transitions to off. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 2.0,
+          "tune24": 2.0
         }
       }
     },
@@ -140,6 +378,159 @@
       }
     },
     {
+      "name": "Dynamic Airflow High RPM Re-Enable",
+      "value": 3900.0,
+      "unit": "rpm",
+      "stock_value": 3900.0,
+      "param_id": 3033,
+      "category": "Engine",
+      "note": "If enabled, RPM must drop below this to re-enable airmass prediction calculations. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 3900.0,
+          "tune24": 3900.0
+        }
+      }
+    },
+    {
+      "name": "Low Baro Threshold",
+      "value": 75.0,
+      "unit": "kPa",
+      "stock_value": 75.0,
+      "param_id": 3250,
+      "category": "Engine",
+      "note": "Variable camshaft Low Barometric pressure threshold. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 75.0,
+          "tune24": 75.0
+        }
+      }
+    },
+    {
+      "name": "Med Baro Threshold",
+      "value": 84.0,
+      "unit": "kPa",
+      "stock_value": 84.0,
+      "param_id": 3251,
+      "category": "Engine",
+      "note": "Variable camshaft Medium Barometric pressure threshold. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 84.0,
+          "tune24": 84.0
+        }
+      }
+    },
+    {
+      "name": "High Baro Threshold",
+      "value": 94.0,
+      "unit": "kPa",
+      "stock_value": 94.0,
+      "param_id": 3252,
+      "category": "Engine",
+      "note": "Variable camshaft High Barometric pressure threshold. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 94.0,
+          "tune24": 94.0
+        }
+      }
+    },
+    {
+      "name": "Cold Start Enable Delay",
+      "value": 4.0,
+      "unit": "s",
+      "stock_value": 4.0,
+      "param_id": 3274,
+      "category": "Engine",
+      "note": "Engine must be running longer than this time to enable variable camshaft during cold start. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 4.0,
+          "tune24": 4.0
+        }
+      }
+    },
+    {
+      "name": "Cold Start Enable RPM",
+      "value": 8000.0,
+      "unit": "rpm",
+      "stock_value": 8000.0,
+      "param_id": 3272,
+      "category": "Engine",
+      "note": "Above this RPM variable camshaft will enable during cold start. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 8000.0,
+          "tune24": 8000.0
+        }
+      }
+    },
+    {
+      "name": "Cold Start Disable RPM",
+      "value": 7000.0,
+      "unit": "rpm",
+      "stock_value": 7000.0,
+      "param_id": 3273,
+      "category": "Engine",
+      "note": "Below this RPM variable camshaft will disable during cold start. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 7000.0,
+          "tune24": 7000.0
+        }
+      }
+    },
+    {
+      "name": "Supercharger Inlet Air Pressure Sensor Offset",
+      "value": 10.34,
+      "unit": "kPa",
+      "stock_value": 10.34,
+      "param_id": 4014,
+      "category": "Engine",
+      "note": "The offset calibration of the Supercharger Inlet Pressure sensor. ie. MAP (kPa) at 0V. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.34,
+          "tune24": 10.34
+        }
+      }
+    },
+    {
+      "name": "Flood Clear Enable TPS",
+      "value": 85.0,
+      "unit": "%",
+      "stock_value": 85.0,
+      "param_id": 2330,
+      "category": "Engine",
+      "note": "If throttle position is greater than this value then fuel is cut during cranking. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 85.0,
+          "tune24": 85.0
+        }
+      }
+    },
+    {
       "name": "Octane Scalar Delta",
       "value": 1.003,
       "unit": "",
@@ -153,6 +544,40 @@
         "candidates": {
           "stock": 1.003,
           "tune24": 1.003
+        }
+      }
+    },
+    {
+      "name": "Minimum Rail Pressure",
+      "value": 275.0,
+      "unit": "kPa",
+      "stock_value": 275.0,
+      "param_id": 13541,
+      "category": "Engine",
+      "note": "Minimum expected fuel rail pressure used in injector control calculations. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 275.0,
+          "tune24": 275.0
+        }
+      }
+    },
+    {
+      "name": "Maximum Rail Pressure",
+      "value": 640.0,
+      "unit": "kPa",
+      "stock_value": 640.0,
+      "param_id": 13542,
+      "category": "Engine",
+      "note": "Maximum expected fuel rail pressure used in injector control calculations. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 640.0,
+          "tune24": 640.0
         }
       }
     },
@@ -191,6 +616,40 @@
       }
     },
     {
+      "name": "O2 Sensor Upper Limit",
+      "value": 550.0,
+      "unit": "mV",
+      "stock_value": 550.0,
+      "param_id": 45011,
+      "category": "Engine",
+      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is below the provided voltage level. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 550.0,
+          "tune24": 550.0
+        }
+      }
+    },
+    {
+      "name": "O2 Sensor Lower Limit",
+      "value": 350.0,
+      "unit": "mV",
+      "stock_value": 350.0,
+      "param_id": 45013,
+      "category": "Engine",
+      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is above the provided voltage level. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 350.0,
+          "tune24": 350.0
+        }
+      }
+    },
+    {
       "name": "LTM Max Limit",
       "value": 0.7,
       "unit": "",
@@ -225,6 +684,295 @@
       }
     },
     {
+      "name": "LTFT Idle Cells Enable TPS",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": 0.0,
+      "param_id": 2511,
+      "category": "Engine",
+      "note": "LTFT idle cells will be used below this throttle position. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "LTFT Idle Cells Disable TPS",
+      "value": 0.6,
+      "unit": "%",
+      "stock_value": 0.6,
+      "param_id": 2512,
+      "category": "Engine",
+      "note": "LTFT idle cells will be disabled above this throttle position. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.6,
+          "tune24": 0.6
+        }
+      }
+    },
+    {
+      "name": "LTFT Idle Cells Enable VSS",
+      "value": 2.5,
+      "unit": "mph",
+      "stock_value": 2.5,
+      "param_id": 2513,
+      "category": "Engine",
+      "note": "LTFT idle cells will be used below this vehicle speed. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 2.5,
+          "tune24": 2.5
+        }
+      }
+    },
+    {
+      "name": "LTFT Idle Cells Disable VSS",
+      "value": 3.7,
+      "unit": "mph",
+      "stock_value": 3.7,
+      "param_id": 2514,
+      "category": "Engine",
+      "note": "LTFT idle cells will be disabled above this vehicle speed. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 3.7,
+          "tune24": 3.7
+        }
+      }
+    },
+    {
+      "name": "O2 Sensor Not Ready Timer",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": 10.0,
+      "param_id": 2532,
+      "category": "Engine",
+      "note": "If the O2 voltage is out of range for this period, oxygen sensors are considered not ready. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.0,
+          "tune24": 10.0
+        }
+      }
+    },
+    {
+      "name": "O2 Sensor Ready Timer",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": 10.0,
+      "param_id": 24991,
+      "category": "Engine",
+      "note": "ECM determines if the O2 sensors are ready for the closed loop. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.0,
+          "tune24": 10.0
+        }
+      }
+    },
+    {
+      "name": "Power Enrichment Minimum MAP Hysteresis",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": 0.0,
+      "param_id": 2403,
+      "category": "Engine",
+      "note": "Hysteresis applied to the minimum MAP, below which power enrichment will disable. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Power Enrichment Minimum RPM",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": 0.0,
+      "param_id": 2411,
+      "category": "Engine",
+      "note": "The minimum RPM before power enrichment will enable. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Power Enrichment Minimum RPM Hysteresis",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": 0.0,
+      "param_id": 2412,
+      "category": "Engine",
+      "note": "Hysteresis applied to the minimum RPM, below which power enrichment will disable. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Power Enrich Throttle Bypass Delay",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": 0.0,
+      "param_id": 2425,
+      "category": "Engine",
+      "note": "If the movement rate for the delay timer is higher than the P.E mode check, the delay timer is bypassed. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Power Enrich Speed Bypass Delay",
+      "value": 19.9,
+      "unit": "mph",
+      "stock_value": 19.9,
+      "param_id": 2426,
+      "category": "Engine",
+      "note": "If vehicle speed is below a certain value, the delay timer is bypassed. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 19.9,
+          "tune24": 19.9
+        }
+      }
+    },
+    {
+      "name": "CFCO Enable RPM",
+      "value": 1200.0,
+      "unit": "rpm",
+      "stock_value": 1200.0,
+      "param_id": 2298,
+      "category": "Engine",
+      "note": "RPM must be above this value to enable CFCO. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 1200.0,
+          "tune24": 500.0
+        }
+      }
+    },
+    {
+      "name": "CFCO Enable ECT",
+      "value": 55.0,
+      "unit": "\u00b0F",
+      "stock_value": 55.0,
+      "param_id": 2299,
+      "category": "Engine",
+      "note": "ECT must be above this value to enable CFCO. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 55.0,
+          "tune24": 122.0
+        }
+      }
+    },
+    {
+      "name": "Transient Fuel MAP Filter",
+      "value": 0.25,
+      "unit": "",
+      "stock_value": 0.25,
+      "param_id": 2279,
+      "category": "Engine",
+      "note": "Filter coefficient for the filtered MAP calculation. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.25,
+          "tune24": 0.25
+        }
+      }
+    },
+    {
+      "name": "Transient Fuel Enable Delay",
+      "value": 100.0,
+      "unit": "",
+      "stock_value": 100.0,
+      "param_id": 2287,
+      "category": "Engine",
+      "note": "Transient fuel will not enable until this many crank reference pulses are detected. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 100.0,
+          "tune24": 100.0
+        }
+      }
+    },
+    {
+      "name": "Transient Fuel Delta MAP",
+      "value": 2.0,
+      "unit": "kPa",
+      "stock_value": 2.0,
+      "param_id": 2288,
+      "category": "Engine",
+      "note": "Filtered MAP change required for transient fuel calculations. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 2.0,
+          "tune24": 2.0
+        }
+      }
+    },
+    {
+      "name": "Transient Fuel Delta TPS",
+      "value": 1.0,
+      "unit": "%",
+      "stock_value": 1.0,
+      "param_id": 2289,
+      "category": "Engine",
+      "note": "TPS change required for transient fuel calculations. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 1.0,
+          "tune24": 1.0
+        }
+      }
+    },
+    {
       "name": "Maximum Ethanol Percentage",
       "value": 80.000313,
       "unit": "%",
@@ -242,6 +990,193 @@
       }
     },
     {
+      "name": "Composition Change Threshold",
+      "value": 0.0,
+      "unit": "%",
+      "stock_value": 0.0,
+      "param_id": 3146,
+      "category": "Engine",
+      "note": "Minimum composition change to update flex fuel composition. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Bidir Retard Max",
+      "value": 10.0,
+      "unit": "\u00b0",
+      "stock_value": 10.0,
+      "param_id": 2786,
+      "category": "Engine",
+      "note": "Maximum allowed retard when using bidirectional scanner VCM controls. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.0,
+          "tune24": 10.0
+        }
+      }
+    },
+    {
+      "name": "Knock Retard Disable Time",
+      "value": 0.0,
+      "unit": "",
+      "stock_value": 0.0,
+      "param_id": 2740,
+      "category": "Engine",
+      "note": "Knock retard will be disabled for this many crank refernce pulses when burst knock is active. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Knock Retard Max Step",
+      "value": 6.0,
+      "unit": "\u00b0",
+      "stock_value": 6.0,
+      "param_id": 2736,
+      "category": "Engine",
+      "note": "Maximum change in knock retard per crank reference pulse. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 6.0,
+          "tune24": 6.0
+        }
+      }
+    },
+    {
+      "name": "Knock Learn Min MAP",
+      "value": 35.0,
+      "unit": "kPa",
+      "stock_value": 35.0,
+      "param_id": 2700,
+      "category": "Engine",
+      "note": "MAP must be above this to enable knock learn. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 35.0,
+          "tune24": 35.0
+        }
+      }
+    },
+    {
+      "name": "Knock Learn Min IAT",
+      "value": -40.0,
+      "unit": "\u00b0F",
+      "stock_value": -40.0,
+      "param_id": 2706,
+      "category": "Engine",
+      "note": "Inlet air temperature must be above this to enable knock learn. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": -40.0,
+          "tune24": -40.0
+        }
+      }
+    },
+    {
+      "name": "Knock Learn Min RPM",
+      "value": 400.0,
+      "unit": "rpm",
+      "stock_value": 400.0,
+      "param_id": 2703,
+      "category": "Engine",
+      "note": "RPM must be above this to enable knock learn. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 400.0,
+          "tune24": 400.0
+        }
+      }
+    },
+    {
+      "name": "Knock Sensor Transient Mode RPM Decrease",
+      "value": -200.0,
+      "unit": "rpm",
+      "stock_value": -200.0,
+      "param_id": 2959,
+      "category": "Engine",
+      "note": "Minimum RPM decrease required for knock sensor transient operation. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": -200.0,
+          "tune24": -200.0
+        }
+      }
+    },
+    {
+      "name": "Knock Sensor Transient Mode RPM Increase",
+      "value": 120.0,
+      "unit": "rpm",
+      "stock_value": 120.0,
+      "param_id": 2960,
+      "category": "Engine",
+      "note": "Minimum RPM increase required for knock sensor transient operation. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 120.0,
+          "tune24": 120.0
+        }
+      }
+    },
+    {
+      "name": "Knock Sensor Transient Mode TPS Decrease",
+      "value": -10.0,
+      "unit": "%",
+      "stock_value": -10.0,
+      "param_id": 2961,
+      "category": "Engine",
+      "note": "Minimum TPS decrease required for knock sensor transient operation. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": -10.0,
+          "tune24": -10.0
+        }
+      }
+    },
+    {
+      "name": "Knock Sensor Transient Mode TPS Increase",
+      "value": 5.0,
+      "unit": "%",
+      "stock_value": 5.0,
+      "param_id": 2962,
+      "category": "Engine",
+      "note": "Minimum TPS increase required for knock sensor transient operation. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 5.0,
+          "tune24": 5.0
+        }
+      }
+    },
+    {
       "name": "Torque Loss Runtime",
       "value": 0.5,
       "unit": "s",
@@ -255,6 +1190,57 @@
         "candidates": {
           "stock": 0.5,
           "tune24": 0.5
+        }
+      }
+    },
+    {
+      "name": "Oil Press Warning Delay",
+      "value": 15.0,
+      "unit": "s",
+      "stock_value": 15.0,
+      "param_id": 4152,
+      "category": "Engine Diagnostics",
+      "note": "The delay for the oil pressure warning to occur after oil pressure has been determined to be low. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 15.0,
+          "tune24": 15.0
+        }
+      }
+    },
+    {
+      "name": "Oil Temperature High",
+      "value": 493.0,
+      "unit": "\u00b0F",
+      "stock_value": 493.0,
+      "param_id": 4160,
+      "category": "Engine Diagnostics",
+      "note": "Oil temperature high warning level. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 493.0,
+          "tune24": 493.0
+        }
+      }
+    },
+    {
+      "name": "Oil Temperature High Hyst",
+      "value": 50.0,
+      "unit": "\u00b0F",
+      "stock_value": 50.0,
+      "param_id": 4161,
+      "category": "Engine Diagnostics",
+      "note": "Oil temperature high warning hysteresis value. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 50.0,
+          "tune24": 50.0
         }
       }
     },
@@ -289,6 +1275,261 @@
         "candidates": {
           "stock": 15.0,
           "tune24": 15.0
+        }
+      }
+    },
+    {
+      "name": "Downstream Lean Thresh",
+      "value": 300.0,
+      "unit": "mV",
+      "stock_value": 300.0,
+      "param_id": 45683,
+      "category": "Engine Diagnostics",
+      "note": "Below this threshold O2 sensor values will be considered lean for post catalyst. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 300.0,
+          "tune24": 300.0
+        }
+      }
+    },
+    {
+      "name": "Downstream Rich Thresh",
+      "value": 600.0,
+      "unit": "mV",
+      "stock_value": 600.0,
+      "param_id": 45684,
+      "category": "Engine Diagnostics",
+      "note": "Above this threshold O2 sensor values will be considered rich for post catalyst. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 600.0,
+          "tune24": 600.0
+        }
+      }
+    },
+    {
+      "name": "Maximum Clutch Pressure",
+      "value": 1500.0,
+      "unit": "kPa",
+      "stock_value": 1500.0,
+      "param_id": 5102,
+      "category": "Transmission",
+      "note": "Clutch pressure maximum value, in some cases this value may be calibrated as actual line pressure after the regulator gain has been applied. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 1500.0,
+          "tune24": 1500.0
+        }
+      }
+    },
+    {
+      "name": "Shift Adapt Preset Volume 2-3 Oncoming",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": 24.0,
+      "param_id": 5251,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 2-3 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 24.0,
+          "tune24": 24.0
+        }
+      }
+    },
+    {
+      "name": "Shift Adapt Preset Volume 3-4 Oncoming",
+      "value": 31.0,
+      "unit": "",
+      "stock_value": 31.0,
+      "param_id": 5252,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 3-4 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 31.0,
+          "tune24": 31.0
+        }
+      }
+    },
+    {
+      "name": "Shift Adapt Preset Volume 4-5 Oncoming",
+      "value": 24.0,
+      "unit": "",
+      "stock_value": 24.0,
+      "param_id": 5253,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 4-5 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 24.0,
+          "tune24": 24.0
+        }
+      }
+    },
+    {
+      "name": "Shift Adapt Preset Volume 5-6 Oncoming",
+      "value": 50.0,
+      "unit": "",
+      "stock_value": 50.0,
+      "param_id": 5254,
+      "category": "Transmission",
+      "note": "Oncoming clutch adapt volume preset for 5-6 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 50.0,
+          "tune24": 50.0
+        }
+      }
+    },
+    {
+      "name": "Shift Max Adapt Volume 2-3",
+      "value": 40.0,
+      "unit": "",
+      "stock_value": 40.0,
+      "param_id": 5221,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 2-3 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 40.0,
+          "tune24": 40.0
+        }
+      }
+    },
+    {
+      "name": "Shift Max Adapt Volume 3-4",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": 200.0,
+      "param_id": 5222,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 3-4 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 200.0,
+          "tune24": 200.0
+        }
+      }
+    },
+    {
+      "name": "Shift Max Adapt Volume 4-5",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": 200.0,
+      "param_id": 5223,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 4-5 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 200.0,
+          "tune24": 200.0
+        }
+      }
+    },
+    {
+      "name": "Shift Max Adapt Volume 5-6",
+      "value": 200.0,
+      "unit": "",
+      "stock_value": 200.0,
+      "param_id": 5224,
+      "category": "Transmission",
+      "note": "Maximum clutch adapt volume for 5-6 shift. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 200.0,
+          "tune24": 200.0
+        }
+      }
+    },
+    {
+      "name": "TCC Pressure Regulator Gain",
+      "value": 1.5,
+      "unit": "",
+      "stock_value": 1.5,
+      "param_id": 5670,
+      "category": "Transmission",
+      "note": "The gain of the TCC pressure regulator valve. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 1.5,
+          "tune24": 1.5
+        }
+      }
+    },
+    {
+      "name": "TCC Pressure Regulator Offset",
+      "value": 184.0,
+      "unit": "kPa",
+      "stock_value": 184.0,
+      "param_id": 5671,
+      "category": "Transmission",
+      "note": "The offset of the TCC pressure regulator valve. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 184.0,
+          "tune24": 184.0
+        }
+      }
+    },
+    {
+      "name": "TCC Adapt Pressure Min",
+      "value": -150.0,
+      "unit": "kPa",
+      "stock_value": -150.0,
+      "param_id": 5660,
+      "category": "Transmission",
+      "note": "TCC Adapt Pressure Lower Limit. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": -150.0,
+          "tune24": -150.0
+        }
+      }
+    },
+    {
+      "name": "TCC Adapt Pressure Max",
+      "value": 150.0,
+      "unit": "kPa",
+      "stock_value": 150.0,
+      "param_id": 5661,
+      "category": "Transmission",
+      "note": "TCC Adapt Pressure Upper Limit. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 150.0,
+          "tune24": 150.0
         }
       }
     },
@@ -361,6 +1602,125 @@
       }
     },
     {
+      "name": "Hot Fuel Pressure Transition Rate",
+      "value": 0.0,
+      "unit": "kPa",
+      "stock_value": 0.0,
+      "param_id": 7026,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the hot fuel pressure. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "Cranking Pressure Transition Rate",
+      "value": 5.0,
+      "unit": "kPa",
+      "stock_value": 5.0,
+      "param_id": 7020,
+      "category": "Fuel System",
+      "note": "The rate of change from the current fuel pressure to the cranking fuel pressure. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 5.0,
+          "tune24": 5.0
+        }
+      }
+    },
+    {
+      "name": "Primary Fuel Tank Capacity",
+      "value": 270.51,
+      "unit": "gal",
+      "stock_value": 270.51,
+      "param_id": 7002,
+      "category": "Fuel System",
+      "note": "Maximum capacity of the primary fuel tank. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 270.51,
+          "tune24": 270.51
+        }
+      }
+    },
+    {
+      "name": "Fuel Tank Sender Max %",
+      "value": 60.0,
+      "unit": "%",
+      "stock_value": 60.0,
+      "param_id": 7004,
+      "category": "Fuel System",
+      "note": "Maximum allowed percentage for the fuel tank sender input. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 60.0,
+          "tune24": 60.0
+        }
+      }
+    },
+    {
+      "name": "Fuel Tank Sender Min %",
+      "value": 10.0,
+      "unit": "%",
+      "stock_value": 10.0,
+      "param_id": 7005,
+      "category": "Fuel System",
+      "note": "Minimum allowed percentage for the fuel tank sender input. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.0,
+          "tune24": 10.0
+        }
+      }
+    },
+    {
+      "name": "Airflow System Minimum Voltage",
+      "value": 12.0,
+      "unit": "V",
+      "stock_value": 12.0,
+      "param_id": 8142,
+      "category": "System",
+      "note": "Minimum system voltage required by airflow system. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 12.0,
+          "tune24": 12.0
+        }
+      }
+    },
+    {
+      "name": "Diagnostic System Voltage Delay",
+      "value": 5.0,
+      "unit": "s",
+      "stock_value": 5.0,
+      "param_id": 8144,
+      "category": "System",
+      "note": "Startup delay before Diagnostic Boost Voltage can be requested. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 5.0,
+          "tune24": 5.0
+        }
+      }
+    },
+    {
       "name": "Number of Fans Fitted",
       "value": 2.0,
       "unit": "",
@@ -408,6 +1768,108 @@
         "candidates": {
           "stock": 241.0,
           "tune24": 241.0
+        }
+      }
+    },
+    {
+      "name": "Intercooler Pump ERT Min",
+      "value": 10.0,
+      "unit": "s",
+      "stock_value": 10.0,
+      "param_id": 2946,
+      "category": "System",
+      "note": "Minimum engine run time to enable intercooler pump. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 10.0,
+          "tune24": 10.0
+        }
+      }
+    },
+    {
+      "name": "Intercooler Pump IAT Min",
+      "value": 32.0,
+      "unit": "\u00b0F",
+      "stock_value": 32.0,
+      "param_id": 2947,
+      "category": "System",
+      "note": "Below this IAT the intercooler pump will be disabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 32.0,
+          "tune24": 32.0
+        }
+      }
+    },
+    {
+      "name": "Intercooler Pump MAT Min",
+      "value": 50.0,
+      "unit": "\u00b0F",
+      "stock_value": 50.0,
+      "param_id": 2948,
+      "category": "System",
+      "note": "Below this MAT (IAT2) the intercooler pump will be disabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 50.0,
+          "tune24": 50.0
+        }
+      }
+    },
+    {
+      "name": "A/C Re-Enable RPM",
+      "value": 0.0,
+      "unit": "rpm",
+      "stock_value": 0.0,
+      "param_id": 8020,
+      "category": "System",
+      "note": "If Disabled, RPM at which the A/C system will be re-enabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 0.0,
+          "tune24": 0.0
+        }
+      }
+    },
+    {
+      "name": "A/C Disable TPS",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": 100.0,
+      "param_id": 8023,
+      "category": "System",
+      "note": "Throttle Position at which the A/C system will be disabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 100.0,
+          "tune24": 100.0
+        }
+      }
+    },
+    {
+      "name": "A/C Re-Enable TPS",
+      "value": 100.0,
+      "unit": "%",
+      "stock_value": 100.0,
+      "param_id": 8022,
+      "category": "System",
+      "note": "If disabled, Throttle Position at which the A/C system will be re-enabled. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 100.0,
+          "tune24": 100.0
         }
       }
     },
@@ -604,38 +2066,6 @@
       }
     },
     {
-      "name": "Supercharger Cam Min Angle",
-      "value": 3.0,
-      "unit": "\u00b0",
-      "stock_value": null,
-      "param_id": 2971,
-      "category": "Engine",
-      "note": "Minimum camshaft angle for Cam Phaser boost limit. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 3.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger Cam Min TPS",
-      "value": 50.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2972,
-      "category": "Engine",
-      "note": "Minimum throttle for Cam Phaser boost limit. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 50.0
-        }
-      }
-    },
-    {
       "name": "Supercharger Cam Max Boost %",
       "value": 25.0,
       "unit": "%",
@@ -664,102 +2094,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 100.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger MAP Disable",
-      "value": 180.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 2980,
-      "category": "Engine",
-      "note": "Above this MAP boost control will be disbaled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 180.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger MAP Enable",
-      "value": 140.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 2981,
-      "category": "Engine",
-      "note": "MAP must be below this to enable boost control. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 140.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger Boost Disable VSS Min",
-      "value": 318.0,
-      "unit": "mph",
-      "stock_value": null,
-      "param_id": 2941,
-      "category": "Engine",
-      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 318.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger Boost Disable TPS Max",
-      "value": 1.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2942,
-      "category": "Engine",
-      "note": "If VSS is greater than VSS Min and TPS is less than TPS Max then boost will be disabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 1.0
-        }
-      }
-    },
-    {
-      "name": "Supercharger Boost Ramp",
-      "value": 0.5,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 2943,
-      "category": "Engine",
-      "note": "Boost will ramp in at this rate when re-enabled, lower numbers mean slower ramp in. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.5
-        }
-      }
-    },
-    {
-      "name": "Supercharger Boost Int Gain",
-      "value": 0.125,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 2945,
-      "category": "Engine",
-      "note": "Integral gain for boost control. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.125
         }
       }
     },
@@ -856,22 +2190,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 0.2
-        }
-      }
-    },
-    {
-      "name": "Min RPM Reference",
-      "value": 525.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 13540,
-      "category": "Engine",
-      "note": "Minimum allowed current RPM reference in idle mode. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 525.0
         }
       }
     },
@@ -1036,86 +2354,6 @@
       }
     },
     {
-      "name": "Fan Med On Airflow",
-      "value": 2.4,
-      "unit": "lb/h",
-      "stock_value": null,
-      "param_id": 2145,
-      "category": "Engine",
-      "note": "Airflow adder for when medium speed fan transitions to active. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 2.4
-        }
-      }
-    },
-    {
-      "name": "Fan Hi On Airflow",
-      "value": 4.8,
-      "unit": "lb/h",
-      "stock_value": null,
-      "param_id": 2146,
-      "category": "Engine",
-      "note": "Airflow adder for when high speed fan transitions to active. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 4.8
-        }
-      }
-    },
-    {
-      "name": "Fan Low Off Airflow",
-      "value": 0.0,
-      "unit": "lb/h",
-      "stock_value": null,
-      "param_id": 2147,
-      "category": "Engine",
-      "note": "Airflow subtractor for when low speed fan transitions to off. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Fan Med Off Airflow",
-      "value": 0.0,
-      "unit": "lb/h",
-      "stock_value": null,
-      "param_id": 2148,
-      "category": "Engine",
-      "note": "Airflow subtractor for when medium speed fan transitions to off. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Fan Hi Off Airflow",
-      "value": 2.0,
-      "unit": "lb/h",
-      "stock_value": null,
-      "param_id": 2149,
-      "category": "Engine",
-      "note": "Airflow subtractor for when high speed fan transitions to off. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 2.0
-        }
-      }
-    },
-    {
       "name": "MAF Steady State Stepdown",
       "value": 1.0,
       "unit": "",
@@ -1224,22 +2462,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 84.0
-        }
-      }
-    },
-    {
-      "name": "Dynamic Airflow High RPM Re-Enable",
-      "value": 3900.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 3033,
-      "category": "Engine",
-      "note": "If enabled, RPM must drop below this to re-enable airmass prediction calculations. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 3900.0
         }
       }
     },
@@ -1368,102 +2590,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 0.003799
-        }
-      }
-    },
-    {
-      "name": "Low Baro Threshold",
-      "value": 75.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 3250,
-      "category": "Engine",
-      "note": "Variable camshaft Low Barometric pressure threshold. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 75.0
-        }
-      }
-    },
-    {
-      "name": "Med Baro Threshold",
-      "value": 84.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 3251,
-      "category": "Engine",
-      "note": "Variable camshaft Medium Barometric pressure threshold. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 84.0
-        }
-      }
-    },
-    {
-      "name": "High Baro Threshold",
-      "value": 94.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 3252,
-      "category": "Engine",
-      "note": "Variable camshaft High Barometric pressure threshold. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 94.0
-        }
-      }
-    },
-    {
-      "name": "Cold Start Enable Delay",
-      "value": 4.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 3274,
-      "category": "Engine",
-      "note": "Engine must be running longer than this time to enable variable camshaft during cold start. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 4.0
-        }
-      }
-    },
-    {
-      "name": "Cold Start Enable RPM",
-      "value": 8000.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 3272,
-      "category": "Engine",
-      "note": "Above this RPM variable camshaft will enable during cold start. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 8000.0
-        }
-      }
-    },
-    {
-      "name": "Cold Start Disable RPM",
-      "value": 7000.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 3273,
-      "category": "Engine",
-      "note": "Below this RPM variable camshaft will disable during cold start. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 7000.0
         }
       }
     },
@@ -1644,38 +2770,6 @@
       }
     },
     {
-      "name": "Supercharger Inlet Air Pressure Sensor Offset",
-      "value": 10.34,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 4014,
-      "category": "Engine",
-      "note": "The offset calibration of the Supercharger Inlet Pressure sensor. ie. MAP (kPa) at 0V. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.34
-        }
-      }
-    },
-    {
-      "name": "Flood Clear Enable TPS",
-      "value": 85.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2330,
-      "category": "Engine",
-      "note": "If throttle position is greater than this value then fuel is cut during cranking. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 85.0
-        }
-      }
-    },
-    {
       "name": "Flood Clear Disable TPS",
       "value": 80.0,
       "unit": "%",
@@ -1692,38 +2786,6 @@
       }
     },
     {
-      "name": "Minimum Rail Pressure",
-      "value": 275.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 13541,
-      "category": "Engine",
-      "note": "Minimum expected fuel rail pressure used in injector control calculations. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 275.0
-        }
-      }
-    },
-    {
-      "name": "Maximum Rail Pressure",
-      "value": 640.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 13542,
-      "category": "Engine",
-      "note": "Maximum expected fuel rail pressure used in injector control calculations. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 640.0
-        }
-      }
-    },
-    {
       "name": "Short Pulse Cranking",
       "value": 4.0,
       "unit": "ms",
@@ -1736,38 +2798,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 4.0
-        }
-      }
-    },
-    {
-      "name": "O2 Sensor Upper Limit",
-      "value": 550.0,
-      "unit": "mV",
-      "stock_value": null,
-      "param_id": 45011,
-      "category": "Engine",
-      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is below the provided voltage level. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 550.0
-        }
-      }
-    },
-    {
-      "name": "O2 Sensor Lower Limit",
-      "value": 350.0,
-      "unit": "mV",
-      "stock_value": null,
-      "param_id": 45013,
-      "category": "Engine",
-      "note": "Indicates when the O2 sensor is ready for Open Loop if the sensor is above the provided voltage level. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 350.0
         }
       }
     },
@@ -1868,70 +2898,6 @@
       }
     },
     {
-      "name": "LTFT Idle Cells Enable TPS",
-      "value": 0.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2511,
-      "category": "Engine",
-      "note": "LTFT idle cells will be used below this throttle position. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "LTFT Idle Cells Disable TPS",
-      "value": 0.6,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2512,
-      "category": "Engine",
-      "note": "LTFT idle cells will be disabled above this throttle position. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.6
-        }
-      }
-    },
-    {
-      "name": "LTFT Idle Cells Enable VSS",
-      "value": 2.5,
-      "unit": "mph",
-      "stock_value": null,
-      "param_id": 2513,
-      "category": "Engine",
-      "note": "LTFT idle cells will be used below this vehicle speed. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 2.5
-        }
-      }
-    },
-    {
-      "name": "LTFT Idle Cells Disable VSS",
-      "value": 3.7,
-      "unit": "mph",
-      "stock_value": null,
-      "param_id": 2514,
-      "category": "Engine",
-      "note": "LTFT idle cells will be disabled above this vehicle speed. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 3.7
-        }
-      }
-    },
-    {
       "name": "O2 Sensor Rich/Lean Min",
       "value": 450.0,
       "unit": "mV",
@@ -1960,38 +2926,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 450.0
-        }
-      }
-    },
-    {
-      "name": "O2 Sensor Not Ready Timer",
-      "value": 10.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 2532,
-      "category": "Engine",
-      "note": "If the O2 voltage is out of range for this period, oxygen sensors are considered not ready. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.0
-        }
-      }
-    },
-    {
-      "name": "O2 Sensor Ready Timer",
-      "value": 10.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 24991,
-      "category": "Engine",
-      "note": "ECM determines if the O2 sensors are ready for the closed loop. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.0
         }
       }
     },
@@ -2076,54 +3010,6 @@
       }
     },
     {
-      "name": "Power Enrichment Minimum MAP Hysteresis",
-      "value": 0.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 2403,
-      "category": "Engine",
-      "note": "Hysteresis applied to the minimum MAP, below which power enrichment will disable. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Power Enrichment Minimum RPM",
-      "value": 0.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2411,
-      "category": "Engine",
-      "note": "The minimum RPM before power enrichment will enable. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Power Enrichment Minimum RPM Hysteresis",
-      "value": 0.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2412,
-      "category": "Engine",
-      "note": "Hysteresis applied to the minimum RPM, below which power enrichment will disable. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
       "name": "Power Enrichment Mode Throttle",
       "value": 0.5,
       "unit": "%",
@@ -2136,38 +3022,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 0.5
-        }
-      }
-    },
-    {
-      "name": "Power Enrich Throttle Bypass Delay",
-      "value": 0.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2425,
-      "category": "Engine",
-      "note": "If the movement rate for the delay timer is higher than the P.E mode check, the delay timer is bypassed. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Power Enrich Speed Bypass Delay",
-      "value": 19.9,
-      "unit": "mph",
-      "stock_value": null,
-      "param_id": 2426,
-      "category": "Engine",
-      "note": "If vehicle speed is below a certain value, the delay timer is bypassed. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 19.9
         }
       }
     },
@@ -2428,38 +3282,6 @@
       }
     },
     {
-      "name": "CFCO Enable RPM",
-      "value": 500.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2298,
-      "category": "Engine",
-      "note": "RPM must be above this value to enable CFCO. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 500.0
-        }
-      }
-    },
-    {
-      "name": "CFCO Enable ECT",
-      "value": 122.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 2299,
-      "category": "Engine",
-      "note": "ECT must be above this value to enable CFCO. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 122.0
-        }
-      }
-    },
-    {
       "name": "DoD Enable ERT",
       "value": 30.0,
       "unit": "s",
@@ -2636,70 +3458,6 @@
       }
     },
     {
-      "name": "Transient Fuel MAP Filter",
-      "value": 0.25,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 2279,
-      "category": "Engine",
-      "note": "Filter coefficient for the filtered MAP calculation. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.25
-        }
-      }
-    },
-    {
-      "name": "Transient Fuel Enable Delay",
-      "value": 100.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 2287,
-      "category": "Engine",
-      "note": "Transient fuel will not enable until this many crank reference pulses are detected. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 100.0
-        }
-      }
-    },
-    {
-      "name": "Transient Fuel Delta MAP",
-      "value": 2.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 2288,
-      "category": "Engine",
-      "note": "Filtered MAP change required for transient fuel calculations. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 2.0
-        }
-      }
-    },
-    {
-      "name": "Transient Fuel Delta TPS",
-      "value": 1.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2289,
-      "category": "Engine",
-      "note": "TPS change required for transient fuel calculations. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 1.0
-        }
-      }
-    },
-    {
       "name": "Fuel Delta Min Increase",
       "value": 0.0625,
       "unit": "",
@@ -2728,22 +3486,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 2048.0
-        }
-      }
-    },
-    {
-      "name": "Composition Change Threshold",
-      "value": 0.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 3146,
-      "category": "Engine",
-      "note": "Minimum composition change to update flex fuel composition. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
         }
       }
     },
@@ -2828,54 +3570,6 @@
       }
     },
     {
-      "name": "Bidir Retard Max",
-      "value": 10.0,
-      "unit": "\u00b0",
-      "stock_value": null,
-      "param_id": 2786,
-      "category": "Engine",
-      "note": "Maximum allowed retard when using bidirectional scanner VCM controls. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.0
-        }
-      }
-    },
-    {
-      "name": "Knock Retard Disable Time",
-      "value": 0.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 2740,
-      "category": "Engine",
-      "note": "Knock retard will be disabled for this many crank refernce pulses when burst knock is active. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Knock Retard Max Step",
-      "value": 6.0,
-      "unit": "\u00b0",
-      "stock_value": null,
-      "param_id": 2736,
-      "category": "Engine",
-      "note": "Maximum change in knock retard per crank reference pulse. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 6.0
-        }
-      }
-    },
-    {
       "name": "Knock Retard Maximum RPM",
       "value": 8000.0,
       "unit": "rpm",
@@ -2936,54 +3630,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 2.0
-        }
-      }
-    },
-    {
-      "name": "Knock Learn Min MAP",
-      "value": 35.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 2700,
-      "category": "Engine",
-      "note": "MAP must be above this to enable knock learn. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 35.0
-        }
-      }
-    },
-    {
-      "name": "Knock Learn Min IAT",
-      "value": -40.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 2706,
-      "category": "Engine",
-      "note": "Inlet air temperature must be above this to enable knock learn. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": -40.0
-        }
-      }
-    },
-    {
-      "name": "Knock Learn Min RPM",
-      "value": 400.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2703,
-      "category": "Engine",
-      "note": "RPM must be above this to enable knock learn. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 400.0
         }
       }
     },
@@ -3176,70 +3822,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 0.02
-        }
-      }
-    },
-    {
-      "name": "Knock Sensor Transient Mode RPM Decrease",
-      "value": -200.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2959,
-      "category": "Engine",
-      "note": "Minimum RPM decrease required for knock sensor transient operation. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": -200.0
-        }
-      }
-    },
-    {
-      "name": "Knock Sensor Transient Mode RPM Increase",
-      "value": 120.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 2960,
-      "category": "Engine",
-      "note": "Minimum RPM increase required for knock sensor transient operation. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 120.0
-        }
-      }
-    },
-    {
-      "name": "Knock Sensor Transient Mode TPS Decrease",
-      "value": -10.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2961,
-      "category": "Engine",
-      "note": "Minimum TPS decrease required for knock sensor transient operation. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": -10.0
-        }
-      }
-    },
-    {
-      "name": "Knock Sensor Transient Mode TPS Increase",
-      "value": 5.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 2962,
-      "category": "Engine",
-      "note": "Minimum TPS increase required for knock sensor transient operation. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 5.0
         }
       }
     },
@@ -3596,54 +4178,6 @@
       }
     },
     {
-      "name": "Oil Press Warning Delay",
-      "value": 15.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 4152,
-      "category": "Engine Diagnostics",
-      "note": "The delay for the oil pressure warning to occur after oil pressure has been determined to be low. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 15.0
-        }
-      }
-    },
-    {
-      "name": "Oil Temperature High",
-      "value": 493.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 4160,
-      "category": "Engine Diagnostics",
-      "note": "Oil temperature high warning level. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 493.0
-        }
-      }
-    },
-    {
-      "name": "Oil Temperature High Hyst",
-      "value": 50.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 4161,
-      "category": "Engine Diagnostics",
-      "note": "Oil temperature high warning hysteresis value. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 50.0
-        }
-      }
-    },
-    {
       "name": "MAF Freq Test ERT Min",
       "value": 1.0,
       "unit": "s",
@@ -3779,38 +4313,6 @@
       "param_id": 45682,
       "category": "Engine Diagnostics",
       "note": "Above this threshold O2 sensor values will be considered rich for pre catalyst. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 600.0
-        }
-      }
-    },
-    {
-      "name": "Downstream Lean Thresh",
-      "value": 300.0,
-      "unit": "mV",
-      "stock_value": null,
-      "param_id": 45683,
-      "category": "Engine Diagnostics",
-      "note": "Below this threshold O2 sensor values will be considered lean for post catalyst. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 300.0
-        }
-      }
-    },
-    {
-      "name": "Downstream Rich Thresh",
-      "value": 600.0,
-      "unit": "mV",
-      "stock_value": null,
-      "param_id": 45684,
-      "category": "Engine Diagnostics",
-      "note": "Above this threshold O2 sensor values will be considered rich for post catalyst. [coalesced: tune24]",
       "provenance": {
         "source": "tune24",
         "rule": "priority:tune24",
@@ -4268,86 +4770,6 @@
       }
     },
     {
-      "name": "Maximum Clutch Pressure",
-      "value": 1500.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 5102,
-      "category": "Transmission",
-      "note": "Clutch pressure maximum value, in some cases this value may be calibrated as actual line pressure after the regulator gain has been applied. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 1500.0
-        }
-      }
-    },
-    {
-      "name": "Shift Adapt Preset Volume 2-3 Oncoming",
-      "value": 24.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5251,
-      "category": "Transmission",
-      "note": "Oncoming clutch adapt volume preset for 2-3 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 24.0
-        }
-      }
-    },
-    {
-      "name": "Shift Adapt Preset Volume 3-4 Oncoming",
-      "value": 31.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5252,
-      "category": "Transmission",
-      "note": "Oncoming clutch adapt volume preset for 3-4 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 31.0
-        }
-      }
-    },
-    {
-      "name": "Shift Adapt Preset Volume 4-5 Oncoming",
-      "value": 24.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5253,
-      "category": "Transmission",
-      "note": "Oncoming clutch adapt volume preset for 4-5 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 24.0
-        }
-      }
-    },
-    {
-      "name": "Shift Adapt Preset Volume 5-6 Oncoming",
-      "value": 50.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5254,
-      "category": "Transmission",
-      "note": "Oncoming clutch adapt volume preset for 5-6 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 50.0
-        }
-      }
-    },
-    {
       "name": "Shift Adapt Preset Volume 1-2 Oncoming Special",
       "value": 55.0,
       "unit": "",
@@ -4584,70 +5006,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 1023.969
-        }
-      }
-    },
-    {
-      "name": "Shift Max Adapt Volume 2-3",
-      "value": 40.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5221,
-      "category": "Transmission",
-      "note": "Maximum clutch adapt volume for 2-3 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 40.0
-        }
-      }
-    },
-    {
-      "name": "Shift Max Adapt Volume 3-4",
-      "value": 200.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5222,
-      "category": "Transmission",
-      "note": "Maximum clutch adapt volume for 3-4 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 200.0
-        }
-      }
-    },
-    {
-      "name": "Shift Max Adapt Volume 4-5",
-      "value": 200.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5223,
-      "category": "Transmission",
-      "note": "Maximum clutch adapt volume for 4-5 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 200.0
-        }
-      }
-    },
-    {
-      "name": "Shift Max Adapt Volume 5-6",
-      "value": 200.0,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5224,
-      "category": "Transmission",
-      "note": "Maximum clutch adapt volume for 5-6 shift. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 200.0
         }
       }
     },
@@ -5084,38 +5442,6 @@
       }
     },
     {
-      "name": "TCC Pressure Regulator Gain",
-      "value": 1.5,
-      "unit": "",
-      "stock_value": null,
-      "param_id": 5670,
-      "category": "Transmission",
-      "note": "The gain of the TCC pressure regulator valve. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 1.5
-        }
-      }
-    },
-    {
-      "name": "TCC Pressure Regulator Offset",
-      "value": 184.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 5671,
-      "category": "Transmission",
-      "note": "The offset of the TCC pressure regulator valve. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 184.0
-        }
-      }
-    },
-    {
       "name": "TCC Desired Slip Min AC On",
       "value": 0.0,
       "unit": "rpm",
@@ -5272,38 +5598,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 318.0
-        }
-      }
-    },
-    {
-      "name": "TCC Adapt Pressure Min",
-      "value": -150.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 5660,
-      "category": "Transmission",
-      "note": "TCC Adapt Pressure Lower Limit. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": -150.0
-        }
-      }
-    },
-    {
-      "name": "TCC Adapt Pressure Max",
-      "value": 150.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 5661,
-      "category": "Transmission",
-      "note": "TCC Adapt Pressure Upper Limit. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 150.0
         }
       }
     },
@@ -5484,22 +5778,6 @@
       }
     },
     {
-      "name": "Hot Fuel Pressure Transition Rate",
-      "value": 0.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 7026,
-      "category": "Fuel System",
-      "note": "The rate of change from the current fuel pressure to the hot fuel pressure. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
       "name": "Default Pressure Transition Rate",
       "value": 100.0,
       "unit": "kPa",
@@ -5512,22 +5790,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 100.0
-        }
-      }
-    },
-    {
-      "name": "Cranking Pressure Transition Rate",
-      "value": 5.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 7020,
-      "category": "Fuel System",
-      "note": "The rate of change from the current fuel pressure to the cranking fuel pressure. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 5.0
         }
       }
     },
@@ -5564,22 +5826,6 @@
       }
     },
     {
-      "name": "Primary Fuel Tank Capacity",
-      "value": 270.51,
-      "unit": "gal",
-      "stock_value": null,
-      "param_id": 7002,
-      "category": "Fuel System",
-      "note": "Maximum capacity of the primary fuel tank. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 270.51
-        }
-      }
-    },
-    {
       "name": "Fuel Tank Primary Capacity Gauge",
       "value": 26.15,
       "unit": "gal",
@@ -5592,38 +5838,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 26.15
-        }
-      }
-    },
-    {
-      "name": "Fuel Tank Sender Max %",
-      "value": 60.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 7004,
-      "category": "Fuel System",
-      "note": "Maximum allowed percentage for the fuel tank sender input. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 60.0
-        }
-      }
-    },
-    {
-      "name": "Fuel Tank Sender Min %",
-      "value": 10.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 7005,
-      "category": "Fuel System",
-      "note": "Minimum allowed percentage for the fuel tank sender input. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.0
         }
       }
     },
@@ -5747,38 +5961,6 @@
       "param_id": 8141,
       "category": "System",
       "note": "Startup delay before Minimum Fuel System Voltage will be requested. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 5.0
-        }
-      }
-    },
-    {
-      "name": "Airflow System Minimum Voltage",
-      "value": 12.0,
-      "unit": "V",
-      "stock_value": null,
-      "param_id": 8142,
-      "category": "System",
-      "note": "Minimum system voltage required by airflow system. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 12.0
-        }
-      }
-    },
-    {
-      "name": "Diagnostic System Voltage Delay",
-      "value": 5.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 8144,
-      "category": "System",
-      "note": "Startup delay before Diagnostic Boost Voltage can be requested. [coalesced: tune24]",
       "provenance": {
         "source": "tune24",
         "rule": "priority:tune24",
@@ -5976,102 +6158,6 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "Intercooler Pump ERT Min",
-      "value": 10.0,
-      "unit": "s",
-      "stock_value": null,
-      "param_id": 2946,
-      "category": "System",
-      "note": "Minimum engine run time to enable intercooler pump. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 10.0
-        }
-      }
-    },
-    {
-      "name": "Intercooler Pump IAT Min",
-      "value": 32.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 2947,
-      "category": "System",
-      "note": "Below this IAT the intercooler pump will be disabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 32.0
-        }
-      }
-    },
-    {
-      "name": "Intercooler Pump MAT Min",
-      "value": 50.0,
-      "unit": "\u00b0F",
-      "stock_value": null,
-      "param_id": 2948,
-      "category": "System",
-      "note": "Below this MAT (IAT2) the intercooler pump will be disabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 50.0
-        }
-      }
-    },
-    {
-      "name": "A/C Re-Enable RPM",
-      "value": 0.0,
-      "unit": "rpm",
-      "stock_value": null,
-      "param_id": 8020,
-      "category": "System",
-      "note": "If Disabled, RPM at which the A/C system will be re-enabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 0.0
-        }
-      }
-    },
-    {
-      "name": "A/C Disable TPS",
-      "value": 100.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 8023,
-      "category": "System",
-      "note": "Throttle Position at which the A/C system will be disabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 100.0
-        }
-      }
-    },
-    {
-      "name": "A/C Re-Enable TPS",
-      "value": 100.0,
-      "unit": "%",
-      "stock_value": null,
-      "param_id": 8022,
-      "category": "System",
-      "note": "If disabled, Throttle Position at which the A/C system will be re-enabled. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 100.0
         }
       }
     }
