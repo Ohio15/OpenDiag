@@ -186,6 +186,38 @@ class TestCoalesce(unittest.TestCase):
         self.assertEqual(back.pins[0].value, 2742.0)
         self.assertEqual(back.stock_source, "stock")
 
+class TestCompareRefCli(unittest.TestCase):
+    def test_compare_ref_excluded_from_merge_included_in_report(self):
+        from openobd.coalesce import main
+        a = Calibration()
+        a.scalars.append(Scalar(name="Shared", value=1.0, param_id=100))
+        tow = Calibration()
+        tow.scalars.append(Scalar(name="Shared", value=2.0, param_id=100))
+        tow.scalars.append(Scalar(name="TowOnly", value=9.0, param_id=999))
+        pol = MergePolicy(priority=["a"])
+        with tempfile.TemporaryDirectory() as td:
+            pa = os.path.join(td, "a.cal.json"); a.save(pa)
+            pt = os.path.join(td, "tow.cal.json"); tow.save(pt)
+            pp = os.path.join(td, "pol.json")
+            with open(pp, "w", encoding="utf-8") as fh:
+                json.dump(pol.to_dict(), fh)
+            po = os.path.join(td, "out.cal.json")
+            pc = os.path.join(td, "cmp.json")
+            rc = main(["--ref", f"a={pa}", "--compare-ref", f"tow={pt}",
+                       "--policy", pp, "--out", po, "--compare-out", pc])
+            self.assertEqual(rc, 0)
+            merged = Calibration.load(po)
+            # tow-only parameter must NOT leak into the merge
+            self.assertEqual([s.name for s in merged.scalars], ["Shared"])
+            self.assertEqual(merged.scalars[0].value, 1.0)
+            with open(pc, encoding="utf-8") as fh:
+                rep = json.load(fh)
+            keys = {r["key"]: r for r in rep}
+            # but it MUST appear in the comparison report, and the shared
+            # parameter's report must carry both sources
+            self.assertIn("pid:999", keys)
+            self.assertEqual(set(keys["pid:100"]["sources"]), {"a", "tow"})
+
 
 if __name__ == "__main__":
     unittest.main()

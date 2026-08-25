@@ -345,6 +345,12 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--out", required=True, help="output .cal.json")
     ap.add_argument("--compare-out", default=None,
                     help="also write the full comparison report JSON here")
+    ap.add_argument("--compare-ref", action="append", default=[],
+                    metavar="NAME=PATH",
+                    help="reference included in the comparison report but "
+                         "NEVER in the merge (e.g. tow references from a "
+                         "different vehicle: strategies to compare against, "
+                         "not cell values to adopt).")
     a = ap.parse_args(argv)
 
     refs: dict[str, Calibration] = {}
@@ -353,6 +359,12 @@ def main(argv: Optional[list[str]] = None) -> int:
         refs[name] = cal
         print(f"ref {name}: {len(cal.tables)} tables, "
               f"{len(cal.scalars)} scalars")
+    crefs: dict[str, Calibration] = {}
+    for spec in a.compare_ref:
+        name, cal = load_reference(spec)
+        crefs[name] = cal
+        print(f"compare-ref {name}: {len(cal.tables)} tables, "
+              f"{len(cal.scalars)} scalars (comparison only)")
     policy = MergePolicy.load(a.policy)
     merged = coalesce(refs, policy)
     errs = merged.validate()
@@ -373,7 +385,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     print(f"  by source: {srcs}")
     if a.compare_out:
         with open(a.compare_out, "w", encoding="utf-8") as fh:
-            json.dump(compare(refs), fh, indent=2)
+            json.dump(compare({**refs, **crefs}), fh, indent=2)
         print(f"wrote comparison report: {a.compare_out}")
     return 0
 
