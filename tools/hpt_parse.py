@@ -63,7 +63,37 @@ def load_dir(d):
         out[tid]=r
     return out,fails
 
-def load_scalar_jsonl(path):
+_CORRECTIONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 "..", "data", "uia_capture_corrections.json")
+
+def _apply_corrections(records, corrections_path=None):
+    """Repair known UIA-harvester capture defects (documented in
+    data/uia_capture_corrections.json). Values only — join keys untouched."""
+    path = corrections_path or _CORRECTIONS_PATH
+    if not os.path.exists(path):
+        return 0
+    spec = json.load(open(path, encoding="utf-8"))
+    applied = 0
+    for c in spec.get("corrections", []):
+        if c.get("type") != "swap_values":
+            continue
+        by_name = {o.get("name"): o for o in records.values()
+                   if o.get("category") == c["category"] and o.get("desc") == c["desc"]}
+        mn, mx = by_name.get(c["min_name"]), by_name.get(c["max_name"])
+        if mn is None or mx is None:
+            continue
+        try:
+            vmin, vmax = float(mn["value"]), float(mx["value"])
+        except (TypeError, ValueError):
+            continue
+        # swap only when the defect is actually present (a fixed harvester or
+        # already-corrected capture must not be re-swapped into the defect)
+        if vmin > vmax:
+            mn["value"], mx["value"] = mx["value"], mn["value"]
+            applied += 1
+    return applied
+
+def load_scalar_jsonl(path, corrections_path=None):
     out = {}
     if not os.path.exists(path):
         return out
@@ -83,4 +113,7 @@ def load_scalar_jsonl(path):
             sid = f"name:{o.get('name','')}|{o.get('desc','')}"
         if sid not in out:
             out[sid] = o
+    n = _apply_corrections(out, corrections_path)
+    if n:
+        print(f"  applied {n} UIA capture correction(s) from {os.path.basename(corrections_path or _CORRECTIONS_PATH)}")
     return out

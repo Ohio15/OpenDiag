@@ -1,0 +1,13 @@
+{
+  "_comment": "Known defects in click-free UIA harvester captures, applied at load time by tools/hpt_parse.load_scalar_jsonl. The harvester mispairs name<->value on some panels (adjacent-control association drift). Corrections are keyed by the capture's own (category, desc, name) fields so join keys stay untouched; only values are repaired. Each entry documents the evidence.",
+  "corrections": [
+    {
+      "type": "swap_values",
+      "category": "Engine/Fuel/Oxygen Sensors",
+      "desc": "Min MAP vs. BARO",
+      "min_name": "LTM Min Limit",
+      "max_name": "LTM Max Limit",
+      "evidence": "All three UIA captures (stock 1.3/0.7, trailering 1.3/0.7, hd2500 1.25/0.75) show Min > Max; the desktop tune24 capture (real ParameterIDs 2536/2537, full descriptions) shows the correct GM convention Max=1.3 / Min=0.7. The attached group caption 'Min MAP vs. BARO' is itself misattached, confirming association drift on this panel. Audited 2026-08-25."
+    }
+  ]
+}

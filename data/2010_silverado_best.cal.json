@@ -651,9 +651,9 @@
     },
     {
       "name": "LTM Max Limit",
-      "value": 0.7,
+      "value": 1.3,
       "unit": "",
-      "stock_value": 0.7,
+      "stock_value": 1.3,
       "param_id": 2536,
       "category": "Engine",
       "note": "The maximum value to which any long term memory cell can increase. [coalesced: stock]",
@@ -661,16 +661,16 @@
         "source": "stock",
         "rule": "priority:stock",
         "candidates": {
-          "stock": 0.7,
+          "stock": 1.3,
           "tune24": 1.3
         }
       }
     },
     {
       "name": "LTM Min Limit",
-      "value": 1.3,
+      "value": 0.7,
       "unit": "",
-      "stock_value": 1.3,
+      "stock_value": 0.7,
       "param_id": 2537,
       "category": "Engine",
       "note": "The minimum value to which any long term memory cell can decrease. [coalesced: stock]",
@@ -678,7 +678,7 @@
         "source": "stock",
         "rule": "priority:stock",
         "candidates": {
-          "stock": 1.3,
+          "stock": 0.7,
           "tune24": 0.7
         }
       }
