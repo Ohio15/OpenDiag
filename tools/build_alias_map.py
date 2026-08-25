@@ -22,6 +22,11 @@ STOCK = os.path.join(HERE, "stock_read", "scalars.jsonl")
 OUT = os.path.join(ROOT, "data", "tune24_scalar_aliases.json")
 
 STOP = {"the", "a", "an", "of", "to", "in", "on", "for", "and", "or", "by", "with", "vs"}
+# same-file UIA capture of the tune24 .hpt: the identity oracle. A candidate
+# alias is only correct if the desktop value equals the UIA value at the
+# aliased triple (same file, two captures — any mismatch proves a wrong join;
+# caught the CFCO/DFCO caption mispairing that token evidence alone passed).
+TUNE_UIA = os.path.join(HERE, "tune24_uia_read", "scalars.jsonl")
 
 def load(path):
     return [json.loads(l) for l in open(path, encoding="utf-8-sig") if l.strip()]
@@ -132,6 +137,33 @@ def main():
         s = scored[0][1]
         aliases[tn] = {"category": s["category"], "desc": s["desc"], "name": s["name"],
                        "score": round(scored[0][0], 2)}
+
+    # identity validation against the same-file UIA capture (when present),
+    # loaded through hpt_parse so the capture-corrections overlay applies
+    if os.path.exists(TUNE_UIA):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from hpt_parse import load_scalar_jsonl
+        uia = list(load_scalar_jsonl(TUNE_UIA).values())
+        ui = {(o.get("category", ""), o.get("desc", ""), o.get("name", "")): o for o in uia}
+        dn = {t.get("name", ""): t for t in tune}
+        dropped = 0
+        for tn in list(aliases):
+            v = aliases[tn]
+            u = ui.get((v["category"], v["desc"], v["name"]))
+            if u is None or tn not in dn:
+                continue
+            try:
+                dv, uv = float(dn[tn]["value"]), float(u["value"])
+            except (TypeError, ValueError):
+                continue
+            if dv != uv and not (uv and abs(dv - uv) / abs(uv) < 0.001):
+                print(f"  identity REJECT: {tn} (desktop={dv} != uia={uv} at {v['name']!r})")
+                del aliases[tn]
+                unmatched.append(tn)
+                dropped += 1
+        print(f"identity validation vs tune24_uia: {dropped} alias(es) rejected")
+    else:
+        print("WARNING: tune24_uia_read absent - aliases are NOT identity-validated")
 
     # collision check: two tune24 names claiming the same stock scalar means at
     # least one join is wrong — keep only a clear winner, else drop both

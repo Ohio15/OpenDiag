@@ -29,18 +29,6 @@
   "name": "Max Retard",
   "score": 5.25
  },
- "CFCO Enable ECT": {
-  "category": "Engine/Fuel/Cutoff, DFCO",
-  "desc": "Clutch Fuel Cutoff (CFCO)",
-  "name": "Enable ECT",
-  "score": 3.88
- },
- "CFCO Enable RPM": {
-  "category": "Engine/Fuel/Cutoff, DFCO",
-  "desc": "Clutch Fuel Cutoff (CFCO)",
-  "name": "Enable RPM",
-  "score": 3.88
- },
  "Cold Start Disable RPM": {
   "category": "Engine/Airflow/Variable Camshaft",
   "desc": "Cold Start",
@@ -70,6 +58,12 @@
   "desc": "Fuel Pressure Transition Rate",
   "name": "Cranking",
   "score": 6.38
+ },
+ "Default Fuel Pressure": {
+  "category": "Fuel Sys/Fuel Pressure",
+  "desc": "Fuel Pressure Transition Rate",
+  "name": "Default",
+  "score": 6.25
  },
  "Diagnostic System Voltage Delay": {
   "category": "System/General",
@@ -256,6 +250,12 @@
   "desc": "Desired Angle",
   "name": "Low Baro Thresh",
   "score": 3.25
+ },
+ "Low Flow Fuel Pressure": {
+  "category": "Fuel Sys/Fuel Pressure",
+  "desc": "Fuel Pressure Transition Rate",
+  "name": "Low Flow",
+  "score": 6.25
  },
  "Maximum Clutch Pressure": {
   "category": "Trans/Shift Pressures/General",

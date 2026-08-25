@@ -18,7 +18,7 @@
         "source": "VCM Editor Copy-with-Axis full sweep",
         "base_tune": "#24 - Claudes Edit 8.7.26",
         "n_tables": 251,
-        "n_scalars": 368
+        "n_scalars": 369
       }
     },
     "merge_policy": {
@@ -871,40 +871,6 @@
       }
     },
     {
-      "name": "CFCO Enable RPM",
-      "value": 1200.0,
-      "unit": "rpm",
-      "stock_value": 1200.0,
-      "param_id": 2298,
-      "category": "Engine",
-      "note": "RPM must be above this value to enable CFCO. [coalesced: stock]",
-      "provenance": {
-        "source": "stock",
-        "rule": "priority:stock",
-        "candidates": {
-          "stock": 1200.0,
-          "tune24": 500.0
-        }
-      }
-    },
-    {
-      "name": "CFCO Enable ECT",
-      "value": 55.0,
-      "unit": "\u00b0F",
-      "stock_value": 55.0,
-      "param_id": 2299,
-      "category": "Engine",
-      "note": "ECT must be above this value to enable CFCO. [coalesced: stock]",
-      "provenance": {
-        "source": "stock",
-        "rule": "priority:stock",
-        "candidates": {
-          "stock": 55.0,
-          "tune24": 122.0
-        }
-      }
-    },
-    {
       "name": "Transient Fuel MAP Filter",
       "value": 0.25,
       "unit": "",
@@ -1568,6 +1534,40 @@
       }
     },
     {
+      "name": "Low Flow Fuel Pressure",
+      "value": 300.0,
+      "unit": "kPa",
+      "stock_value": 300.0,
+      "param_id": 7031,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure under low flow conditions. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 300.0,
+          "tune24": 300.0
+        }
+      }
+    },
+    {
+      "name": "Default Fuel Pressure",
+      "value": 400.0,
+      "unit": "kPa",
+      "stock_value": 400.0,
+      "param_id": 7034,
+      "category": "Fuel System",
+      "note": "Commanded Fuel pressure under default conditions. [coalesced: stock]",
+      "provenance": {
+        "source": "stock",
+        "rule": "priority:stock",
+        "candidates": {
+          "stock": 400.0,
+          "tune24": 400.0
+        }
+      }
+    },
+    {
       "name": "Hot Soak VSS",
       "value": 0.0,
       "unit": "mph",
@@ -1966,6 +1966,22 @@
         "rule": "pin:AFM/DoD deleted",
         "candidates": {
           "sheet24": 0
+        }
+      }
+    },
+    {
+      "name": "Supercharger ETC Max Boost %",
+      "value": 199.0,
+      "unit": "%",
+      "stock_value": null,
+      "param_id": 2934,
+      "category": "Engine",
+      "note": "Maximum Boost % when ETC power management is active. [coalesced: tune24]",
+      "provenance": {
+        "source": "tune24",
+        "rule": "priority:tune24",
+        "candidates": {
+          "tune24": 199.0
         }
       }
     },
@@ -3278,6 +3294,38 @@
         "rule": "priority:tune24",
         "candidates": {
           "tune24": 1800.0
+        }
+      }
+    },
+    {
+      "name": "CFCO Enable RPM",
+      "value": 500.0,
+      "unit": "rpm",
+      "stock_value": null,
+      "param_id": 2298,
+      "category": "Engine",
+      "note": "RPM must be above this value to enable CFCO. [coalesced: tune24]",
+      "provenance": {
+        "source": "tune24",
+        "rule": "priority:tune24",
+        "candidates": {
+          "tune24": 500.0
+        }
+      }
+    },
+    {
+      "name": "CFCO Enable ECT",
+      "value": 122.0,
+      "unit": "\u00b0F",
+      "stock_value": null,
+      "param_id": 2299,
+      "category": "Engine",
+      "note": "ECT must be above this value to enable CFCO. [coalesced: tune24]",
+      "provenance": {
+        "source": "tune24",
+        "rule": "priority:tune24",
+        "candidates": {
+          "tune24": 122.0
         }
       }
     },
@@ -5682,22 +5730,6 @@
       }
     },
     {
-      "name": "Low Flow Fuel Pressure",
-      "value": 300.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 7031,
-      "category": "Fuel System",
-      "note": "Commanded Fuel pressure under low flow conditions. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 300.0
-        }
-      }
-    },
-    {
       "name": "Cold Fuel Pressure",
       "value": 400.0,
       "unit": "kPa",
@@ -5705,22 +5737,6 @@
       "param_id": 7032,
       "category": "Fuel System",
       "note": "Commanded Fuel pressure when the engine is cold ie. not high flow conditions and closed loop fuel not active. [coalesced: tune24]",
-      "provenance": {
-        "source": "tune24",
-        "rule": "priority:tune24",
-        "candidates": {
-          "tune24": 400.0
-        }
-      }
-    },
-    {
-      "name": "Default Fuel Pressure",
-      "value": 400.0,
-      "unit": "kPa",
-      "stock_value": null,
-      "param_id": 7034,
-      "category": "Fuel System",
-      "note": "Commanded Fuel pressure under default conditions. [coalesced: tune24]",
       "provenance": {
         "source": "tune24",
         "rule": "priority:tune24",

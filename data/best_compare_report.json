@@ -659,34 +659,6 @@
   },
   {
     "kind": "scalar",
-    "key": "pid:2298",
-    "name": "CFCO Enable RPM",
-    "sources": [
-      "stock",
-      "tune24"
-    ],
-    "values": {
-      "stock": 1200.0,
-      "tune24": 500.0
-    },
-    "agree": false
-  },
-  {
-    "kind": "scalar",
-    "key": "pid:2299",
-    "name": "CFCO Enable ECT",
-    "sources": [
-      "stock",
-      "tune24"
-    ],
-    "values": {
-      "stock": 55.0,
-      "tune24": 122.0
-    },
-    "agree": false
-  },
-  {
-    "kind": "scalar",
     "key": "pid:2279",
     "name": "Transient Fuel MAP Filter",
     "sources": [
@@ -1233,6 +1205,34 @@
   },
   {
     "kind": "scalar",
+    "key": "pid:7031",
+    "name": "Low Flow Fuel Pressure",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "values": {
+      "stock": 300.0,
+      "tune24": 300.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:7034",
+    "name": "Default Fuel Pressure",
+    "sources": [
+      "stock",
+      "tune24"
+    ],
+    "values": {
+      "stock": 400.0,
+      "tune24": 400.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
     "key": "pid:7040",
     "name": "Hot Soak VSS",
     "sources": [
@@ -1552,6 +1552,18 @@
     ],
     "values": {
       "sheet24": 0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2934",
+    "name": "Supercharger ETC Max Boost %",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 199.0
     },
     "agree": true
   },
@@ -2536,6 +2548,30 @@
     ],
     "values": {
       "tune24": 1800.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2298",
+    "name": "CFCO Enable RPM",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 500.0
+    },
+    "agree": true
+  },
+  {
+    "kind": "scalar",
+    "key": "pid:2299",
+    "name": "CFCO Enable ECT",
+    "sources": [
+      "tune24"
+    ],
+    "values": {
+      "tune24": 122.0
     },
     "agree": true
   },
@@ -4341,32 +4377,8 @@
   },
   {
     "kind": "scalar",
-    "key": "pid:7031",
-    "name": "Low Flow Fuel Pressure",
-    "sources": [
-      "tune24"
-    ],
-    "values": {
-      "tune24": 300.0
-    },
-    "agree": true
-  },
-  {
-    "kind": "scalar",
     "key": "pid:7032",
     "name": "Cold Fuel Pressure",
-    "sources": [
-      "tune24"
-    ],
-    "values": {
-      "tune24": 400.0
-    },
-    "agree": true
-  },
-  {
-    "kind": "scalar",
-    "key": "pid:7034",
-    "name": "Default Fuel Pressure",
     "sources": [
       "tune24"
     ],

@@ -97,7 +97,9 @@ def load_scalar_jsonl(path, corrections_path=None):
     out = {}
     if not os.path.exists(path):
         return out
-    for ln in open(path, encoding="utf-8"):
+    # utf-8-sig: the harvester writes a BOM; plain utf-8 made the first
+    # record of every capture fail json.loads and drop silently
+    for ln in open(path, encoding="utf-8-sig"):
         ln = ln.strip()
         if not ln:
             continue
